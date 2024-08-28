@@ -1,5 +1,6 @@
 {
   "name": "070-cra7",
+  "packageManager": "yarn@4.4.1",
   "version": "0.0.1",
   "author": "Laboratorio EnFlujo <enflujo@uniandes.edu.co>",
   "license": "MIT",
