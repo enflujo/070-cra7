@@ -55,3 +55,4 @@ export const compararListas = (a: any[], b: any[]) =>
   a.length === b.length && a.every((element, index) => element === b[index]);
 
 export const esNumero = (valor: string | number): boolean => !isNaN(parseInt(`${valor}`));
+export const esFecha = (valor: string) => !isNaN(new Date(valor).getTime());
