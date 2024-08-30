@@ -1,0 +1,31 @@
+{
+  "name": "procesador",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": " nodemon ./fuente/aplicacion.ts"
+  },
+  "devDependencies": {
+    "@types/cli-color": "^2.0.6",
+    "@types/cli-progress": "^3.11.6",
+    "@types/node": "^22.5.1",
+    "nodemon": "^3.1.4",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "cli-color": "^2.0.4",
+    "cli-progress": "^3.12.0",
+    "node-emoji": "^2.1.3",
+    "slug": "^9.1.0",
+    "xlstream": "^2.5.5"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "./datos/*"
+    ],
+    "ext": "ts, js"
+  }
+}
