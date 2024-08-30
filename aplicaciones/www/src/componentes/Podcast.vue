@@ -11,7 +11,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <h1>{{ podcast.nombre }}</h1>
+  <h2>{{ podcast.nombre }}</h2>
   <p>{{ podcast.descripcion }}</p>
   <audio :src="podcast.ruta"></audio>
 </template>

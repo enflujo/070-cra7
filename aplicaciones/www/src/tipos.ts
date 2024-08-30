@@ -6,3 +6,9 @@ export interface ElementoPaisaje {
   ubicacion: number;
   ruta?: string;
 }
+
+export interface FichaIndicador {
+  nombre: string;
+  descripcion: string;
+  unidadMedida: string;
+}

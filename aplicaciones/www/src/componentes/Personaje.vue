@@ -11,7 +11,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <h1>{{ personaje.nombre }}</h1>
+  <h2>{{ personaje.nombre }}</h2>
   <p>{{ personaje.descripcion }}</p>
   <video :src="personaje.ruta"></video>
 </template>

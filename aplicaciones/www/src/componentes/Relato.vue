@@ -11,7 +11,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <h1>{{ relato.nombre }}</h1>
+  <h2>{{ relato.nombre }}</h2>
   <p>{{ relato.descripcion }}</p>
 </template>
 
