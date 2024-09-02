@@ -59,8 +59,6 @@ export default async function procesarRuido(): Promise<DatosRuido> {
     });
 
     flujo.on('close', () => {
-      mensajes.exito('FIN');
-
       if (errataRuido.length) guardarJSON(errataRuido, 'errataRuido');
 
       for (const idPunto in ruidoProcesados) {
@@ -74,6 +72,7 @@ export default async function procesarRuido(): Promise<DatosRuido> {
         ruidoProcesados[idPunto].promedio[0] = redondearDecimal(suma / ruidoProcesados[idPunto].promedio[2]);
       }
 
+      mensajes.exito(`Datos de Ruido procesados`);
       resolver(ruidoProcesados);
     });
 
