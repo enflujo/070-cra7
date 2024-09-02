@@ -56,3 +56,15 @@ export const compararListas = (a: any[], b: any[]) =>
 
 export const esNumero = (valor: string | number): boolean => !isNaN(parseInt(`${valor}`));
 export const esFecha = (valor: string) => !isNaN(new Date(valor).getTime());
+
+/**
+ * Redondea y reduce el número de decimales.
+ *
+ * @ejemplo
+ * ```js
+ * redondearDecimal(3.1938477402);
+ * ```
+ * @param {number} num Número decimal que se va a transformar.
+ * @returns {number} Número con decimales reducidos.
+ */
+export const redondearDecimal = (num: number): number => +(Math.round(+(num + 'e+2')) + 'e-2');

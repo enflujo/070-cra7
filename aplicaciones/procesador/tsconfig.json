@@ -8,12 +8,12 @@
     "skipLibCheck": true,
     "moduleResolution": "node",
     "outDir": "./publico",
-    "baseUrl": "./fuente"
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["fuente/*"],
+      "@/tipos/*": ["../../tipos/*"]
+    }
   },
-  "include": [
-    "./fuente/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./fuente/**/*"],
+  "exclude": ["node_modules"]
 }
