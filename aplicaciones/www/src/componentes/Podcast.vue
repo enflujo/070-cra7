@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import type { ElementoPaisaje } from '../tipos';
 interface Props {
   podcast: ElementoPaisaje;
@@ -11,9 +10,17 @@ defineProps<Props>();
 </script>
 
 <template>
-  <h2>{{ podcast.nombre }}</h2>
-  <p>{{ podcast.descripcion }}</p>
-  <audio :src="podcast.ruta"></audio>
+  <div class="contenedorPodcast">
+    <h2>{{ podcast.nombre }}</h2>
+    <p>{{ podcast.descripcion }}</p>
+    <audio :src="podcast.ruta" controls="true"></audio>
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.contenedorPodcast {
+  border: 1px solid black;
+  max-width: 30vw;
+  padding: 1em;
+}
+</style>

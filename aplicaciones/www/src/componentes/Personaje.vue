@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import type { ElementoPaisaje } from '../tipos';
 interface Props {
   personaje: ElementoPaisaje;
@@ -11,9 +10,17 @@ defineProps<Props>();
 </script>
 
 <template>
-  <h2>{{ personaje.nombre }}</h2>
-  <p>{{ personaje.descripcion }}</p>
-  <video :src="personaje.ruta"></video>
+  <div class="contenedorPersonaje">
+    <h2>{{ personaje.nombre }}</h2>
+    <p>{{ personaje.descripcion }}</p>
+    <video :src="personaje.ruta" controls="true"></video>
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.contenedorPersonaje {
+  border: 1px solid black;
+  max-width: 30vw;
+  padding: 1em;
+}
+</style>
