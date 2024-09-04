@@ -23,17 +23,18 @@ export default async (): Promise<{ puntos: Punto[] }> => {
     const puntos: Punto[] = [];
 
     flujo.on('data', async (obj) => {
+      const fila = obj.formatted.arr;
+
       if (!primeraFilaProcesada) {
         /**
          * En esta fila están los puntos como nombres de las columnas
          */
         if (numeroFila === 1) {
-          const llaves = obj.formatted.arr;
           const slugPrimerPunto = slugificar('Plaza Bolivar');
           let guardandoPuntos = false;
           let id = 0;
 
-          llaves.forEach((llave: string) => {
+          fila.forEach((llave: string) => {
             const slug = slugificar(llave);
 
             if (slug === slugPrimerPunto) {
@@ -49,6 +50,7 @@ export default async (): Promise<{ puntos: Punto[] }> => {
           primeraFilaProcesada = true;
         }
       } else {
+        console.log(fila);
       }
 
       numeroFila++;

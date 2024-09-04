@@ -8,8 +8,8 @@ Hay dos tipos, unos generales que se pueden observar a lo largo de la séptima c
 
 ### Generales / por índices
 
-- [ ] Habitabilidad
-- [ ] Ambiente
+- [ ] Habitabilidad (fuente: Datos A o ZAT)
+- [ ] Ambiente (fuente: Datos A o ZAT)
 - [ ] Infraestructura pública y social
 - [ ] ??Caminabilidad?? (si es índice)
 - [ ] Movilidad
@@ -23,7 +23,7 @@ Estos tienen estructuras diferentes entre sí.
 
 Hay también datos 💬 Cualitativos y 📈 Cuantitativos
 
-- [x] 📈 Ruido
+- [x] 📈 Ruido (fuente: Ruido)
 - [ ] 📈 Calidad aire
 - [ ] 💬 Calidad aire
 - [ ] 💬 Pájaros
@@ -49,3 +49,7 @@ Exporta `ruido.json`
 Archivo: **Mapa 7ma - Datos CEPER puntos primera capa.xlsx**
 
 Exporta `puntos.json`
+
+### ZAT
+
+...
