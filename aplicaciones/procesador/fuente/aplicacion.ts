@@ -3,6 +3,8 @@ import procesarRuido from './procesarRuido';
 import { guardarJSON } from './utilidades/ayudas';
 
 export const estructuras = {
+  /** Esta tabla nos define:
+   * - Los nombres y slugs de los puntos */
   datosA: {
     archivo: 'Mapa 7ma - Datos CEPER puntos primera capa',
     nombreHoja: 'Sheet1',
@@ -31,7 +33,6 @@ async function inicio(): Promise<void> {
   guardarJSON(datosRuido, 'ruido');
 
   const datosA = await procesarDatosA();
-
   guardarJSON(datosA.puntos, 'puntos');
 }
 

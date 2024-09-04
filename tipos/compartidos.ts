@@ -23,3 +23,9 @@ export interface DatosRuido {
     mediciones: Ruido[];
   };
 }
+
+export interface Punto {
+  id: string;
+  nombre: string;
+  slug: string;
+}

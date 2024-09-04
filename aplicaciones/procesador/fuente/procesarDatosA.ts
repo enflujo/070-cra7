@@ -2,8 +2,9 @@ import { getXlsxStream } from 'xlstream';
 import { estructuras } from './aplicacion';
 import { guardarJSON, mensajes } from './utilidades/ayudas';
 import slugificar from 'slug';
+import { Punto } from '@/tipos/compartidos';
 
-export default async (): Promise<{ puntos: string[] }> => {
+export default async (): Promise<{ puntos: Punto[] }> => {
   const { datosA } = estructuras;
   const ruta = `./datos/${datosA.archivo}.xlsx`;
   const flujo = await getXlsxStream({
@@ -19,7 +20,7 @@ export default async (): Promise<{ puntos: string[] }> => {
 
   return new Promise((resolver) => {
     /** Acá guardamos los nombres de los puntos */
-    const puntos: string[] = [];
+    const puntos: Punto[] = [];
 
     flujo.on('data', async (obj) => {
       if (!primeraFilaProcesada) {
@@ -28,18 +29,20 @@ export default async (): Promise<{ puntos: string[] }> => {
          */
         if (numeroFila === 1) {
           const llaves = obj.formatted.arr;
-          const nombrePrimerPunto = slugificar('Plaza Bolivar');
+          const slugPrimerPunto = slugificar('Plaza Bolivar');
           let guardandoPuntos = false;
+          let id = 0;
 
           llaves.forEach((llave: string) => {
-            const nombre = slugificar(llave);
+            const slug = slugificar(llave);
 
-            if (nombre === nombrePrimerPunto) {
+            if (slug === slugPrimerPunto) {
               guardandoPuntos = true;
             }
 
             if (guardandoPuntos) {
-              puntos.push(nombre);
+              puntos.push({ id: `${id}`, slug, nombre: llave.trim() });
+              id++;
             }
           });
 
