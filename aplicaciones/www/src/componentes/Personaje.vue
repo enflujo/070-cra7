@@ -1,19 +1,13 @@
 <script setup lang="ts">
 import type { ElementoPaisaje } from '../tipos';
-interface Props {
-  personaje: ElementoPaisaje;
-  // Definir qué tipo de dato va a ser la ubicación
-  ubicacion: any;
-}
-
-defineProps<Props>();
+defineProps<ElementoPaisaje>();
 </script>
 
 <template>
   <div class="contenedorPersonaje">
-    <h2>{{ personaje.nombre }}</h2>
-    <p>{{ personaje.descripcion }}</p>
-    <video :src="personaje.ruta" controls="true"></video>
+    <h2>{{ nombre }}</h2>
+    <p>{{ descripcion }}</p>
+    <video :src="ruta" controls="true"></video>
   </div>
 </template>
 

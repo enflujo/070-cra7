@@ -1,19 +1,13 @@
 <script setup lang="ts">
 import type { ElementoPaisaje } from '../tipos';
-interface Props {
-  podcast: ElementoPaisaje;
-  // Definir qué tipo de dato va a ser la ubicación
-  ubicacion: any;
-}
-
-defineProps<Props>();
+defineProps<ElementoPaisaje>();
 </script>
 
 <template>
   <div class="contenedorPodcast">
-    <h2>{{ podcast.nombre }}</h2>
-    <p>{{ podcast.descripcion }}</p>
-    <audio :src="podcast.ruta" controls="true"></audio>
+    <h2>{{ nombre }}</h2>
+    <p>{{ descripcion }}</p>
+    <audio :src="ruta" controls="true"></audio>
   </div>
 </template>
 
