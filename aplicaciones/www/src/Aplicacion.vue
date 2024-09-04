@@ -1,6 +1,31 @@
 <script setup lang="ts">
-import Hola from './componentes/Hola.vue';
 import { distanciaEntreCoordenadas } from './utilidades/ayudas';
+import { ElementoPaisaje } from './tipos';
+import Personaje from './componentes/Personaje.vue';
+import Podcast from './componentes/Podcast.vue';
+import Relato from './componentes/Relato.vue';
+
+/** Si se definen así los props desde un objeto,
+ * toca usar el v-bind="" en elemento de vue para pasar los props.
+ * Ver explicación en: https://vuejs.org/guide/components/props.html#binding-multiple-properties-using-an-object
+ * */
+const personajePrueba: ElementoPaisaje = {
+  nombre: 'Elemento personaje',
+  descripcion: 'descripción personaje',
+  ubicacion: '0',
+};
+
+const podcastPrueba: ElementoPaisaje = {
+  nombre: 'Elemento podcast',
+  descripcion: 'descripción podcast',
+  ubicacion: '1',
+};
+
+const relatoPrueba: ElementoPaisaje = {
+  nombre: 'Elemento personaje',
+  descripcion: 'Relato bla bla',
+  ubicacion: '2',
+};
 
 async function cargarDatos() {
   try {
@@ -34,7 +59,10 @@ for (let i = 1; i < puntos.length; i++) {
 </script>
 
 <template>
-  <Hola />
+  <h1>Habitabilidad en la cra 7 de Bogotá</h1>
+  <Personaje v-bind="personajePrueba" />
+  <Podcast v-bind="podcastPrueba" />
+  <Relato v-bind="relatoPrueba" />
 </template>
 
 <style lang="scss" scoped>
