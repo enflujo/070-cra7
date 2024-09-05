@@ -1,6 +1,6 @@
 # Procesador de datos
 
-Esta aplicación se encarga de procesar los datos y exporta archivos `.json` a la aplicación **www.**
+Esta aplicación se encarga de procesar los datos y exporta archivos `.json` a la aplicación **www**
 
 ## Indicadores
 
@@ -8,12 +8,12 @@ Hay dos tipos, unos generales que se pueden observar a lo largo de la séptima c
 
 ### Generales / por índices
 
-- [ ] Habitabilidad (fuente: Datos A o ZAT)
-- [ ] Ambiente (fuente: Datos A o ZAT)
-- [ ] Infraestructura pública y social
+- [x] Habitabilidad (fuente: Datos A o ZAT)
+- [x] Ambiente (fuente: Datos A o ZAT)
+- [x] Infraestructura pública y social
 - [ ] ??Caminabilidad?? (si es índice)
-- [ ] Movilidad
-- [ ] Seguridad
+- [x] Movilidad
+- [x] Seguridad
 - [ ] PD
 - [ ] Salud
 
