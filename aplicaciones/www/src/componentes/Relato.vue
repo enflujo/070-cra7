@@ -15,5 +15,6 @@ defineProps<ElementoPaisaje>();
   border: 1px solid black;
   max-width: 30vw;
   padding: 1em;
+  display: none;
 }
 </style>

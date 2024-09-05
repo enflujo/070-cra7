@@ -5,6 +5,7 @@ import { ElementoPaisaje } from './tipos';
 import Personaje from './componentes/Personaje.vue';
 import Podcast from './componentes/Podcast.vue';
 import Relato from './componentes/Relato.vue';
+import Ilustracion from './componentes/Ilustracion.vue';
 
 /** Si se definen así los props desde un objeto,
  * toca usar el v-bind="" en elemento de vue para pasar los props.
@@ -28,6 +29,13 @@ const relatoPrueba: ElementoPaisaje = {
   ubicacion: '2',
 };
 
+const ilustracionPrueba: ElementoPaisaje = {
+  nombre: 'Elemento Ilustración',
+  descripcion: 'Ilustración bla bla',
+  ubicacion: '3',
+  ruta: '../../estaticos/imagenes/plaza_bolivar_pr.png',
+};
+
 async function cargarDatos() {
   try {
     const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
@@ -44,7 +52,7 @@ const anchoEnPantalla: number = 98; // medida en vw
 let distanciaTotal: number = 0;
 
 onMounted(async () => {
-  const cra7: HTMLElement = document.getElementById('cra7') as HTMLElement;
+  const contenedorPuntos: HTMLElement = document.getElementById('contenedorPuntos') as HTMLElement;
   const infoPunto: HTMLElement = document.getElementById('infoPunto') as HTMLElement;
   const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
 
@@ -55,7 +63,7 @@ onMounted(async () => {
       const punto = document.createElement('div');
       punto.classList.add('punto'); // No funciona y no sé por qué
       punto.style.left = `0vw`; //`${distanciaTotal}%`
-      cra7.appendChild(punto);
+      contenedorPuntos.appendChild(punto);
 
       punto.addEventListener('mouseenter', () => {
         infoPunto.innerText = `${puntos[0].nombre}`;
@@ -85,7 +93,7 @@ onMounted(async () => {
       punto.style.left = `${posicionPunto}vw`; //`${distanciaTotal}%`
 
       // Agregar cada punto a la línea de la 7
-      cra7.appendChild(punto);
+      contenedorPuntos.appendChild(punto);
 
       punto.addEventListener('mouseenter', () => {
         infoPunto.innerText = `${puntoB.nombre}`;
@@ -107,12 +115,17 @@ function escalar(x: number, max: number) {
 
 <template>
   <h1>Habitabilidad en la cra 7 de Bogotá</h1>
+
   <div id="cra7">
-    <div id="infoPunto"></div>
+    <div id="fondoMontaña"></div>
+
+    <Ilustracion v-bind="ilustracionPrueba" />
+    <Personaje v-bind="personajePrueba" />
+    <Podcast v-bind="podcastPrueba" />
+    <Relato v-bind="relatoPrueba" />
+
+    <div id="contenedorPuntos"><div id="infoPunto"></div></div>
   </div>
-  <Personaje v-bind="personajePrueba" />
-  <Podcast v-bind="podcastPrueba" />
-  <Relato v-bind="relatoPrueba" />
 </template>
 
 <style lang="scss">
@@ -121,10 +134,21 @@ function escalar(x: number, max: number) {
 }
 
 #cra7 {
-  background-color: rgb(243, 156, 255);
-  height: 8px;
+  /*  background-color: rgb(243, 156, 255);
+  height: 8px; */
   width: 98vw; // debe ser igual que anchoEnPantalla
   position: relative;
+
+  #fondoMontaña {
+    background-image: url('/imagenes/silueta_montaña_prueba.png');
+    left: 0;
+    top: 0;
+    background-position: bottom;
+    height: 15vw;
+    width: 99vw;
+    opacity: 0.2;
+    position: absolute;
+  }
 }
 
 #infoPunto {
