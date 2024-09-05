@@ -152,7 +152,7 @@ async function procesarLatLon(puntos: Punto[], errata: Errata[]): Promise<void> 
 
   return new Promise((resolver) => {
     flujo.on('data', async (obj) => {
-      const { id, nombre, latitud, longitud } = obj.formatted.obj;
+      const { nombre, latitud, longitud } = obj.formatted.obj;
 
       const slug = slugificar(nombre);
       const punto = puntos.find((punto) => punto.slug == slug);
@@ -163,6 +163,8 @@ async function procesarLatLon(puntos: Punto[], errata: Errata[]): Promise<void> 
       } else {
         errata.push({ fila: numeroFila, error: `No hay punto con slug: ${slug} para guardar la latitud y longitud` });
       }
+
+      numeroFila++;
     });
 
     flujo.on('close', () => {
