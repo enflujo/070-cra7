@@ -28,4 +28,11 @@ export interface Punto {
   id: string;
   nombre: string;
   slug: string;
+  habitabilidad?: number;
+  ambiente?: number;
+  infraestructura?: number;
+  movilidad?: number;
+  seguridad?: number;
 }
+
+export type LlavesDatosPunto = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad' | 'seguridad';

@@ -1,29 +1,71 @@
 import { getXlsxStream } from 'xlstream';
 import { estructuras } from './aplicacion';
-import { guardarJSON, mensajes } from './utilidades/ayudas';
+import { esNumero, guardarJSON, mensajes } from './utilidades/ayudas';
 import slugificar from 'slug';
-import { Punto } from '@/tipos/compartidos';
+import type { LlavesDatosPunto, Punto } from '@/tipos/compartidos';
+import type { Errata } from './tipos';
 
-export default async (): Promise<{ puntos: Punto[] }> => {
+export default async (): Promise<Punto[]> => {
   const { datosA } = estructuras;
   const ruta = `./datos/${datosA.archivo}.xlsx`;
   const flujo = await getXlsxStream({
     filePath: ruta,
     sheet: datosA.nombreHoja,
     withHeader: false,
-    ignoreEmpty: true,
+    ignoreEmpty: false,
   });
 
   let numeroFila = 0;
-  let primeraFilaProcesada = false;
-  const errata: { fila: number; error: string }[] = [];
 
   return new Promise((resolver) => {
-    /** Acá guardamos los nombres de los puntos */
+    const errata: Errata[] = [];
+    /** Acá guardamos los datos para cada punto */
     const puntos: Punto[] = [];
+    /** Un objeto de ayuda para guardar slugs y nombre de columna. Como los datos están por columna toca buscar datos a partir del nombre de la columna que es texto y no un número / índice */
+    const estructuraDatosColumnas: { [slug: string]: string } = {};
+    let primeraFilaProcesada = false;
+    let primeraColumnaPuntos = 0;
+
+    function procesarCeldaTipoA(llave: LlavesDatosPunto, fila: { obj: { [llave: string]: string }; arr: string[] }) {
+      for (const nombrePunto in estructuraDatosColumnas) {
+        const columna = estructuraDatosColumnas[nombrePunto];
+        const valorCrudo = fila.obj[columna];
+
+        if (valorCrudo) {
+          const partes = valorCrudo.includes('valor de ') ? valorCrudo.split('valor de ') : valorCrudo.split('valor ');
+
+          if (partes.length && partes.length === 2) {
+            const [valor] = partes[1].split(' ');
+
+            if (esNumero(valor)) {
+              const punto = puntos.find((punto) => punto.slug === nombrePunto);
+
+              if (punto) {
+                punto[llave] = +valor.replace(',', '.');
+              } else {
+                errata.push({
+                  fila: numeroFila,
+                  error: `No hay punto con slug ${nombrePunto} para guardar datos de ${llave}.`,
+                });
+              }
+            } else {
+              errata.push({
+                fila: numeroFila,
+                error: `No se puede extraer el valor de ${llave}, revisar estructura del texto: ${valorCrudo}.`,
+              });
+            }
+          }
+        } else {
+          errata.push({
+            fila: numeroFila,
+            error: `No hay valor de ${llave} para el punto ${nombrePunto}.`,
+          });
+        }
+      }
+    }
 
     flujo.on('data', async (obj) => {
-      const fila = obj.formatted.arr;
+      const fila = obj.raw.arr;
 
       if (!primeraFilaProcesada) {
         /**
@@ -34,15 +76,19 @@ export default async (): Promise<{ puntos: Punto[] }> => {
           let guardandoPuntos = false;
           let id = 0;
 
-          fila.forEach((llave: string) => {
+          fila.forEach((llave: string, i: number) => {
             const slug = slugificar(llave);
 
             if (slug === slugPrimerPunto) {
               guardandoPuntos = true;
+              primeraColumnaPuntos = i;
             }
 
             if (guardandoPuntos) {
               puntos.push({ id: `${id}`, slug, nombre: llave.trim() });
+              // Extraer el nombre de la columna para buscar valores por nombre de la columna más adelante.
+              const columna = Object.keys(obj.raw.obj).find((k) => obj.raw.obj[k] === llave) || '';
+              estructuraDatosColumnas[slug] = columna;
               id++;
             }
           });
@@ -50,7 +96,30 @@ export default async (): Promise<{ puntos: Punto[] }> => {
           primeraFilaProcesada = true;
         }
       } else {
-        console.log(fila);
+        switch (fila[1]) {
+          case 'Habitabilidad':
+            procesarCeldaTipoA('habitabilidad', obj.raw);
+            break;
+
+          case 'Ambiente':
+            procesarCeldaTipoA('ambiente', obj.raw);
+            break;
+
+          case 'Infraestructura pública y social':
+            procesarCeldaTipoA('infraestructura', obj.raw);
+            break;
+
+          case 'Movilidad':
+            procesarCeldaTipoA('movilidad', obj.raw);
+            break;
+
+          case 'Seguridad':
+            procesarCeldaTipoA('seguridad', obj.raw);
+            break;
+
+          default:
+            break;
+        }
       }
 
       numeroFila++;
@@ -59,9 +128,8 @@ export default async (): Promise<{ puntos: Punto[] }> => {
     flujo.on('close', () => {
       if (errata.length) guardarJSON(errata, 'errataDatosA');
 
-      console.log(puntos, puntos.length);
-      mensajes.exito('Datos generales A procesados');
-      resolver({ puntos });
+      mensajes.exito('Datos de Puntos procesados');
+      resolver(puntos);
     });
 
     flujo.on('error', (error) => {
