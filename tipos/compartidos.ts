@@ -28,6 +28,8 @@ export interface Punto {
   id: string;
   nombre: string;
   slug: string;
+  lat?: number;
+  lon?: number;
   habitabilidad?: number;
   ambiente?: number;
   infraestructura?: number;
@@ -36,3 +38,33 @@ export interface Punto {
 }
 
 export type LlavesDatosPunto = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad' | 'seguridad';
+
+export interface ElementosPorPunto {
+  [
+    /** indica el número de paradero en el cual se tomó la información. */
+    punto: number
+  ]: {
+    ilustraciones?: {
+      /** Ruta al archivo de la ilustración */
+      ruta: string;
+      nombre: string;
+      descripcion?: string;
+    }[];
+    /** Ruta al archivo del podcast */
+    podcast?: {
+      ruta: string;
+      nombre: string;
+      descripcion?: string;
+    }[];
+    perfiles?: {
+      ruta: string;
+      nombre: string;
+      descripcion?: string;
+    }[];
+    textos?: {
+      /** Ruta al archivo de la ilustración */
+      texto: string;
+      categoria?: string;
+    }[];
+  };
+}
