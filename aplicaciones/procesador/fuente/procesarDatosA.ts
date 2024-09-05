@@ -124,7 +124,6 @@ export default async (): Promise<Punto[]> => {
     });
 
     flujo.on('close', async () => {
-      console.log(puntos);
       await procesarLatLon(puntos, errata);
       if (errata.length) guardarJSON(errata, 'errataDatosA');
 
@@ -140,9 +139,8 @@ export default async (): Promise<Punto[]> => {
 
 // Guardar datos de lat/lon en los puntos
 async function procesarLatLon(puntos: Punto[], errata: Errata[]): Promise<void> {
-  const archivo = './datos/datos_elementos_linea.xlsx';
   const flujo = await getXlsxStream({
-    filePath: archivo,
+    filePath: './datos/Mapa 7ma - Datos.xlsx',
     sheet: 'Cuatro cuadras ',
     withHeader: true,
     ignoreEmpty: true,
