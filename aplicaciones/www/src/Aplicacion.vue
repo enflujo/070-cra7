@@ -32,7 +32,7 @@ async function cargarDatos() {
   try {
     const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
 
-    console.log(ruido);
+    // console.log(ruido);
   } catch (error) {
     console.error('Error descargando datos del ruido', error);
   }
@@ -97,7 +97,6 @@ onMounted(async () => {
         infoPunto.style.display = 'none';
       });
     }
-    //console.log(i, i + 2, `${distanciaEntreCoordenadas(puntoA[0], puntoA[1], puntoB[0], puntoB[1])}km`);
   }
 });
 
