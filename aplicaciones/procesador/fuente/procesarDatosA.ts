@@ -58,7 +58,7 @@ export default async (): Promise<Punto[]> => {
         } else {
           errata.push({
             fila: numeroFila,
-            error: `No hay valor de ${llave} para el punto ${nombrePunto}.`,
+            error: `No hay valor de ${llave} para el punto ${nombrePunto} en columna ${columna}.`,
           });
         }
       }
