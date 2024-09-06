@@ -24,7 +24,6 @@ export default async (): Promise<Punto[]> => {
     /** Un objeto de ayuda para guardar slugs y nombre de columna. Como los datos están por columna toca buscar datos a partir del nombre de la columna que es texto y no un número / índice */
     const estructuraDatosColumnas: { [slug: string]: string } = {};
     let primeraFilaProcesada = false;
-    let primeraColumnaPuntos = 0;
 
     function procesarCeldaTipoA(llave: LlavesDatosPunto, fila: { obj: { [llave: string]: string }; arr: string[] }) {
       for (const nombrePunto in estructuraDatosColumnas) {
@@ -72,7 +71,7 @@ export default async (): Promise<Punto[]> => {
          * En esta fila están los puntos como nombres de las columnas
          */
         if (numeroFila === 1) {
-          const slugPrimerPunto = slugificar('Plaza Bolivar');
+          const slugPrimerPunto = slugificar('Plaza de Bolivar');
           let guardandoPuntos = false;
           let id = 0;
 
@@ -81,7 +80,6 @@ export default async (): Promise<Punto[]> => {
 
             if (slug === slugPrimerPunto) {
               guardandoPuntos = true;
-              primeraColumnaPuntos = i;
             }
 
             if (guardandoPuntos) {
@@ -125,7 +123,8 @@ export default async (): Promise<Punto[]> => {
       numeroFila++;
     });
 
-    flujo.on('close', () => {
+    flujo.on('close', async () => {
+      await procesarLatLon(puntos, errata);
       if (errata.length) guardarJSON(errata, 'errataDatosA');
 
       mensajes.exito('Datos de Puntos procesados');
@@ -137,3 +136,37 @@ export default async (): Promise<Punto[]> => {
     });
   });
 };
+
+// Guardar datos de lat/lon en los puntos
+async function procesarLatLon(puntos: Punto[], errata: Errata[]): Promise<void> {
+  const flujo = await getXlsxStream({
+    filePath: './datos/Mapa 7ma - Datos.xlsx',
+    sheet: 'Cuatro cuadras ',
+    withHeader: true,
+    ignoreEmpty: true,
+  });
+
+  let numeroFila = 2;
+
+  return new Promise((resolver) => {
+    flujo.on('data', async (obj) => {
+      const { nombre, latitud, longitud } = obj.formatted.obj;
+
+      const slug = slugificar(nombre);
+      const punto = puntos.find((punto) => punto.slug == slug);
+
+      if (punto) {
+        punto.lat = latitud;
+        punto.lon = longitud;
+      } else {
+        errata.push({ fila: numeroFila, error: `No hay punto con slug: ${slug} para guardar la latitud y longitud` });
+      }
+
+      numeroFila++;
+    });
+
+    flujo.on('close', () => {
+      resolver();
+    });
+  });
+}
