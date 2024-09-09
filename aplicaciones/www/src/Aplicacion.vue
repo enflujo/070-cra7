@@ -6,6 +6,7 @@ import Personaje from './componentes/Personaje.vue';
 import Podcast from './componentes/Podcast.vue';
 import Relato from './componentes/Relato.vue';
 import Ilustracion from './componentes/Ilustracion.vue';
+import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
 /** Si se definen así los props desde un objeto,
  * toca usar el v-bind="" en elemento de vue para pasar los props.
@@ -48,21 +49,26 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const anchoEnPantalla: number = 98; // medida en vw
+const anchoEnPantalla: number = 97; // medida en vw
 let distanciaTotal: number = 0;
+let distanciaParcial: number = 0;
 
 onMounted(async () => {
+  // Punto por lugar
   const contenedorPuntos: HTMLElement = document.getElementById('contenedorPuntos') as HTMLElement;
   const infoPunto: HTMLElement = document.getElementById('infoPunto') as HTMLElement;
   const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
 
-  // Calcular
+  // Calcular lugar de cada punto por lugar y pintarlos
   for (let i = 0; i < puntos.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
       const punto = document.createElement('div');
+
       punto.classList.add('punto'); // No funciona y no sé por qué
       punto.style.left = `0vw`; //`${distanciaTotal}%`
+      punto.style.top = '10px';
+
       contenedorPuntos.appendChild(punto);
 
       punto.addEventListener('mouseenter', () => {
@@ -79,25 +85,25 @@ onMounted(async () => {
       const puntoA = puntos[i - 1];
       const puntoB = puntos[i];
 
-      const distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
+      const punto = document.createElement('div');
+
+      distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
       // ir calculando la distancia total sumando las parciales
       // distancia total = 24.7921;
       distanciaTotal += distanciaParcial;
 
-      const posicionPunto = escalar(distanciaTotal, 24.7921);
+      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
 
-      //console.log(escalar(distanciaParcial, 24.7921));
-
-      const punto = document.createElement('div');
       punto.classList.add('punto'); // No funciona y no sé por qué
-      punto.style.left = `${posicionPunto}vw`; //`${distanciaTotal}%`
+      punto.style.left = `${x}vw`; //`${distanciaTotal}%`
+      punto.style.top = '10px';
 
       // Agregar cada punto a la línea de la 7
       contenedorPuntos.appendChild(punto);
 
       punto.addEventListener('mouseenter', () => {
         infoPunto.innerText = `${puntoB.nombre}`;
-        infoPunto.style.left = `${posicionPunto - 1}vw`;
+        infoPunto.style.left = `${x}vw`;
         infoPunto.style.display = 'block';
       });
       punto.addEventListener('mouseleave', () => {
@@ -108,8 +114,17 @@ onMounted(async () => {
   }
 });
 
-function escalar(x: number, max: number) {
-  return (x * anchoEnPantalla) / max;
+function convertirEscala(
+  valor: number,
+  escalaBaseMin: number,
+  escalaBaseMax: number,
+  escalaDestinoMin: number,
+  escalaDestinoMax: number
+): number {
+  return (
+    ((valor - escalaBaseMin) * (escalaDestinoMax - escalaDestinoMin)) / (escalaBaseMax - escalaBaseMin) +
+    escalaDestinoMin
+  );
 }
 </script>
 
@@ -117,14 +132,16 @@ function escalar(x: number, max: number) {
   <h1>Habitabilidad en la cra 7 de Bogotá</h1>
 
   <div id="cra7">
-    <div id="fondoMontaña"></div>
-
+    <!-- <div id="fondoMontaña"></div> -->
+    <VisualizacionIndices />
     <Ilustracion v-bind="ilustracionPrueba" />
     <Personaje v-bind="personajePrueba" />
     <Podcast v-bind="podcastPrueba" />
     <Relato v-bind="relatoPrueba" />
 
-    <div id="contenedorPuntos"><div id="infoPunto"></div></div>
+    <div id="contenedorPuntos">
+      <div id="infoPunto"></div>
+    </div>
   </div>
 </template>
 
@@ -136,8 +153,8 @@ function escalar(x: number, max: number) {
 #cra7 {
   /*  background-color: rgb(243, 156, 255);
   height: 8px; */
-  width: 98vw; // debe ser igual que anchoEnPantalla
-  position: relative;
+  width: 97vw; // debe ser igual que anchoEnPantalla
+  //position: relative;
 
   #fondoMontaña {
     background-image: url('/imagenes/silueta_montaña_prueba.png');
@@ -154,15 +171,25 @@ function escalar(x: number, max: number) {
 #infoPunto {
   display: none;
   position: absolute;
-  top: 10px;
+}
+
+#infoIndice {
+  display: none;
+  position: absolute;
 }
 
 .punto {
   position: absolute;
-  background-color: black;
-  width: 8px;
-  height: 8px;
+  background-color: coral;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   cursor: pointer;
+}
+
+#contenedorPuntos {
+  height: 300px;
+  position: absolute;
+  top: 88px;
 }
 </style>
