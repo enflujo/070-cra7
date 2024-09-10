@@ -81,6 +81,25 @@ onMounted(async () => {
         infoPunto.style.display = 'none';
       });
       // Dibujar el resto de puntos
+    } else if (i === 1) {
+      const puntoA = puntos[0];
+      const puntoB = puntos[1];
+
+      const punto = document.createElement('div');
+      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
+
+      distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
+      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100);
+
+      punto.style.width = `${ancho}vw`;
+      punto.classList.add('punto'); // No funciona y no sé por qué
+      punto.style.left = `${x}vw`; //`${distanciaTotal}%`
+      punto.style.top = '10px';
+
+      distanciaTotal += distanciaParcial;
+
+      // Agregar cada punto a la línea de la 7
+      contenedorPuntos.appendChild(punto);
     } else {
       const puntoA = puntos[i - 1];
       const puntoB = puntos[i];
@@ -90,11 +109,12 @@ onMounted(async () => {
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
       // ir calculando la distancia total sumando las parciales
       // distancia total = 24.7921;
+      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
+      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100);
       distanciaTotal += distanciaParcial;
 
-      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
-
       punto.classList.add('punto'); // No funciona y no sé por qué
+      punto.style.width = `${ancho}vw`;
       punto.style.left = `${x}vw`; //`${distanciaTotal}%`
       punto.style.top = '10px';
 
@@ -180,11 +200,15 @@ function convertirEscala(
 
 .punto {
   position: absolute;
-  background-color: coral;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
+  background-color: rgba(134, 225, 241, 0.222);
+  border: rgba(10, 109, 248, 0.5) solid 1px;
+  height: 320px;
+  opacity: 0.1;
   cursor: pointer;
+  z-index: 99;
+}
+.punto:hover {
+  opacity: 0.9;
 }
 
 #contenedorPuntos {

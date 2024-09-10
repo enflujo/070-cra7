@@ -54,14 +54,14 @@ onMounted(async () => {
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
       // línea calle
-      lineaCalle.setAttribute('class', 'lineasCalle');
+      /*  lineaCalle.setAttribute('class', 'lineasCalle');
       lineaCalle.setAttribute('x1', '0');
       lineaCalle.setAttribute('y1', `${alturaContenedor - 100}`);
       lineaCalle.setAttribute('x2', '0');
       lineaCalle.setAttribute('y2', `${alturaContenedor}`);
 
       contenedorCalles.append(lineaCalle);
-
+ */
       // línea
       lineaHabitabilidad += `L 0 ${alturaContenedor - puntos[0].habitabilidad * alturaContenedor} `;
       lineaAmbiente += `L 0 ${alturaContenedor - puntos[0].ambiente * alturaContenedor} `;
@@ -99,12 +99,12 @@ onMounted(async () => {
       const yAmbiente = alturaContenedor - puntoB.ambiente * alturaContenedor;
 
       // línea calle
-      lineaCalle.setAttribute('class', 'lineasCalle');
+      /*       lineaCalle.setAttribute('class', 'lineasCalle');
       lineaCalle.setAttribute('x1', `${x}`);
       lineaCalle.setAttribute('y1', `${alturaContenedor - 50}`);
       lineaCalle.setAttribute('x2', `${x}`);
       lineaCalle.setAttribute('y2', `${alturaContenedor + 20}`);
-      contenedorCalles.append(lineaCalle);
+      contenedorCalles.append(lineaCalle); */
 
       circuloHabitabilidad.setAttribute('class', 'puntoIndicador');
       circuloHabitabilidad.setAttribute('cx', `${x}`);
