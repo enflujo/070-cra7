@@ -52,16 +52,8 @@ onMounted(async () => {
       const lineaCalle = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      const circuloInfraestructura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
-      // línea calle
-      /*  lineaCalle.setAttribute('class', 'lineasCalle');
-      lineaCalle.setAttribute('x1', '0');
-      lineaCalle.setAttribute('y1', `${alturaContenedor - 100}`);
-      lineaCalle.setAttribute('x2', '0');
-      lineaCalle.setAttribute('y2', `${alturaContenedor}`);
-
-      contenedorCalles.append(lineaCalle);
- */
       // línea
       lineaHabitabilidad += `L 0 ${alturaContenedor - puntos[0].habitabilidad * alturaContenedor} `;
       lineaAmbiente += `L 0 ${alturaContenedor - puntos[0].ambiente * alturaContenedor} `;
@@ -79,6 +71,12 @@ onMounted(async () => {
       circuloAmbiente.setAttribute('cy', `${alturaContenedor - puntos[0].habitabilidad * alturaContenedor}`);
       circulosAmbiente.append(circuloAmbiente);
 
+      // Puntos Infraestructura
+      circuloInfraestructura.setAttribute('class', 'puntoIndicador');
+      circuloInfraestructura.setAttribute('cx', '0');
+      circuloInfraestructura.setAttribute('cy', `${alturaContenedor - puntos[0].infraestructura * alturaContenedor}`);
+      circulosInfraestructura.append(circuloInfraestructura);
+
       // Dibujar el resto de puntos
     } else {
       const puntoA = puntos[i - 1];
@@ -86,6 +84,7 @@ onMounted(async () => {
 
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      const circuloInfraestructura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
       // ir calculando la distancia total sumando las parciales
@@ -105,6 +104,11 @@ onMounted(async () => {
       circuloAmbiente.setAttribute('cx', `${x}`);
       circuloAmbiente.setAttribute('cy', `${yAmbiente}`);
 
+      // Puntos Infraestructura
+      circuloInfraestructura.setAttribute('class', 'puntoIndicador');
+      circuloInfraestructura.setAttribute('cx', `${x}`);
+      circuloInfraestructura.setAttribute('cy', `${yInfraestructura}`);
+
       if (i < puntos.length - 1) {
         lineaHabitabilidad += `L ${x} ${yHabitabilidad} `;
         lineaAmbiente += `L ${x} ${yAmbiente} `;
@@ -119,7 +123,9 @@ onMounted(async () => {
       // Agregar los círculos a los grupos
       circulosHabitabilidad.append(circuloHabitabilidad);
       circulosAmbiente.append(circuloAmbiente);
+      circulosInfraestructura.append(circuloInfraestructura);
     }
+
     trazoHabitabilidad.setAttribute('d', lineaHabitabilidad);
     trazoAmbiente.setAttribute('d', lineaAmbiente);
     trazoInfraestructura.setAttribute('d', lineaInfraestructura);
