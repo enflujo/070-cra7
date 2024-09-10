@@ -84,7 +84,6 @@ onMounted(async () => {
       const puntoA = puntos[i - 1];
       const puntoB = puntos[i];
 
-      const lineaCalle = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
@@ -97,14 +96,6 @@ onMounted(async () => {
       const yInfraestructura = alturaContenedor - puntoB.infraestructura * alturaContenedor;
       const yHabitabilidad = alturaContenedor - puntoB.habitabilidad * alturaContenedor;
       const yAmbiente = alturaContenedor - puntoB.ambiente * alturaContenedor;
-
-      // línea calle
-      /*       lineaCalle.setAttribute('class', 'lineasCalle');
-      lineaCalle.setAttribute('x1', `${x}`);
-      lineaCalle.setAttribute('y1', `${alturaContenedor - 50}`);
-      lineaCalle.setAttribute('x2', `${x}`);
-      lineaCalle.setAttribute('y2', `${alturaContenedor + 20}`);
-      contenedorCalles.append(lineaCalle); */
 
       circuloHabitabilidad.setAttribute('class', 'puntoIndicador');
       circuloHabitabilidad.setAttribute('cx', `${x}`);
@@ -135,10 +126,6 @@ onMounted(async () => {
   }
 });
 
-function escalar(x: number, max: number) {
-  return (x * anchoEnPantalla) / max;
-}
-
 function convertirEscala(
   valor: number,
   escalaBaseMin: number,
@@ -166,12 +153,19 @@ function convertirEscala(
     <path id="trazoInfraestructura" class="trazo" />
     <g id="circulosInfraestructura"></g>
   </svg>
+  <div id="etiquetas">
+    <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
+    <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
+    <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
+  </div>
 </template>
 
 <style lang="scss">
+@import '../scss/constantes';
+
 #contenedorTrazos {
   width: 100vw;
-  height: 500px;
+  height: 330px;
 }
 
 #trazoHabitabilidad {
@@ -179,11 +173,32 @@ function convertirEscala(
 }
 
 #trazoAmbiente {
-  stroke: rgb(36, 243, 9);
+  stroke: var(--colorAmbiente);
+}
+
+#trazoInfraestructura {
+  stroke: rgb(5, 19, 208);
+}
+
+.etiqueta {
+  border-bottom: 2px solid;
+  width: fit-content;
+  font-size: 0.8em;
+}
+
+#etiqHabitabilidad {
+  border-color: rgb(65, 134, 56);
+}
+
+#etiqAmbiente {
+  border-color: var(--colorAmbiente);
+}
+
+#etiqInfraestructura {
+  border-color: rgb(5, 19, 208);
 }
 
 .trazo {
-  stroke: rgb(73, 73, 73);
   fill: none;
   stroke-width: 1;
   pointer-events: none;
