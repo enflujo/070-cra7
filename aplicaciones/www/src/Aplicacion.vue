@@ -34,7 +34,7 @@ const ilustracionPrueba: ElementoPaisaje = {
   nombre: 'Elemento Ilustración',
   descripcion: 'Ilustración bla bla',
   ubicacion: '3',
-  ruta: '../../estaticos/imagenes/plaza_bolivar_pr.png',
+  ruta: '/imagenes/plaza_bolivar_pr.png',
 };
 
 async function cargarDatos() {
