@@ -59,6 +59,9 @@ onMounted(async () => {
   const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
   const infoPuntoB: HTMLElement = document.getElementById('infoPuntoB') as HTMLElement;
   const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
+  const elementos = await fetch('/datos/elementos.json').then((res) => res.json());
+
+  console.log(elementos);
 
   // Calcular lugar de cada punto por lugar y pintarlos
   for (let i = 0; i < puntos.length; i++) {

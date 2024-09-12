@@ -110,7 +110,7 @@ export const estructuras: Estructuras = {
 async function inicio(): Promise<void> {
   /** RUIDO */
   const datosRuido = await procesarRuido();
-  guardarJSON(datosRuido, 'ruido');
+  // guardarJSON(datosRuido, 'ruido');
 
   /** Aire */
   const datosAire = await procesarAire();
