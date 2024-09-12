@@ -1,0 +1,13 @@
+:root {
+  /// Fuentes tipográficas hemochas
+  --fuenteParrafo: 'Inter', 'Helvetica', 'Roboto', 'Arial', 'Tahoma', 'Verdana', sans-serif;
+  --fuenteNumeros: 'IBM Plex Mono', 'Courier New', monospace;
+  --fuenteLogo: mixta-pro, 'Garamond', 'Georgia', 'Times', serif;
+
+  // Paleta
+  --colorAmbiente: #7cd11c;
+  --colorInfraestructura: rgb(5, 19, 208);
+  --colorHabitabilidad: rgb(65, 134, 56);
+  --colorMovilidad: rgb(144, 5, 208);
+  --colorSeguridad: rgb(208, 178, 5);
+}

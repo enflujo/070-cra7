@@ -5,6 +5,8 @@ import { ElementoPaisaje } from './tipos';
 import Personaje from './componentes/Personaje.vue';
 import Podcast from './componentes/Podcast.vue';
 import Relato from './componentes/Relato.vue';
+import Ilustracion from './componentes/Ilustracion.vue';
+import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
 /** Si se definen así los props desde un objeto,
  * toca usar el v-bind="" en elemento de vue para pasar los props.
@@ -28,6 +30,13 @@ const relatoPrueba: ElementoPaisaje = {
   ubicacion: '2',
 };
 
+const ilustracionPrueba: ElementoPaisaje = {
+  nombre: 'Elemento Ilustración',
+  descripcion: 'Ilustración bla bla',
+  ubicacion: '3',
+  ruta: '../../estaticos/imagenes/plaza_bolivar_pr.png',
+};
+
 async function cargarDatos() {
   try {
     const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
@@ -40,79 +49,120 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const anchoEnPantalla: number = 98; // medida en vw
+const anchoEnPantalla: number = 97; // medida en vw
 let distanciaTotal: number = 0;
+let distanciaParcial: number = 0;
 
 onMounted(async () => {
-  const cra7: HTMLElement = document.getElementById('cra7') as HTMLElement;
-  const infoPunto: HTMLElement = document.getElementById('infoPunto') as HTMLElement;
+  // Punto por lugar
+  const contenedorZonas: HTMLElement = document.getElementById('contenedorZonas') as HTMLElement;
+  const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
+  const infoPuntoB: HTMLElement = document.getElementById('infoPuntoB') as HTMLElement;
   const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
 
-  // Calcular
+  // Calcular lugar de cada punto por lugar y pintarlos
   for (let i = 0; i < puntos.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
-      const punto = document.createElement('div');
-      punto.classList.add('punto'); // No funciona y no sé por qué
-      punto.style.left = `0vw`; //`${distanciaTotal}%`
-      cra7.appendChild(punto);
-
-      punto.addEventListener('mouseenter', () => {
-        infoPunto.innerText = `${puntos[0].nombre}`;
-        infoPunto.style.left = `0vw`;
-        infoPunto.style.display = 'block';
-      });
-      punto.addEventListener('mouseleave', () => {
-        infoPunto.innerText = '';
-        infoPunto.style.display = 'none';
-      });
       // Dibujar el resto de puntos
+    } else if (i === 1) {
+      const puntoA = puntos[0];
+      const puntoB = puntos[1];
+
+      const zona = document.createElement('div');
+      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
+
+      distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
+      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100);
+
+      zona.style.width = `${ancho}vw`;
+      zona.classList.add('zona'); // No funciona y no sé por qué
+      zona.style.left = `${x}vw`; //`${distanciaTotal}%`
+      zona.style.top = '10px';
+
+      distanciaTotal += distanciaParcial;
+
+      // Agregar cada punto a la línea de la 7
+      contenedorZonas.appendChild(zona);
+      zona.addEventListener('mouseenter', () => {
+        infoPuntoA.innerText = `${puntoA.nombre}`;
+        infoPuntoA.style.left = `${x}vw`;
+        infoPuntoA.style.display = 'block';
+        infoPuntoB.innerText = `${puntoB.nombre}`;
+        infoPuntoB.style.left = `${x + ancho}vw`;
+        infoPuntoB.style.display = 'block';
+      });
+      zona.addEventListener('mouseleave', () => {
+        infoPuntoA.innerText = infoPuntoB.innerText = '';
+        infoPuntoA.style.display = infoPuntoB.style.display = 'none';
+      });
     } else {
       const puntoA = puntos[i - 1];
       const puntoB = puntos[i];
 
-      const distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
+      const zona = document.createElement('div');
+
+      distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
       // ir calculando la distancia total sumando las parciales
       // distancia total = 24.7921;
+      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
+      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100);
       distanciaTotal += distanciaParcial;
 
-      const posicionPunto = escalar(distanciaTotal, 24.7921);
-
-      //console.log(escalar(distanciaParcial, 24.7921));
-
-      const punto = document.createElement('div');
-      punto.classList.add('punto'); // No funciona y no sé por qué
-      punto.style.left = `${posicionPunto}vw`; //`${distanciaTotal}%`
+      zona.classList.add('zona'); // No funciona y no sé por qué
+      zona.style.width = `${ancho}vw`;
+      zona.style.left = `${x}vw`; //`${distanciaTotal}%`
+      zona.style.top = '10px';
 
       // Agregar cada punto a la línea de la 7
-      cra7.appendChild(punto);
+      contenedorZonas.appendChild(zona);
 
-      punto.addEventListener('mouseenter', () => {
-        infoPunto.innerText = `${puntoB.nombre}`;
-        infoPunto.style.left = `${posicionPunto - 1}vw`;
-        infoPunto.style.display = 'block';
+      zona.addEventListener('mouseenter', () => {
+        infoPuntoA.innerText = `${puntoA.nombre}`;
+        infoPuntoA.style.left = `${x - 1}vw`;
+        infoPuntoA.style.display = 'block';
+        infoPuntoB.innerText = `${puntoB.nombre}`;
+        infoPuntoB.style.left = `${x + ancho}vw`;
+        infoPuntoB.style.display = 'block';
       });
-      punto.addEventListener('mouseleave', () => {
-        infoPunto.innerText = '';
-        infoPunto.style.display = 'none';
+      zona.addEventListener('mouseleave', () => {
+        infoPuntoA.innerText = infoPuntoB.innerText = '';
+        infoPuntoA.style.display = infoPuntoB.style.display = 'none';
       });
     }
   }
 });
 
-function escalar(x: number, max: number) {
-  return (x * anchoEnPantalla) / max;
+function convertirEscala(
+  valor: number,
+  escalaBaseMin: number,
+  escalaBaseMax: number,
+  escalaDestinoMin: number,
+  escalaDestinoMax: number
+): number {
+  return (
+    ((valor - escalaBaseMin) * (escalaDestinoMax - escalaDestinoMin)) / (escalaBaseMax - escalaBaseMin) +
+    escalaDestinoMin
+  );
 }
 </script>
 
 <template>
   <h1>Habitabilidad en la cra 7 de Bogotá</h1>
+
   <div id="cra7">
-    <div id="infoPunto"></div>
+    <!-- <div id="fondoMontaña"></div> -->
+    <VisualizacionIndices />
+    <Ilustracion v-bind="ilustracionPrueba" />
+    <Personaje v-bind="personajePrueba" />
+    <Podcast v-bind="podcastPrueba" />
+    <Relato v-bind="relatoPrueba" />
+
+    <div id="contenedorZonas">
+      <div class="infoPunto" id="infoPuntoA"></div>
+      <div class="infoPunto" id="infoPuntoB"></div>
+    </div>
   </div>
-  <Personaje v-bind="personajePrueba" />
-  <Podcast v-bind="podcastPrueba" />
-  <Relato v-bind="relatoPrueba" />
 </template>
 
 <style lang="scss">
@@ -121,24 +171,48 @@ function escalar(x: number, max: number) {
 }
 
 #cra7 {
-  background-color: rgb(243, 156, 255);
-  height: 8px;
-  width: 98vw; // debe ser igual que anchoEnPantalla
-  position: relative;
+  /*  background-color: rgb(243, 156, 255);
+  height: 8px; */
+  width: 97vw; // debe ser igual que anchoEnPantalla
+  //position: relative;
+
+  #fondoMontaña {
+    background-image: url('/imagenes/silueta_montaña_prueba.png');
+    left: 0;
+    top: 0;
+    background-position: bottom;
+    height: 15vw;
+    width: 99vw;
+    opacity: 0.2;
+    position: absolute;
+  }
 }
 
-#infoPunto {
+.infoPunto {
   display: none;
   position: absolute;
-  top: 10px;
+  font-size: 0.8em;
+  text-align: center;
+  text-transform: lowercase;
+  top: 303px;
 }
 
-.punto {
+.zona {
   position: absolute;
-  background-color: black;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+  background-color: rgba(16, 255, 255, 0.222);
+  border: rgba(10, 197, 248, 0.5) solid 1px;
+  height: 292px;
+  opacity: 0.1;
   cursor: pointer;
+  z-index: 99;
+}
+.zona:hover {
+  opacity: 0.9;
+}
+
+#contenedorZonas {
+  height: 300px;
+  position: absolute;
+  top: 88px;
 }
 </style>
