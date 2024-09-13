@@ -14,7 +14,7 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const anchoEnPantalla: number = 98; // medida en vw
+const multiplicadorAncho: number = 1; // medida en vw
 const alturaContenedor: number = 310;
 
 let distanciaTotal: number = 0;
@@ -117,7 +117,7 @@ onMounted(async () => {
       // distancia total = 24.7921;
       distanciaTotal += distanciaParcial;
 
-      const x = convertirEscala(distanciaTotal, 0, 25, 0, window.innerWidth);
+      const x = convertirEscala(distanciaTotal, 0, 25, 0, window.innerWidth * multiplicadorAncho);
       const yInfraestructura = alturaContenedor - puntoB.infraestructura * alturaContenedor;
       const yHabitabilidad = alturaContenedor - puntoB.habitabilidad * alturaContenedor;
       const yAmbiente = alturaContenedor - puntoB.ambiente * alturaContenedor;
@@ -195,37 +195,45 @@ function convertirEscala(
 </script>
 
 <template>
-  <h2></h2>
-  <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
-    <g id="contenedorCalles"></g>
-    <path id="trazoHabitabilidad" class="trazo" />
-    <g id="circulosHabitabilidad"></g>
+  <div id="contenedorVis">
+    <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
+      <g id="contenedorCalles"></g>
+      <path id="trazoHabitabilidad" class="trazo" />
+      <g id="circulosHabitabilidad"></g>
 
-    <path id="trazoAmbiente" class="trazo" />
-    <g id="circulosAmbiente"></g>
+      <path id="trazoAmbiente" class="trazo" />
+      <g id="circulosAmbiente"></g>
 
-    <path id="trazoInfraestructura" class="trazo" />
-    <g id="circulosInfraestructura"></g>
+      <path id="trazoInfraestructura" class="trazo" />
+      <g id="circulosInfraestructura"></g>
 
-    <path id="trazoMovilidad" class="trazo" />
-    <g id="circulosMovilidad"></g>
+      <path id="trazoMovilidad" class="trazo" />
+      <g id="circulosMovilidad"></g>
 
-    <path id="trazoSeguridad" class="trazo" />
-    <g id="circulosSeguridad"></g>
-  </svg>
-  <div id="etiquetas">
-    <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
-    <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
-    <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
-    <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
-    <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
+      <path id="trazoSeguridad" class="trazo" />
+      <g id="circulosSeguridad"></g>
+    </svg>
+
+    <div id="etiquetas">
+      <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
+      <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
+      <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
+      <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
+      <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
 @import '../scss/constantes';
 
+#contenedorVis {
+  position: fixed;
+  top: 50px;
+}
+
 #contenedorTrazos {
+  // Ancho del contenedor
   width: 100vw;
   height: 330px;
 }

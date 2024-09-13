@@ -34,7 +34,7 @@ const ilustracionPrueba: ElementoPaisaje = {
   nombre: 'Elemento Ilustración',
   descripcion: 'Ilustración bla bla',
   ubicacion: '3',
-  ruta: '/imagenes/plaza_bolivar_pr.png',
+  ruta: '/imagenes/iglesia_san_francisco.png',
 };
 
 async function cargarDatos() {
@@ -49,19 +49,20 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const anchoEnPantalla: number = 97; // medida en vw
+const multiplicadorAncho: number = 3; // valor para multiplicar 100vw por
 let distanciaTotal: number = 0;
 let distanciaParcial: number = 0;
+
+//const ilustraciones: ElementoPaisaje[] = [];
 
 onMounted(async () => {
   // Punto por lugar
   const contenedorZonas: HTMLElement = document.getElementById('contenedorZonas') as HTMLElement;
   const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
   const infoPuntoB: HTMLElement = document.getElementById('infoPuntoB') as HTMLElement;
+  const contenedorIlustraciones = document.getElementById('ilustraciones') as HTMLDivElement;
   const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
   const elementos = await fetch('/datos/elementos.json').then((res) => res.json());
-
-  console.log(elementos);
 
   // Calcular lugar de cada punto por lugar y pintarlos
   for (let i = 0; i < puntos.length; i++) {
@@ -73,7 +74,7 @@ onMounted(async () => {
       const puntoB = puntos[1];
 
       const zona = document.createElement('div');
-      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
+      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
 
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
       const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100);
@@ -99,6 +100,18 @@ onMounted(async () => {
         infoPuntoA.innerText = infoPuntoB.innerText = '';
         infoPuntoA.style.display = infoPuntoB.style.display = 'none';
       });
+
+      // Agregar primera ilustración
+      if (elementos[i + 1].ilustraciones.length) {
+        if (elementos[i + 1].ilustraciones.length === 1) {
+          const ilustracion = document.createElement('img') as HTMLImageElement;
+          ilustracion.className = 'ilustracion';
+          ilustracion.src = `/imagenes/${elementos[i + 1].ilustraciones[0].ruta}.png`;
+          ilustracion.style.left = `${x}vw`;
+
+          contenedorIlustraciones.appendChild(ilustracion);
+        }
+      }
     } else {
       const puntoA = puntos[i - 1];
       const puntoB = puntos[i];
@@ -108,8 +121,8 @@ onMounted(async () => {
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
       // ir calculando la distancia total sumando las parciales
       // distancia total = 24.7921;
-      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
-      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100);
+      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
+      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho);
       distanciaTotal += distanciaParcial;
 
       zona.classList.add('zona'); // No funciona y no sé por qué
@@ -132,9 +145,40 @@ onMounted(async () => {
         infoPuntoA.innerText = infoPuntoB.innerText = '';
         infoPuntoA.style.display = infoPuntoB.style.display = 'none';
       });
+
+      // Agregar las demás ilustraciones
+      if (elementos[i + 1].ilustraciones.length) {
+        if (elementos[i + 1].ilustraciones.length === 1) {
+          const ilustracion = document.createElement('img') as HTMLImageElement;
+          ilustracion.className = 'ilustracion';
+          ilustracion.src = '/imagenes/iglesia_san_francisco.png'; // `/imagenes/${elementos[i + 1].ilustraciones[0].ruta}.png`;
+          ilustracion.style.left = `${x}vw`;
+
+          /*  const ilustracion: ElementoPaisaje = {
+          nombre: 'Elemento Ilustración',
+          descripcion: 'Ilustración bla bla',
+          ubicacion: `${i + 1}`,
+          ruta: `/imagenes/${elementos[i + 1].ilustraciones[0].ruta}.png`,
+        }; 
+        ilustraciones.push(ilustracion);*/
+
+          contenedorIlustraciones.appendChild(ilustracion);
+        }
+      }
     }
   }
 });
+
+/*const ilustracion = createVNode(Ilustracion, {
+  nombre: 'Elemento Ilustración',
+  descripcion: 'Ilustración bla bla',
+  ubicacion: '3',
+  ruta: '/imagenes/iglesia_san_francisco.png',
+})*/
+
+/* if (contenedorIlustraciones) {
+  contenedorIlustraciones.appendChild(ilustracion);
+} */
 
 function convertirEscala(
   valor: number,
@@ -151,12 +195,15 @@ function convertirEscala(
 </script>
 
 <template>
-  <h1>Habitabilidad en la cra 7 de Bogotá</h1>
+  <h1 id="titulo">Habitabilidad en la cra 7 de Bogotá</h1>
 
   <div id="cra7">
     <!-- <div id="fondoMontaña"></div> -->
     <VisualizacionIndices />
-    <Ilustracion v-bind="ilustracionPrueba" />
+
+    <div id="ilustraciones"></div>
+
+    <!--     <Ilustracion v-bind="ilustraciones[0]" /> -->
     <Personaje v-bind="personajePrueba" />
     <Podcast v-bind="podcastPrueba" />
     <Relato v-bind="relatoPrueba" />
@@ -169,14 +216,14 @@ function convertirEscala(
 </template>
 
 <style lang="scss">
-#main {
-  background-color: yellow;
+#titulo {
+  position: fixed;
 }
 
 #cra7 {
   /*  background-color: rgb(243, 156, 255);
   height: 8px; */
-  width: 97vw; // debe ser igual que anchoEnPantalla
+  width: 200vw; // debe ser igual que anchoEnPantalla
   //position: relative;
 
   #fondoMontaña {
@@ -189,6 +236,12 @@ function convertirEscala(
     opacity: 0.2;
     position: absolute;
   }
+}
+
+.ilustracion {
+  width: 300px;
+  position: absolute;
+  bottom: 0;
 }
 
 .infoPunto {
