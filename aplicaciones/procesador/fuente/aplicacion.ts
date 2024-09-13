@@ -94,7 +94,7 @@ async function inicio(): Promise<void> {
   const puntos = await procesarDatosA();
   guardarJSON(puntos, 'puntos');
 
-  const datosZat = await procesarZat();
+  const datosZat = await procesarZat(puntos);
 }
 
 inicio().catch(console.error);
