@@ -57,9 +57,6 @@ let distanciaParcial: number = 0;
 
 onMounted(async () => {
   // Punto por lugar
-  const contenedorZonas: HTMLElement = document.getElementById('contenedorZonas') as HTMLElement;
-  const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
-  const infoPuntoB: HTMLElement = document.getElementById('infoPuntoB') as HTMLElement;
   const contenedorIlustraciones = document.getElementById('ilustraciones') as HTMLDivElement;
   const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
   const elementos = await fetch('/datos/elementos.json').then((res) => res.json());
@@ -73,33 +70,10 @@ onMounted(async () => {
       const puntoA = puntos[0];
       const puntoB = puntos[1];
 
-      const zona = document.createElement('div');
       const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
 
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
-      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100);
-
-      zona.style.width = `${ancho}vw`;
-      zona.classList.add('zona'); // No funciona y no sé por qué
-      zona.style.left = `${x}vw`; //`${distanciaTotal}%`
-      zona.style.top = '10px';
-
       distanciaTotal += distanciaParcial;
-
-      // Agregar cada punto a la línea de la 7
-      contenedorZonas.appendChild(zona);
-      zona.addEventListener('mouseenter', () => {
-        infoPuntoA.innerText = `${puntoA.nombre}`;
-        infoPuntoA.style.left = `${x}vw`;
-        infoPuntoA.style.display = 'block';
-        infoPuntoB.innerText = `${puntoB.nombre}`;
-        infoPuntoB.style.left = `${x + ancho}vw`;
-        infoPuntoB.style.display = 'block';
-      });
-      zona.addEventListener('mouseleave', () => {
-        infoPuntoA.innerText = infoPuntoB.innerText = '';
-        infoPuntoA.style.display = infoPuntoB.style.display = 'none';
-      });
 
       // Agregar primera ilustración
       if (elementos[i + 1].ilustraciones.length) {
@@ -116,35 +90,12 @@ onMounted(async () => {
       const puntoA = puntos[i - 1];
       const puntoB = puntos[i];
 
-      const zona = document.createElement('div');
-
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
       // ir calculando la distancia total sumando las parciales
       // distancia total = 24.7921;
       const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
-      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho);
+      // const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho);
       distanciaTotal += distanciaParcial;
-
-      zona.classList.add('zona'); // No funciona y no sé por qué
-      zona.style.width = `${ancho}vw`;
-      zona.style.left = `${x}vw`; //`${distanciaTotal}%`
-      zona.style.top = '10px';
-
-      // Agregar cada punto a la línea de la 7
-      contenedorZonas.appendChild(zona);
-
-      zona.addEventListener('mouseenter', () => {
-        infoPuntoA.innerText = `${puntoA.nombre}`;
-        infoPuntoA.style.left = `${x - 1}vw`;
-        infoPuntoA.style.display = 'block';
-        infoPuntoB.innerText = `${puntoB.nombre}`;
-        infoPuntoB.style.left = `${x + ancho}vw`;
-        infoPuntoB.style.display = 'block';
-      });
-      zona.addEventListener('mouseleave', () => {
-        infoPuntoA.innerText = infoPuntoB.innerText = '';
-        infoPuntoA.style.display = infoPuntoB.style.display = 'none';
-      });
 
       // Agregar las demás ilustraciones
       if (elementos[i + 1].ilustraciones.length) {
@@ -207,11 +158,6 @@ function convertirEscala(
     <Personaje v-bind="personajePrueba" />
     <Podcast v-bind="podcastPrueba" />
     <Relato v-bind="relatoPrueba" />
-
-    <div id="contenedorZonas">
-      <div class="infoPunto" id="infoPuntoA"></div>
-      <div class="infoPunto" id="infoPuntoB"></div>
-    </div>
   </div>
 </template>
 
@@ -223,7 +169,7 @@ function convertirEscala(
 #cra7 {
   /*  background-color: rgb(243, 156, 255);
   height: 8px; */
-  width: 200vw; // debe ser igual que anchoEnPantalla
+  width: 300vw; // debe ser igual que anchoEnPantalla
   //position: relative;
 
   #fondoMontaña {
@@ -239,7 +185,7 @@ function convertirEscala(
 }
 
 .ilustracion {
-  width: 300px;
+  width: 100px;
   position: absolute;
   bottom: 0;
 }
@@ -250,25 +196,6 @@ function convertirEscala(
   font-size: 0.8em;
   text-align: center;
   text-transform: lowercase;
-  top: 303px;
-}
-
-.zona {
-  position: absolute;
-  background-color: rgba(16, 255, 255, 0.222);
-  border: rgba(10, 197, 248, 0.5) solid 1px;
-  height: 292px;
-  opacity: 0.1;
-  cursor: pointer;
-  z-index: 99;
-}
-.zona:hover {
-  opacity: 0.9;
-}
-
-#contenedorZonas {
-  height: 300px;
-  position: absolute;
-  top: 88px;
+  top: 270px;
 }
 </style>
