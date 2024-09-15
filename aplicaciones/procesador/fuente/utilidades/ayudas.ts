@@ -68,3 +68,5 @@ export const esFecha = (valor: string) => !isNaN(new Date(valor).getTime());
  * @returns {number} Número con decimales reducidos.
  */
 export const redondearDecimal = (num: number): number => +(Math.round(+(num + 'e+2')) + 'e-2');
+
+export const redondearDecimal2 = (num: number, numeroDecimales: number): number => +num.toFixed(numeroDecimales);

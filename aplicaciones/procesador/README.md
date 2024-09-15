@@ -8,12 +8,13 @@ Hay dos tipos, unos generales que se pueden observar a lo largo de la séptima c
 
 ### Generales / por índices
 
-- [x] Habitabilidad (fuente: Datos A o ZAT)
-- [x] Ambiente (fuente: Datos A o ZAT)
-- [x] Infraestructura pública y social
-- [ ] ??Caminabilidad?? (si es índice)
-- [x] Movilidad
-- [x] Seguridad
+- [x] Ambiente (fuente: ZAT)
+- [x] Habitabilidad (fuente: ZAT)
+- [x] Infraestructura pública y social (fuente: ZAT)
+- [x] Movilidad (fuente: ZAT)
+- [x] Proximidad (fuente: ZAT)
+- [ ] Caminabilidad
+- [x] Seguridad (fuente: Datos A)
 - [ ] PD
 - [ ] Salud
 
@@ -52,4 +53,6 @@ Exporta `puntos.json`
 
 ### ZAT
 
-...
+Archivo: **Calles ZAT 7ma v3.xlsx**
+
+Exporta `puntos.json`

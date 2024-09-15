@@ -2,8 +2,16 @@ import procesarDatosA from './procesarDatosA';
 import procesarRuido from './procesarRuido';
 import procesarZat from './procesarZat';
 import { guardarJSON } from './utilidades/ayudas';
-
-export const estructuras = {
+interface BaseEstructura {
+  archivo: string;
+  nombreHoja: string;
+}
+interface Estructuras {
+  datosA: BaseEstructura;
+  zat: BaseEstructura & { llaves: string[]; tramos: { [nombre: string]: number[] } };
+  ruido: BaseEstructura & { llaves: string[] };
+}
+export const estructuras: Estructuras = {
   /** Esta tabla nos define:
    * - Los nombres y slugs de los puntos */
   datosA: {
@@ -30,7 +38,7 @@ export const estructuras = {
       'Calle 19': [456, 455, 354, 993],
       'Calle 26': [354, 993, 352],
       'Calle 32': [345, 351],
-      'Calle 37': [342, 343],
+      'Calle 36': [342, 343],
       'Diagonal 40A': [342, 343, 271, 277],
       'Calle 45': [271, 277, 272, 726],
       'Calle 53': [272, 276, 273, 275],
@@ -92,9 +100,8 @@ async function inicio(): Promise<void> {
   guardarJSON(datosRuido, 'ruido');
 
   const puntos = await procesarDatosA();
+  await procesarZat(puntos);
   guardarJSON(puntos, 'puntos');
-
-  const datosZat = await procesarZat(puntos);
 }
 
 inicio().catch(console.error);

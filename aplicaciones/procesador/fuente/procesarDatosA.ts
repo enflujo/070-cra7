@@ -87,13 +87,6 @@ export default async (): Promise<Punto[]> => {
                 id: `${id}`,
                 slug,
                 nombre: llave.trim(),
-                zats: {
-                  movilidad: { valores: [], calculo: 0 },
-                  ambiente: { valores: [], calculo: 0 },
-                  infraestructura: { valores: [], calculo: 0 },
-                  habitabilidad: { valores: [], calculo: 0 },
-                  proximidad: { valores: [], calculo: 0 },
-                },
               });
               // Extraer el nombre de la columna para buscar valores por nombre de la columna más adelante.
               const columna = Object.keys(obj.raw.obj).find((k) => obj.raw.obj[k] === llave) || '';
@@ -106,21 +99,21 @@ export default async (): Promise<Punto[]> => {
         }
       } else {
         switch (fila[1]) {
-          case 'Habitabilidad':
-            procesarCeldaTipoA('habitabilidad', obj.raw);
-            break;
+          // case 'Habitabilidad':
+          //   procesarCeldaTipoA('habitabilidad', obj.raw);
+          //   break;
 
-          case 'Ambiente':
-            procesarCeldaTipoA('ambiente', obj.raw);
-            break;
+          // case 'Ambiente':
+          //   procesarCeldaTipoA('ambiente', obj.raw);
+          //   break;
 
-          case 'Infraestructura pública y social':
-            procesarCeldaTipoA('infraestructura', obj.raw);
-            break;
+          // case 'Infraestructura pública y social':
+          //   procesarCeldaTipoA('infraestructura', obj.raw);
+          //   break;
 
-          case 'Movilidad':
-            procesarCeldaTipoA('movilidad', obj.raw);
-            break;
+          // case 'Movilidad':
+          //   procesarCeldaTipoA('movilidad', obj.raw);
+          //   break;
 
           case 'Seguridad':
             procesarCeldaTipoA('seguridad', obj.raw);

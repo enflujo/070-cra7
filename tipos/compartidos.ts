@@ -24,8 +24,6 @@ export interface DatosRuido {
   };
 }
 
-type Zat = { valores: number[]; calculo: number };
-
 export interface Punto {
   id: string;
   nombre: string;
@@ -37,16 +35,18 @@ export interface Punto {
   infraestructura?: number;
   movilidad?: number;
   seguridad?: number;
-  zats: {
-    movilidad: Zat;
-    ambiente: Zat;
-    infraestructura: Zat;
-    habitabilidad: Zat;
-    proximidad: Zat;
-  };
+  proximidad?: number;
 }
 
-export type LlavesDatosPunto = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad' | 'seguridad';
+export type LlavesDatosPunto =
+  | 'habitabilidad'
+  | 'ambiente'
+  | 'infraestructura'
+  | 'movilidad'
+  | 'seguridad'
+  | 'proximidad';
+
+export type LlavesZats = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad' | 'proximidad';
 
 export interface ElementosPorPunto {
   [
