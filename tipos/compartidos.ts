@@ -36,6 +36,7 @@ export interface Punto {
   movilidad?: number;
   seguridad?: number;
   proximidad?: number;
+  caminabilidad?: number;
   idRuido?: string;
   ilustraciones?: string[];
 }
@@ -46,7 +47,8 @@ export type LlavesDatosPunto =
   | 'infraestructura'
   | 'movilidad'
   | 'seguridad'
-  | 'proximidad';
+  | 'proximidad'
+  | 'caminabilidad';
 
 export type LlavesZats = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad' | 'proximidad';
 

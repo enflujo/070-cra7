@@ -31,27 +31,42 @@ export default async (): Promise<Punto[]> => {
         const valorCrudo = fila.obj[columna];
 
         if (valorCrudo) {
-          const partes = valorCrudo.includes('valor de ') ? valorCrudo.split('valor de ') : valorCrudo.split('valor ');
+          if (esNumero(valorCrudo)) {
+            const punto = puntos.find((punto) => punto.slug === nombrePunto);
 
-          if (partes.length && partes.length === 2) {
-            const [valor] = partes[1].split(' ');
-
-            if (esNumero(valor)) {
-              const punto = puntos.find((punto) => punto.slug === nombrePunto);
-
-              if (punto) {
-                punto[llave] = +valor.replace(',', '.');
-              } else {
-                errata.push({
-                  fila: numeroFila,
-                  error: `No hay punto con slug ${nombrePunto} para guardar datos de ${llave}.`,
-                });
-              }
+            if (punto) {
+              punto[llave] = +valorCrudo;
             } else {
               errata.push({
                 fila: numeroFila,
-                error: `No se puede extraer el valor de ${llave}, revisar estructura del texto: ${valorCrudo}.`,
+                error: `No hay punto con slug ${nombrePunto} para guardar datos de ${llave}.`,
               });
+            }
+          } else {
+            const partes = valorCrudo.includes('valor de ')
+              ? valorCrudo.split('valor de ')
+              : valorCrudo.split('valor ');
+
+            if (partes.length && partes.length === 2) {
+              const [valor] = partes[1].split(' ');
+
+              if (esNumero(valor)) {
+                const punto = puntos.find((punto) => punto.slug === nombrePunto);
+
+                if (punto) {
+                  punto[llave] = +valor.replace(',', '.');
+                } else {
+                  errata.push({
+                    fila: numeroFila,
+                    error: `No hay punto con slug ${nombrePunto} para guardar datos de ${llave}.`,
+                  });
+                }
+              } else {
+                errata.push({
+                  fila: numeroFila,
+                  error: `No se puede extraer el valor de ${llave}, revisar estructura del texto: ${valorCrudo}.`,
+                });
+              }
             }
           }
         } else {
@@ -117,6 +132,10 @@ export default async (): Promise<Punto[]> => {
 
           case 'Seguridad':
             procesarCeldaTipoA('seguridad', obj.raw);
+            break;
+
+          case 'Caminabilidad':
+            procesarCeldaTipoA('caminabilidad', obj.raw);
             break;
 
           default:

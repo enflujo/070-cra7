@@ -13,7 +13,7 @@ Hay dos tipos, unos generales que se pueden observar a lo largo de la séptima c
 - [x] Infraestructura pública y social (fuente: ZAT)
 - [x] Movilidad (fuente: ZAT)
 - [x] Proximidad (fuente: ZAT)
-- [ ] Caminabilidad
+- [x] Caminabilidad
 - [x] Seguridad (fuente: Datos A)
 - [ ] PD
 - [ ] Salud
