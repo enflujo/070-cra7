@@ -1,4 +1,5 @@
 import procesarDatosA from './procesarDatosA';
+import procesarElementosLinea from './procesarElementosLinea';
 import procesarRuido from './procesarRuido';
 import procesarZat from './procesarZat';
 import { guardarJSON } from './utilidades/ayudas';
@@ -9,6 +10,7 @@ interface BaseEstructura {
 interface Estructuras {
   datosA: BaseEstructura;
   zat: BaseEstructura & { llaves: string[]; tramos: { [nombre: string]: number[] } };
+  linea: BaseEstructura;
   ruido: BaseEstructura & { llaves: string[] };
 }
 export const estructuras: Estructuras = {
@@ -18,6 +20,7 @@ export const estructuras: Estructuras = {
     archivo: 'Mapa 7ma - Datos CEPER puntos primera capa',
     nombreHoja: 'Sheet1',
   },
+  /** En los ZAT se extraen índices de: ambiente, habitabilidad, infraestructura, movilidad y proximidad */
   zat: {
     archivo: 'Calles ZAT 7ma v3',
     nombreHoja: 'Hoja1',
@@ -76,6 +79,10 @@ export const estructuras: Estructuras = {
       'Calle 220': [1071],
     },
   },
+  linea: {
+    archivo: 'Mapa 7ma - Datos',
+    nombreHoja: 'Cuatro cuadras',
+  },
   ruido: {
     archivo: 'Ruido_10 sec',
     nombreHoja: 'Sheet1',
@@ -101,6 +108,7 @@ async function inicio(): Promise<void> {
 
   const puntos = await procesarDatosA();
   await procesarZat(puntos);
+  await procesarElementosLinea(puntos);
   guardarJSON(puntos, 'puntos');
 }
 

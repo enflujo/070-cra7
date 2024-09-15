@@ -36,6 +36,8 @@ export interface Punto {
   movilidad?: number;
   seguridad?: number;
   proximidad?: number;
+  idRuido?: string;
+  ilustraciones?: string[];
 }
 
 export type LlavesDatosPunto =

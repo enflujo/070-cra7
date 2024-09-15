@@ -1,15 +1,17 @@
 import { getXlsxStream } from 'xlstream';
 import { estructuras } from './aplicacion';
-import { guardarJSON, mensajes } from './utilidades/ayudas';
 import slugificar from 'slug';
-import { ElementosPorPunto } from '@/tipos/compartidos';
+import type { ElementosPorPunto, Punto } from '@/tipos/compartidos';
+import type { Errata } from './tipos';
+import { esNumero, mensajes } from './utilidades/ayudas';
 
-export default async (): Promise<{ puntos: string[] }> => {
-  const ruta = `./datos/datos_elementos_linea.xlsx`;
+export default async (puntos: Punto[]): Promise<Punto[]> => {
+  const { linea } = estructuras;
+  const ruta = `./datos/${linea.archivo}.xlsx`;
   const flujo = await getXlsxStream({
     filePath: ruta,
-    sheet: 'cuatro Cuadras',
-    withHeader: false,
+    sheet: linea.nombreHoja,
+    withHeader: true,
     ignoreEmpty: true,
   });
 
@@ -17,6 +19,7 @@ export default async (): Promise<{ puntos: string[] }> => {
   let primeraFilaProcesada = false;
 
   return new Promise((resolver) => {
+    const errata: Errata[] = [];
     const elementosProcesados: ElementosPorPunto = {};
 
     flujo.on('data', async (obj) => {
@@ -25,33 +28,69 @@ export default async (): Promise<{ puntos: string[] }> => {
         primeraFilaProcesada = true;
       }
 
-      const fila = obj.formatted.arr;
-      const id = fila[0];
-      const ilustraciones = obj[16];
-      const podcasts = obj[14];
-      const perfiles = obj[15];
-      const textos = obj[16];
+      const { nombre, latitud, longitud, puntoRuido, ilustracion } = obj.formatted.obj;
 
-      let filaProcesada: ElementosPorPunto = {};
-      const ilustracionesProcesadas = ilustraciones.split(';').map((ilustracion: string) => {
-        return { ruta: ilustracion, nombre: ilustracion };
-      });
-      const podcastsProcesados = podcasts.split(';').map((podcast: string) => {
-        return { ruta: podcast, nombre: podcast };
-      });
-      const perfilesProcesados = perfiles.split(';').map((perfil: string) => {
-        return { ruta: perfil, nombre: perfil };
-      });
-      const textosProcesados = textos.split(';').map((texto: string) => {
-        return { texto: texto, categoria: texto };
-      });
+      const slug = slugificar(nombre);
+      const punto = puntos.find((punto) => punto.slug == slug);
 
-      elementosProcesados[id] = {
-        ilustraciones: ilustracionesProcesadas,
-        podcast: podcastsProcesados,
-        perfiles: perfilesProcesados,
-        textos: textosProcesados,
-      };
+      if (punto) {
+        /** Registrar ID de ruido para los puntos que tienen datos. Campo relacional con ruido.json */
+        if (puntoRuido && esNumero(puntoRuido)) {
+          punto.idRuido = `${puntoRuido}`;
+        }
+
+        /** Referencia a las ilustraciones que van en los puntos que tienen una. */
+        if (ilustracion) {
+          const nombres = ilustracion.split(';');
+
+          if (nombres.length) {
+            punto.ilustraciones = nombres;
+          } else {
+            errata.push({ fila: numeroFila, error: `Problema con los nombres de ilustraciones, revisar esta celda` });
+          }
+        }
+
+        /** Coordenadas de los puntos */
+        if (latitud && longitud && esNumero(latitud) && esNumero(longitud)) {
+          punto.lat = latitud;
+          punto.lon = longitud;
+        } else {
+          errata.push({
+            fila: numeroFila,
+            error: `Problema con los valores de coordenadas, puede ser que no hay o no son números.`,
+          });
+        }
+      } else {
+        errata.push({ fila: numeroFila, error: `No hay punto con slug: ${slug} para guardar datos` });
+      }
+
+      // const fila = obj.formatted.arr;
+      // const id = fila[0];
+      // const ilustraciones = obj[16];
+      // const podcasts = obj[14];
+      // const perfiles = obj[15];
+      // const textos = obj[16];
+
+      // let filaProcesada: ElementosPorPunto = {};
+      // const ilustracionesProcesadas = ilustraciones.split(';').map((ilustracion: string) => {
+      //   return { ruta: ilustracion, nombre: ilustracion };
+      // });
+      // const podcastsProcesados = podcasts.split(';').map((podcast: string) => {
+      //   return { ruta: podcast, nombre: podcast };
+      // });
+      // const perfilesProcesados = perfiles.split(';').map((perfil: string) => {
+      //   return { ruta: perfil, nombre: perfil };
+      // });
+      // const textosProcesados = textos.split(';').map((texto: string) => {
+      //   return { texto: texto, categoria: texto };
+      // });
+
+      // elementosProcesados[id] = {
+      //   ilustraciones: ilustracionesProcesadas,
+      //   podcast: podcastsProcesados,
+      //   perfiles: perfilesProcesados,
+      //   textos: textosProcesados,
+      // };
 
       numeroFila++;
     });
@@ -70,8 +109,10 @@ export default async (): Promise<{ puntos: string[] }> => {
         ruidoProcesados[idPunto].promedio[0] = redondearDecimal(suma / ruidoProcesados[idPunto].promedio[2]);
       }
 
-      mensajes.exito(`Datos de medios procesados`);
+      // mensajes.exito(`Datos de medios procesados`);
       resolver(ruidoProcesados); */
+      mensajes.exito('Datos de Linea procesados');
+      resolver(puntos);
     });
 
     flujo.on('error', (error) => {
