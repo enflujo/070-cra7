@@ -103,7 +103,18 @@ export default async (puntos: Punto[], aire: Aire): Promise<Punto[]> => {
     });
 
     flujo.on('close', () => {
-      // if (errataRuido.length) guardarJSON(errataRuido, 'errataRuido');
+      /*  if (errataRuido.length) guardarJSON(errataRuido, 'errataRuido');
+
+      for (const idPunto in ruidoProcesados) {
+        ruidoProcesados[idPunto].promedio[2] = ruidoProcesados[idPunto].mediciones.length;
+
+        const suma = ruidoProcesados[idPunto].mediciones.reduce((acumulado, actual) => {
+          return actual[1] ? acumulado + actual[1] : acumulado;
+        }, 0);
+
+        ruidoProcesados[idPunto].promedio[1] = redondearDecimal(suma);
+        ruidoProcesados[idPunto].promedio[0] = redondearDecimal(suma / ruidoProcesados[idPunto].promedio[2]);
+      }
 
       // mensajes.exito(`Datos de medios procesados`);
       resolver(ruidoProcesados); */
