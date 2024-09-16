@@ -14,7 +14,7 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const anchoEnPantalla: number = 98; // medida en vw
+const multiplicadorAncho: number = 1; // medida en vw
 const alturaContenedor: number = 310;
 
 let distanciaTotal: number = 0;
@@ -26,6 +26,10 @@ let lineaMovilidad: string = `M 0 ${alturaContenedor}`;
 let lineaSeguridad: string = `M 0 ${alturaContenedor}`;
 
 onMounted(async () => {
+  const contenedorZonas: HTMLElement = document.getElementById('contenedorZonas') as HTMLElement;
+  const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
+  const infoPuntoB: HTMLElement = document.getElementById('infoPuntoB') as HTMLElement;
+
   // Cargar datos
   const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
 
@@ -57,7 +61,6 @@ onMounted(async () => {
   for (let i = 0; i < puntos.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
-      const lineaCalle = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloInfraestructura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -106,6 +109,8 @@ onMounted(async () => {
       const puntoA = puntos[i - 1];
       const puntoB = puntos[i];
 
+      const zona = document.createElement('div');
+
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloInfraestructura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -113,10 +118,10 @@ onMounted(async () => {
       const circuloSeguridad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
-      // ir calculando la distancia total sumando las parciales
-      // distancia total = 24.7921;
-      distanciaTotal += distanciaParcial;
 
+      const xZona = convertirEscala(distanciaTotal, 0, 25, 0, 100);
+      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100);
+      distanciaTotal += distanciaParcial;
       const x = convertirEscala(distanciaTotal, 0, 25, 0, window.innerWidth);
       const yInfraestructura = alturaContenedor - puntoB.infraestructura * alturaContenedor;
       const yHabitabilidad = alturaContenedor - puntoB.habitabilidad * alturaContenedor;
@@ -148,6 +153,29 @@ onMounted(async () => {
       circuloSeguridad.setAttribute('class', 'puntoIndicador');
       circuloSeguridad.setAttribute('cx', `${x}`);
       circuloSeguridad.setAttribute('cy', `${ySeguridad}`);
+
+      console.log(x);
+
+      zona.classList.add('zona');
+      zona.style.width = `${ancho}vw`;
+      zona.style.left = `${xZona}vw`; //`${distanciaTotal}%`
+      zona.style.top = '10px';
+
+      // Agregar cada punto a la línea de la 7
+      contenedorZonas.appendChild(zona);
+
+      zona.addEventListener('mouseenter', () => {
+        infoPuntoA.innerText = `${puntoA.nombre}`;
+        infoPuntoA.style.left = `${xZona - 1}vw`;
+        infoPuntoA.style.display = 'block';
+        infoPuntoB.innerText = `${puntoB.nombre}`;
+        infoPuntoB.style.left = `${xZona + ancho}vw`;
+        infoPuntoB.style.display = 'block';
+      });
+      zona.addEventListener('mouseleave', () => {
+        infoPuntoA.innerText = infoPuntoB.innerText = '';
+        infoPuntoA.style.display = infoPuntoB.style.display = 'none';
+      });
 
       if (i < puntos.length - 1) {
         lineaHabitabilidad += `L ${x} ${yHabitabilidad} `;
@@ -195,37 +223,49 @@ function convertirEscala(
 </script>
 
 <template>
-  <h2></h2>
-  <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
-    <g id="contenedorCalles"></g>
-    <path id="trazoHabitabilidad" class="trazo" />
-    <g id="circulosHabitabilidad"></g>
+  <div id="contenedorVis">
+    <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
+      <path id="trazoHabitabilidad" class="trazo" />
+      <g id="circulosHabitabilidad"></g>
 
-    <path id="trazoAmbiente" class="trazo" />
-    <g id="circulosAmbiente"></g>
+      <path id="trazoAmbiente" class="trazo" />
+      <g id="circulosAmbiente"></g>
 
-    <path id="trazoInfraestructura" class="trazo" />
-    <g id="circulosInfraestructura"></g>
+      <path id="trazoInfraestructura" class="trazo" />
+      <g id="circulosInfraestructura"></g>
 
-    <path id="trazoMovilidad" class="trazo" />
-    <g id="circulosMovilidad"></g>
+      <path id="trazoMovilidad" class="trazo" />
+      <g id="circulosMovilidad"></g>
 
-    <path id="trazoSeguridad" class="trazo" />
-    <g id="circulosSeguridad"></g>
-  </svg>
-  <div id="etiquetas">
-    <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
-    <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
-    <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
-    <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
-    <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
+      <path id="trazoSeguridad" class="trazo" />
+      <g id="circulosSeguridad"></g>
+    </svg>
+
+    <div id="contenedorZonas">
+      <div class="infoPunto" id="infoPuntoA"></div>
+      <div class="infoPunto" id="infoPuntoB"></div>
+    </div>
+
+    <div id="etiquetas">
+      <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
+      <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
+      <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
+      <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
+      <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
 @import '../scss/constantes';
 
+#contenedorVis {
+  position: fixed;
+  top: 50px;
+}
+
 #contenedorTrazos {
+  // Ancho del contenedor
   width: 100vw;
   height: 330px;
 }
@@ -250,10 +290,15 @@ function convertirEscala(
   stroke: var(--colorSeguridad);
 }
 
+#etiquetas {
+  display: flex;
+}
+
 .etiqueta {
   border-bottom: 2px solid;
   width: fit-content;
   font-size: 0.8em;
+  margin: 0 1em;
 }
 
 #etiqHabitabilidad {
@@ -296,5 +341,25 @@ function convertirEscala(
   stroke: none;
   fill: black;
   font-size: 15px;
+}
+
+.zona {
+  position: absolute;
+  top: 0;
+  background-color: rgba(16, 255, 255, 0.222);
+  border: rgba(10, 197, 248, 0.5) solid 1px;
+  height: 200px;
+  opacity: 0.1;
+  cursor: pointer;
+  z-index: 99;
+}
+.zona:hover {
+  opacity: 0.9;
+}
+
+#contenedorZonas {
+  height: 310px;
+  position: absolute;
+  top: 88px;
 }
 </style>
