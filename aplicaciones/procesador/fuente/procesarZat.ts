@@ -104,7 +104,7 @@ export default async (puntos: Punto[]): Promise<Punto[]> => {
         }
       }
 
-      mensajes.exito('Datos ZAT procesados');
+      mensajes.exito('Datos de ZAT procesados');
       resolver(puntos);
     });
 

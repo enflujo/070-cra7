@@ -116,7 +116,7 @@ export default async function procesarAire(): Promise<Aire> {
     });
 
     flujo.on('close', () => {
-      if (errata.length) guardarJSON(errata, 'errataAmbiente');
+      if (errata.length) guardarJSON(errata, 'errataAire');
 
       for (const nombrePunto in datos) {
         let sumaPm25 = 0;
@@ -150,7 +150,7 @@ export default async function procesarAire(): Promise<Aire> {
         datos[nombrePunto].promedios.npNs = redondearDecimal(sumaNpNs / totalMedicionesNpNs);
       }
 
-      mensajes.exito(`Datos de Ambiente procesados`);
+      mensajes.exito(`Datos de Aire procesados`);
       resolver(datos);
     });
 
