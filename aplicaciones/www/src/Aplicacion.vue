@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas } from './utilidades/ayudas';
 import { ElementoPaisaje } from './tipos';
 import Personaje from './componentes/Personaje.vue';
 import Podcast from './componentes/Podcast.vue';
 import Relato from './componentes/Relato.vue';
-import Ilustracion from './componentes/Ilustracion.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
+import { Punto } from '@/tipos/compartidos';
+
+const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
 
 /** Si se definen así los props desde un objeto,
  * toca usar el v-bind="" en elemento de vue para pasar los props.
@@ -30,13 +33,6 @@ const relatoPrueba: ElementoPaisaje = {
   ubicacion: '2',
 };
 
-const ilustracionPrueba: ElementoPaisaje = {
-  nombre: 'Elemento Ilustración',
-  descripcion: 'Ilustración bla bla',
-  ubicacion: '3',
-  ruta: '/imagenes/iglesia_san_francisco.png',
-};
-
 async function cargarDatos() {
   try {
     const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
@@ -51,69 +47,30 @@ cargarDatos().catch(console.error);
 
 const multiplicadorAncho: number = 3; // valor para multiplicar 100vw por
 let distanciaTotal: number = 0;
-let distanciaParcial: number = 0;
-
-//const ilustraciones: ElementoPaisaje[] = [];
 
 onMounted(async () => {
   // Punto por lugar
-  const contenedorIlustraciones = document.getElementById('ilustraciones') as HTMLDivElement;
-  const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
-  const elementos = await fetch('/datos/elementos.json').then((res) => res.json());
+  const puntos = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
 
   // Calcular lugar de cada punto por lugar y pintarlos
   for (let i = 0; i < puntos.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
       // Dibujar el resto de puntos
-    } else if (i === 1) {
-      const puntoA = puntos[0];
-      const puntoB = puntos[1];
-
-      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
-
-      distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
-      distanciaTotal += distanciaParcial;
-
-      // Agregar primera ilustración
-      if (elementos[i + 1].ilustraciones.length) {
-        if (elementos[i + 1].ilustraciones.length === 1) {
-          const ilustracion = document.createElement('img') as HTMLImageElement;
-          ilustracion.className = 'ilustracion';
-          ilustracion.src = `/imagenes/${elementos[i + 1].ilustraciones[0].ruta}.png`;
-          ilustracion.style.left = `${x}vw`;
-
-          contenedorIlustraciones.appendChild(ilustracion);
-        }
-      }
     } else {
       const puntoA = puntos[i - 1];
       const puntoB = puntos[i];
 
-      distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
-      // ir calculando la distancia total sumando las parciales
-      // distancia total = 24.7921;
-      const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
-      // const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho);
-      distanciaTotal += distanciaParcial;
+      if (puntoA.lat && puntoA.lon && puntoB.lat && puntoB.lon) {
+        const distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
+        // ir calculando la distancia total sumando las parciales
+        // distancia total = 24.7921;
+        const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
+        // const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho);
+        distanciaTotal += distanciaParcial;
 
-      // Agregar las demás ilustraciones
-      if (elementos[i + 1].ilustraciones.length) {
-        if (elementos[i + 1].ilustraciones.length === 1) {
-          const ilustracion = document.createElement('img') as HTMLImageElement;
-          ilustracion.className = 'ilustracion';
-          ilustracion.src = '/imagenes/iglesia_san_francisco.png'; // `/imagenes/${elementos[i + 1].ilustraciones[0].ruta}.png`;
-          ilustracion.style.left = `${x}vw`;
-
-          /*  const ilustracion: ElementoPaisaje = {
-          nombre: 'Elemento Ilustración',
-          descripcion: 'Ilustración bla bla',
-          ubicacion: `${i + 1}`,
-          ruta: `/imagenes/${elementos[i + 1].ilustraciones[0].ruta}.png`,
-        }; 
-        ilustraciones.push(ilustracion);*/
-
-          contenedorIlustraciones.appendChild(ilustracion);
+        if (puntoB.ilustraciones) {
+          ilustraciones.value.push({ nombre: 'iglesia_san_francisco', x });
         }
       }
     }
@@ -152,7 +109,16 @@ function convertirEscala(
     <!-- <div id="fondoMontaña"></div> -->
     <VisualizacionIndices />
 
-    <div id="ilustraciones"></div>
+    <div id="ilustraciones">
+      <img
+        class="ilustracion"
+        v-for="ilustracion in ilustraciones"
+        :key="ilustracion.nombre"
+        :src="`/imagenes/${ilustracion.nombre}.png`"
+        alt=""
+        :style="`left:${ilustracion.x}vw`"
+      />
+    </div>
 
     <!--     <Ilustracion v-bind="ilustraciones[0]" /> -->
     <Personaje v-bind="personajePrueba" />
