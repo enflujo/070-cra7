@@ -1,11 +1,11 @@
 import { getXlsxStream } from 'xlstream';
 import { estructuras } from './aplicacion';
 import slugificar from 'slug';
-import type { ElementosPorPunto, Punto } from '@/tipos/compartidos';
+import type { Aire, Punto } from '@/tipos/compartidos';
 import type { Errata } from './tipos';
 import { esNumero, mensajes } from './utilidades/ayudas';
 
-export default async (puntos: Punto[]): Promise<Punto[]> => {
+export default async (puntos: Punto[], aire: Aire): Promise<Punto[]> => {
   const { linea } = estructuras;
   const ruta = `./datos/${linea.archivo}.xlsx`;
   const flujo = await getXlsxStream({
@@ -20,7 +20,6 @@ export default async (puntos: Punto[]): Promise<Punto[]> => {
 
   return new Promise((resolver) => {
     const errata: Errata[] = [];
-    const elementosProcesados: ElementosPorPunto = {};
 
     flujo.on('data', async (obj) => {
       if (!primeraFilaProcesada) {
@@ -28,7 +27,7 @@ export default async (puntos: Punto[]): Promise<Punto[]> => {
         primeraFilaProcesada = true;
       }
 
-      const { nombre, latitud, longitud, puntoRuido, ilustracion } = obj.formatted.obj;
+      const { nombre, latitud, longitud, puntoRuido, ilustracion, idAire } = obj.formatted.obj;
 
       const slug = slugificar(nombre);
       const punto = puntos.find((punto) => punto.slug == slug);
@@ -47,6 +46,14 @@ export default async (puntos: Punto[]): Promise<Punto[]> => {
             punto.ilustraciones = nombres;
           } else {
             errata.push({ fila: numeroFila, error: `Problema con los nombres de ilustraciones, revisar esta celda` });
+          }
+        }
+
+        if (idAire) {
+          if (aire[idAire]) {
+            punto.idAire = idAire;
+          } else {
+            errata.push({ fila: numeroFila, error: `El punto ${idAire} no existe en los datos de aire` });
           }
         }
 

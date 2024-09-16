@@ -57,6 +57,12 @@ Archivo: **Calles ZAT 7ma v3.xlsx**
 
 Exporta `puntos.json`
 
+### Aire
+
+Archivo: **Puntos Fijos_5 min.xlsx**
+
+Exporta `aire.json`
+
 ## Habitabilidad y sus dominios
 
 ### Calles ZAT 7ma

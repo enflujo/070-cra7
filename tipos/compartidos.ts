@@ -1,10 +1,12 @@
+export type Medicion = number | null;
+
 export type Ruido = [
   /** fecha y hora de la medición de niveles de ruido. */
-  hora: number | null,
+  hora: Medicion,
   /** Leq-1: contiene los niveles intermedios de ruido en esos 10 segundos de medición. Con este dato la experta menciona se puede comparar con la normativa de un máximo de 80db. En promedio se observó que los niveles de ruido son cercanos a 80db pero no superaron la normativa nacional.  */
-  leq1: number | null,
+  leq1: Medicion,
   /** Lmax: contiene los niveles máximos de ruido captados en esos 10 segundos de medición. */
-  lmax1: number | null,
+  lmax1: Medicion,
 ];
 
 export interface DatosRuido {
@@ -38,6 +40,7 @@ export interface Punto {
   proximidad?: number;
   caminabilidad?: number;
   idRuido?: string;
+  idAire?: string;
   ilustraciones?: string[];
 }
 
@@ -52,32 +55,15 @@ export type LlavesDatosPunto =
 
 export type LlavesZats = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad' | 'proximidad';
 
-export interface ElementosPorPunto {
-  [
-    /** indica el número de paradero en el cual se tomó la información. */
-    punto: number
-  ]: {
-    ilustraciones?: {
-      /** Ruta al archivo de la ilustración */
-      ruta: string;
-      nombre: string;
-      descripcion?: string;
-    }[];
-    /** Ruta al archivo del podcast */
-    podcast?: {
-      ruta: string;
-      nombre: string;
-      descripcion?: string;
-    }[];
-    perfiles?: {
-      ruta: string;
-      nombre: string;
-      descripcion?: string;
-    }[];
-    textos?: {
-      /** Ruta al archivo de la ilustración */
-      texto: string;
-      categoria?: string;
-    }[];
+export type LlavesAire = 'pm25' | 'ebc' | 'npNs';
+
+export type ValoresMedicionAire = [pm25: Medicion, ebc: Medicion, npNs: Medicion];
+
+export type MedicionAire = [fecha: string, ValoresMedicionAire];
+
+export interface Aire {
+  [nombre: string]: {
+    promedios: { [llave in LlavesAire]: number };
+    mediciones: MedicionAire[];
   };
 }

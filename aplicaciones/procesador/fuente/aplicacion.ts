@@ -1,3 +1,4 @@
+import procesarAire from './procesarAire';
 import procesarDatosA from './procesarDatosA';
 import procesarElementosLinea from './procesarElementosLinea';
 import procesarRuido from './procesarRuido';
@@ -11,6 +12,7 @@ interface Estructuras {
   datosA: BaseEstructura;
   zat: BaseEstructura & { llaves: string[]; tramos: { [nombre: string]: number[] } };
   linea: BaseEstructura;
+  aire: BaseEstructura;
   ruido: BaseEstructura & { llaves: string[] };
 }
 export const estructuras: Estructuras = {
@@ -83,6 +85,10 @@ export const estructuras: Estructuras = {
     archivo: 'Mapa 7ma - Datos',
     nombreHoja: 'Cuatro cuadras',
   },
+  aire: {
+    archivo: 'Puntos Fijos_5 min',
+    nombreHoja: 'Sheet1',
+  },
   ruido: {
     archivo: 'Ruido_10 sec',
     nombreHoja: 'Sheet1',
@@ -106,9 +112,13 @@ async function inicio(): Promise<void> {
   const datosRuido = await procesarRuido();
   guardarJSON(datosRuido, 'ruido');
 
+  /** Aire */
+  const datosAire = await procesarAire();
+  guardarJSON(datosAire, 'aire');
+
   const puntos = await procesarDatosA();
   await procesarZat(puntos);
-  await procesarElementosLinea(puntos);
+  await procesarElementosLinea(puntos, datosAire);
   guardarJSON(puntos, 'puntos');
 }
 
