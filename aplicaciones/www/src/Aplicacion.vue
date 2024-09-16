@@ -2,12 +2,12 @@
 import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas } from './utilidades/ayudas';
-import { ElementoPaisaje } from './tipos';
+import type { ElementoPaisaje } from './tipos';
 import Personaje from './componentes/Personaje.vue';
 import Podcast from './componentes/Podcast.vue';
 import Relato from './componentes/Relato.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
-import { Punto } from '@/tipos/compartidos';
+import type { Punto } from '@/tipos/compartidos';
 
 const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
 
@@ -45,8 +45,8 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const multiplicadorAncho: number = 3; // valor para multiplicar 100vw por
-let distanciaTotal: number = 0;
+const multiplicadorAncho = 3; // valor para multiplicar 100vw por
+let distanciaTotal = 0;
 
 onMounted(async () => {
   // Punto por lugar
