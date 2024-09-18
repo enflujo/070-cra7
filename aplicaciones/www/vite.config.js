@@ -11,9 +11,4 @@ export default defineConfig({
     sourcemap: true,
   },
   publicDir: 'estaticos',
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
 });
