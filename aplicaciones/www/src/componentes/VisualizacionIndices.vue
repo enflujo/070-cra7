@@ -24,6 +24,7 @@ let lineaAmbiente: string = `M 0 ${alturaContenedor}`;
 let lineaInfraestructura: string = `M 0 ${alturaContenedor}`;
 let lineaMovilidad: string = `M 0 ${alturaContenedor}`;
 let lineaSeguridad: string = `M 0 ${alturaContenedor}`;
+let lineaProximidad: string = `M 0 ${alturaContenedor}`;
 
 onMounted(async () => {
   const contenedorZonas: HTMLElement = document.getElementById('contenedorZonas') as HTMLElement;
@@ -57,6 +58,10 @@ onMounted(async () => {
   const trazoSeguridad: SVGPathElement = document.getElementById('trazoSeguridad') as HTMLElement & SVGPathElement;
   const circulosSeguridad: SVGElement = document.getElementById('circulosSeguridad') as HTMLElement & SVGElement;
 
+  // Proximidad
+  const trazoProximidad: SVGPathElement = document.getElementById('trazoProximidad') as HTMLElement & SVGPathElement;
+  const circulosProximidad: SVGElement = document.getElementById('circulosProximidad') as HTMLElement & SVGElement;
+
   // Calcular lugar de cada punto por lugar y pintarlos
   for (let i = 0; i < puntos.length; i++) {
     // Dibujar el primer punto
@@ -66,6 +71,7 @@ onMounted(async () => {
       const circuloInfraestructura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloMovilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloSeguridad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      const circuloProximidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
       // línea
       lineaHabitabilidad += `L 0 ${alturaContenedor - puntos[0].habitabilidad * alturaContenedor} `;
@@ -73,6 +79,7 @@ onMounted(async () => {
       lineaInfraestructura += `L 0 ${alturaContenedor - puntos[0].infraestructura * alturaContenedor} `;
       lineaMovilidad += `L 0 ${alturaContenedor - puntos[0].movilidad * alturaContenedor} `;
       lineaSeguridad += `L 0 ${alturaContenedor - puntos[0].seguridad * alturaContenedor} `;
+      lineaProximidad += `L 0 ${alturaContenedor - puntos[0].proximidad * alturaContenedor} `;
 
       // puntos Habitabilidad
       circuloHabitabilidad.setAttribute('class', 'puntoIndicador');
@@ -104,6 +111,12 @@ onMounted(async () => {
       circuloSeguridad.setAttribute('cy', `${alturaContenedor - puntos[0].seguridad * alturaContenedor}`);
       circulosSeguridad.append(circuloSeguridad);
 
+      // Puntos Proximidad
+      circuloProximidad.setAttribute('class', 'puntoIndicador');
+      circuloProximidad.setAttribute('cx', '0');
+      circuloProximidad.setAttribute('cy', `${alturaContenedor - puntos[0].proximidad * alturaContenedor}`);
+      circulosProximidad.append(circuloProximidad);
+
       // Dibujar el resto de puntos
     } else {
       const puntoA = puntos[i - 1];
@@ -116,6 +129,7 @@ onMounted(async () => {
       const circuloInfraestructura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloMovilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloSeguridad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      const circuloProximidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
 
@@ -128,6 +142,7 @@ onMounted(async () => {
       const yAmbiente = alturaContenedor - puntoB.ambiente * alturaContenedor;
       const yMovilidad = alturaContenedor - puntoB.movilidad * alturaContenedor;
       const ySeguridad = alturaContenedor - puntoB.seguridad * alturaContenedor;
+      const yProximidad = alturaContenedor - puntoB.proximidad * alturaContenedor;
 
       // Puntos Habitabilidad
       circuloHabitabilidad.setAttribute('class', 'puntoIndicador');
@@ -154,7 +169,10 @@ onMounted(async () => {
       circuloSeguridad.setAttribute('cx', `${x}`);
       circuloSeguridad.setAttribute('cy', `${ySeguridad}`);
 
-      console.log(x);
+      // Puntos Proximidad
+      circuloProximidad.setAttribute('class', 'puntoIndicador');
+      circuloProximidad.setAttribute('cx', `${x}`);
+      circuloProximidad.setAttribute('cy', `${yProximidad}`);
 
       zona.classList.add('zona');
       zona.style.width = `${ancho}vw`;
@@ -183,6 +201,7 @@ onMounted(async () => {
         lineaInfraestructura += `L ${x} ${yInfraestructura} `;
         lineaMovilidad += `L ${x} ${yMovilidad} `;
         lineaSeguridad += `L ${x} ${ySeguridad} `;
+        lineaProximidad += `L ${x} ${yProximidad} `;
       } else {
         // cerrar el path si es el último punto
         lineaHabitabilidad += `L ${x} ${yHabitabilidad} L ${x} ${alturaContenedor} Z`;
@@ -190,6 +209,7 @@ onMounted(async () => {
         lineaInfraestructura += `L ${x} ${yInfraestructura} L ${x} ${alturaContenedor} Z`;
         lineaMovilidad += `L ${x} ${yMovilidad} L ${x} ${alturaContenedor} Z`;
         lineaSeguridad += `L ${x} ${ySeguridad} L ${x} ${alturaContenedor} Z`;
+        lineaProximidad += `L ${x} ${yProximidad} L ${x} ${alturaContenedor} Z`;
       }
 
       // Agregar los círculos a los grupos
@@ -198,6 +218,7 @@ onMounted(async () => {
       circulosInfraestructura.append(circuloInfraestructura);
       circulosMovilidad.append(circuloMovilidad);
       circulosSeguridad.append(circuloSeguridad);
+      circulosProximidad.append(circuloProximidad);
     }
 
     trazoHabitabilidad.setAttribute('d', lineaHabitabilidad);
@@ -205,6 +226,7 @@ onMounted(async () => {
     trazoInfraestructura.setAttribute('d', lineaInfraestructura);
     trazoMovilidad.setAttribute('d', lineaMovilidad);
     trazoSeguridad.setAttribute('d', lineaSeguridad);
+    trazoProximidad.setAttribute('d', lineaProximidad);
   }
 });
 
@@ -239,11 +261,13 @@ function convertirEscala(
 
       <path id="trazoSeguridad" class="trazo" />
       <g id="circulosSeguridad"></g>
+
+      <path id="trazoProximidad" class="trazo" />
+      <g id="circulosProximidad"></g>
     </svg>
 
     <div id="contenedorZonas">
       <div class="infoPunto" id="infoPuntoA"></div>
-      <div class="infoPunto" id="infoPuntoB"></div>
     </div>
 
     <div id="etiquetas">
@@ -252,6 +276,7 @@ function convertirEscala(
       <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
       <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
       <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
+      <p class="etiqueta" id="etiqProximidad">Proximidad</p>
     </div>
   </div>
 </template>
@@ -290,6 +315,10 @@ function convertirEscala(
   stroke: var(--colorSeguridad);
 }
 
+#trazoProximidad {
+  stroke: var(--colorProximidad);
+}
+
 #etiquetas {
   display: flex;
 }
@@ -321,6 +350,10 @@ function convertirEscala(
   border-color: var(--colorSeguridad);
 }
 
+#etiqProximidad {
+  border-color: var(--colorProximidad);
+}
+
 .trazo {
   fill: none;
   stroke-width: 1;
@@ -348,7 +381,7 @@ function convertirEscala(
   top: 0;
   background-color: rgba(16, 255, 255, 0.222);
   border: rgba(10, 197, 248, 0.5) solid 1px;
-  height: 200px;
+  height: 210px;
   opacity: 0.1;
   cursor: pointer;
   z-index: 99;
