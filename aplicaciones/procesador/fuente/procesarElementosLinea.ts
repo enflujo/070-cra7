@@ -27,7 +27,7 @@ export default async (puntos: Punto[], aire: Aire): Promise<Punto[]> => {
         primeraFilaProcesada = true;
       }
 
-      const { nombre, latitud, longitud, puntoRuido, ilustracion, idAire } = obj.formatted.obj;
+      const { nombre, latitud, longitud, puntoRuido, ilustracion, idAire, perfil, podcast } = obj.formatted.obj;
 
       const slug = slugificar(nombre);
       const punto = puntos.find((punto) => punto.slug == slug);
@@ -47,6 +47,16 @@ export default async (puntos: Punto[], aire: Aire): Promise<Punto[]> => {
           } else {
             errata.push({ fila: numeroFila, error: `Problema con los nombres de ilustraciones, revisar esta celda` });
           }
+        }
+
+        /** Podcast */
+        if (podcast) {
+          punto.podcast = podcast.trim();
+        }
+
+        /** Perfil */
+        if (perfil) {
+          punto.perfil = perfil.trim();
         }
 
         if (idAire) {

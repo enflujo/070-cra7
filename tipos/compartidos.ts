@@ -42,6 +42,8 @@ export interface Punto {
   idRuido?: string;
   idAire?: string;
   ilustraciones?: string[];
+  podcast?: string;
+  perfil?: string;
 }
 
 export type LlavesDatosPunto =
