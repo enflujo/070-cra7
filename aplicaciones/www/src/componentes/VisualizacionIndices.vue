@@ -186,13 +186,10 @@ onMounted(async () => {
         infoPuntoA.innerText = `${puntoA.nombre}`;
         infoPuntoA.style.left = `${xZona - 1}vw`;
         infoPuntoA.style.display = 'block';
-        infoPuntoB.innerText = `${puntoB.nombre}`;
-        infoPuntoB.style.left = `${xZona + ancho}vw`;
-        infoPuntoB.style.display = 'block';
       });
       zona.addEventListener('mouseleave', () => {
-        infoPuntoA.innerText = infoPuntoB.innerText = '';
-        infoPuntoA.style.display = infoPuntoB.style.display = 'none';
+        infoPuntoA.innerText = '';
+        infoPuntoA.style.display = 'none';
       });
 
       if (i < puntos.length - 1) {
