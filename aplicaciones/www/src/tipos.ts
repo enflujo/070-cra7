@@ -1,9 +1,8 @@
 // Los elementos son: podcast, personaje y texto
 export interface ElementoPaisaje {
-  nombre?: string;
+  id?: string;
+  nombre: string;
   descripcion?: string;
-  // POR HACER: definir formato de ubicación
-  ubicacion: string;
   ruta?: string;
 }
 

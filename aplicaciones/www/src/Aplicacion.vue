@@ -6,10 +6,35 @@ import type { ElementoPaisaje } from './tipos';
 import Personaje from './componentes/Personaje.vue';
 import Podcast from './componentes/Podcast.vue';
 import Relato from './componentes/Relato.vue';
+import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 import type { Punto } from '@/tipos/compartidos';
 
+import { usarCerebro } from './utilidades/cerebro';
+
 const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
+const podcasts: Ref<{ id: string; x: number }[]> = ref([]);
+const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
+const idPodcast: Ref<string | null> = ref(null);
+const idLugar: Ref<string | null> = ref(null);
+const fichaVisible: Ref<boolean> = ref(false);
+
+const lugarElegido: Ref<string> = ref('1'); //Cómo se trae desde el cerebro?
+
+//lugarElegido.value = '1'; // ¿Dónde se define esto para que abajo no se ueje de que puede ser nulo?
+
+function abrirFicha(id: string) {
+  lugarElegido.value = id;
+  idPodcast.value = id;
+  idLugar.value = id;
+  fichaVisible.value = true;
+}
+
+function cerrarFicha() {
+  idPodcast.value = null;
+  idLugar.value = null;
+  fichaVisible.value = false;
+}
 
 /** Si se definen así los props desde un objeto,
  * toca usar el v-bind="" en elemento de vue para pasar los props.
@@ -22,6 +47,7 @@ const personajePrueba: ElementoPaisaje = {
 };
 
 const podcastPrueba: ElementoPaisaje = {
+  id: 'pd4',
   nombre: 'Elemento podcast',
   descripcion: 'descripción podcast',
   ubicacion: '1',
@@ -72,6 +98,12 @@ onMounted(async () => {
         if (puntoB.ilustraciones) {
           ilustraciones.value.push({ nombre: 'iglesia_san_francisco', x });
         }
+        if (puntoB.podcast) {
+          podcasts.value.push({ id: puntoB.podcast, x });
+        }
+        if (puntoB.perfil) {
+          perfiles.value.push({ id: puntoB.perfil, x });
+        }
       }
     }
   }
@@ -120,10 +152,32 @@ function convertirEscala(
       />
     </div>
 
-    <!--     <Ilustracion v-bind="ilustraciones[0]" /> -->
-    <Personaje v-bind="personajePrueba" />
-    <Podcast v-bind="podcastPrueba" />
-    <Relato v-bind="relatoPrueba" />
+    <div id="iconos_podcast">
+      <img
+        @click="abrirFicha(lugarElegido)"
+        class="icono icono_podcast"
+        v-for="podcast in podcasts"
+        :key="podcast.id"
+        src="/imagenes/icono_podcast.png"
+        alt=""
+        :style="`left:${podcast.x}vw`"
+      />
+    </div>
+    <div id="iconos_perfiles">
+      <img
+        class="icono icono_perfil"
+        v-for="perfil in perfiles"
+        :key="perfil.id"
+        src="/imagenes/icono_perfil.png"
+        alt=""
+        :style="`left:${perfil.x}vw`"
+      />
+    </div>
+
+    <FichaLugar v-if="fichaVisible" :id="lugarElegido" :cerrar="cerrarFicha" />
+    <!--  <Personaje v-bind="personajePrueba" />
+    <Podcast v-if="idPodcast" :id="idPodcast" :cerrar="cerrarFicha" />
+    <Relato v-bind="relatoPrueba" /> -->
   </div>
 </template>
 
@@ -154,6 +208,21 @@ function convertirEscala(
   width: 100px;
   position: absolute;
   bottom: 0;
+}
+
+.icono {
+  position: absolute;
+  cursor: pointer;
+}
+
+.icono_podcast {
+  width: 30px;
+  bottom: 80px;
+}
+
+.icono_perfil {
+  height: 30px;
+  bottom: 120px;
 }
 
 .infoPunto {
