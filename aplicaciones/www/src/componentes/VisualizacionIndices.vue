@@ -14,8 +14,8 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const multiplicadorAncho: number = 1; // medida en vw
-const alturaContenedor: number = 310;
+const multiplicadorAncho: number = 0.96; // medida en vw
+const alturaContenedor: number = 180;
 
 let distanciaTotal: number = 0;
 let distanciaParcial: number = 0;
@@ -150,10 +150,14 @@ onMounted(async () => {
 
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
 
-      const xZona = convertirEscala(distanciaTotal, 0, 25, 0, 100);
-      const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100);
+      const xZona = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
+      const ancho = 1; /*
+        convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho) < 3
+          ? convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho) - 0.5
+          : 2; */
+      console.log(ancho);
       distanciaTotal += distanciaParcial;
-      const x = convertirEscala(distanciaTotal, 0, 25, 0, window.innerWidth);
+      const x = convertirEscala(distanciaTotal, 0, 25, 0, window.innerWidth * multiplicadorAncho);
 
       // Definir posición en y de cada punto por indicador
       const yInfraestructura = alturaContenedor - puntoB.infraestructura * alturaContenedor;
@@ -163,8 +167,6 @@ onMounted(async () => {
       const ySeguridad = alturaContenedor - puntoB.seguridad * alturaContenedor;
       const yProximidad = alturaContenedor - puntoB.proximidad * alturaContenedor;
       const yCaminabilidad = alturaContenedor - puntoB.caminabilidad * alturaContenedor;
-
-      console.log(puntoB);
 
       // Puntos Habitabilidad
       circuloHabitabilidad.setAttribute('class', 'puntoIndicador');
@@ -205,8 +207,8 @@ onMounted(async () => {
 
       zona.classList.add('zona');
       zona.style.width = `${ancho}vw`;
-      zona.style.left = `${xZona}vw`; //`${distanciaTotal}%`
-      zona.style.top = '10px';
+      zona.style.left = `${xZona - ancho / 2}vw`; //`${distanciaTotal}%`
+      //  zona.style.bottom = '14px';
 
       // Agregar cada punto a la línea de la 7
       contenedorZonas.appendChild(zona);
@@ -279,6 +281,15 @@ function convertirEscala(
 
 <template>
   <div id="contenedorVis">
+    <div id="etiquetas">
+      <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
+      <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
+      <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
+      <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
+      <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
+      <p class="etiqueta" id="etiqProximidad">Proximidad</p>
+      <p class="etiqueta" id="etiqCaminabilidad">Caminabilidad</p>
+    </div>
     <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
       <path id="trazoHabitabilidad" class="trazo" />
       <g id="circulosHabitabilidad"></g>
@@ -305,16 +316,6 @@ function convertirEscala(
     <div id="contenedorZonas">
       <div class="infoPunto" id="infoPuntoA"></div>
     </div>
-
-    <div id="etiquetas">
-      <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
-      <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
-      <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
-      <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
-      <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
-      <p class="etiqueta" id="etiqProximidad">Proximidad</p>
-      <p class="etiqueta" id="etiqCaminabilidad">Caminabilidad</p>
-    </div>
   </div>
 </template>
 
@@ -322,14 +323,17 @@ function convertirEscala(
 @import '../scss/constantes';
 
 #contenedorVis {
-  position: fixed;
-  top: 50px;
+  position: absolute;
+  bottom: 0;
+  left: 2.5vw;
 }
 
 #contenedorTrazos {
   // Ancho del contenedor
-  width: 100vw;
-  height: 330px;
+  width: 95vw;
+  height: 180px;
+  border: 1px black solid;
+  margin-bottom: 2em;
 }
 
 #trazoHabitabilidad {
@@ -368,7 +372,7 @@ function convertirEscala(
   border-bottom: 2px solid;
   width: fit-content;
   font-size: 0.8em;
-  margin: 0 1em;
+  margin: 0 1em 0.5em 0em;
 }
 
 #etiqHabitabilidad {
@@ -407,22 +411,19 @@ function convertirEscala(
   cursor: pointer;
 }
 
+.infoPunto {
+}
+
 .lineasCalle {
   stroke: rgba(255, 24, 24, 0.3);
 }
 
-.textoCalle {
-  stroke: none;
-  fill: black;
-  font-size: 15px;
-}
-
 .zona {
   position: absolute;
-  top: 0;
+  bottom: 14px;
   background-color: rgba(16, 255, 255, 0.222);
   border: rgba(10, 197, 248, 0.5) solid 1px;
-  height: 210px;
+  height: 180px;
   opacity: 0.1;
   cursor: pointer;
   z-index: 99;
@@ -432,8 +433,8 @@ function convertirEscala(
 }
 
 #contenedorZonas {
-  height: 310px;
+  height: 215px;
   position: absolute;
-  top: 88px;
+  bottom: 22px;
 }
 </style>
