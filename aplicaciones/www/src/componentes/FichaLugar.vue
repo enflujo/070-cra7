@@ -8,15 +8,16 @@ const nombre: Ref<string> = ref('');
 const descripcion: Ref<string> = ref('');
 const ruta: Ref<string> = ref('');
 const hayPodcast: Ref<boolean> = ref(false);
+const hayPerfil: Ref<boolean> = ref(false);
 
 const datos: ElementoPaisaje[] = [
   {
-    id: '4',
+    id: '1',
     nombre: 'Podcast 4',
     descripcion: 'descripción podcast 4',
   },
   {
-    id: '10',
+    id: '2',
     nombre: 'Podcast 10',
     descripcion: 'descripción podcast 10',
   },
@@ -24,20 +25,25 @@ const datos: ElementoPaisaje[] = [
 
 onMounted(() => {
   const podcast = datos.find((podcast) => podcast.id === props.id);
-  console.log(datos);
+  const perfil = datos.find((perfil) => perfil.id === props.id);
 
   if (podcast) {
     if (podcast.nombre) nombre.value = podcast.nombre;
     if (podcast.descripcion) descripcion.value = podcast.descripcion;
     hayPodcast.value = true;
-    console.log(hayPodcast);
+  }
+
+  if (perfil) {
+    if (perfil.nombre) nombre.value = perfil.nombre;
+    if (perfil.descripcion) descripcion.value = perfil.descripcion;
+    hayPerfil.value = true;
   }
 });
 </script>
 
 <template>
   <div id="fichaLugar">
-    <span id="cerrar" @click="cerrar">Cerrar</span>
+    <span id="cerrar" @click="cerrar">X</span>
 
     <!--   <Podcast :id="podcast.id" /> -->
 
@@ -47,7 +53,7 @@ onMounted(() => {
       <audio :src="ruta" controls="true"></audio>
     </div>
 
-    <div class="contenedorPersonaje">
+    <div v-if="hayPerfil" class="contenedorPersonaje">
       <h2>Personaje</h2>
       <p>Descripción perfil</p>
       <video :src="ruta" controls="true"></video>
@@ -62,6 +68,17 @@ onMounted(() => {
   padding: 1em;
   background-color: azure;
   position: relative;
+}
+
+#cerrar {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: 600;
+  }
 }
 .contenedorPodcast {
 }

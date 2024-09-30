@@ -43,20 +43,17 @@ function cerrarFicha() {
 const personajePrueba: ElementoPaisaje = {
   nombre: 'Elemento personaje',
   descripcion: 'descripción personaje',
-  ubicacion: '0',
 };
 
 const podcastPrueba: ElementoPaisaje = {
   id: 'pd4',
   nombre: 'Elemento podcast',
   descripcion: 'descripción podcast',
-  ubicacion: '1',
 };
 
 const relatoPrueba: ElementoPaisaje = {
   nombre: 'Elemento personaje',
   descripcion: 'Relato bla bla',
-  ubicacion: '2',
 };
 
 async function cargarDatos() {
@@ -71,7 +68,7 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const multiplicadorAncho = 3; // valor para multiplicar 100vw por
+const multiplicadorAncho = 6; // valor para multiplicar 100vw por
 let distanciaTotal = 0;
 
 onMounted(async () => {
@@ -139,7 +136,6 @@ function convertirEscala(
 
   <div id="cra7">
     <!-- <div id="fondoMontaña"></div> -->
-    <VisualizacionIndices />
 
     <div id="ilustraciones">
       <img
@@ -175,21 +171,30 @@ function convertirEscala(
     </div>
 
     <FichaLugar v-if="fichaVisible" :id="lugarElegido" :cerrar="cerrarFicha" />
-    <!--  <Personaje v-bind="personajePrueba" />
-    <Podcast v-if="idPodcast" :id="idPodcast" :cerrar="cerrarFicha" />
-    <Relato v-bind="relatoPrueba" /> -->
   </div>
+  <VisualizacionIndices />
 </template>
 
 <style lang="scss">
+@import 'scss/general';
+
+#aplicacion {
+  display: flex;
+}
 #titulo {
-  position: fixed;
+  margin: 0 auto;
+  display: block;
+  font-family: var(--fuenteTitulo);
 }
 
 #cra7 {
   /*  background-color: rgb(243, 156, 255);
   height: 8px; */
   width: 300vw; // debe ser igual que anchoEnPantalla
+  top: 15vw;
+  height: 30vh;
+  position: absolute;
+
   //position: relative;
 
   #fondoMontaña {
@@ -205,9 +210,9 @@ function convertirEscala(
 }
 
 .ilustracion {
-  width: 100px;
+  bottom: 2vh;
   position: absolute;
-  bottom: 0;
+  height: 50vh;
 }
 
 .icono {
@@ -231,6 +236,6 @@ function convertirEscala(
   font-size: 0.8em;
   text-align: center;
   text-transform: lowercase;
-  top: 270px;
+  bottom: -1.2em;
 }
 </style>
