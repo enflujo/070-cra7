@@ -46,15 +46,15 @@ onMounted(() => {
     <span id="cerrar" @click="cerrar">X</span>
 
     <!--   <Podcast :id="podcast.id" /> -->
-
+    <h2>Calle xx</h2>
     <div v-if="hayPodcast" class="contenedorPodcast">
-      <h2>{{ nombre }}</h2>
+      <h3>{{ nombre }}</h3>
       <p>{{ descripcion }}</p>
       <audio :src="ruta" controls="true"></audio>
     </div>
 
     <div v-if="hayPerfil" class="contenedorPersonaje">
-      <h2>Personaje</h2>
+      <h3>Personaje</h3>
       <p>Descripción perfil</p>
       <video :src="ruta" controls="true"></video>
     </div>
@@ -62,12 +62,19 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+@import '../scss/constantes';
+@import '../scss/general';
+
 #fichaLugar {
   border: 1px solid black;
-  max-width: 40vw;
+  width: 40vw;
+  height: 85vh;
   padding: 1em;
-  background-color: azure;
-  position: relative;
+  background-color: var(--rosaTrans);
+  position: fixed;
+  top: 2em;
+  left: 2vw;
+  z-index: 9;
 }
 
 #cerrar {
