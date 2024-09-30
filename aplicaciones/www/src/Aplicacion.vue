@@ -182,7 +182,7 @@ function convertirEscala(
   display: flex;
 }
 #titulo {
-  margin: 0 auto;
+  margin: 0.5em auto;
   display: block;
   font-family: var(--fuenteTitulo);
 }
@@ -212,7 +212,12 @@ function convertirEscala(
 .ilustracion {
   bottom: 2vh;
   position: absolute;
-  height: 50vh;
+  height: 48vh;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .icono {
@@ -222,12 +227,12 @@ function convertirEscala(
 
 .icono_podcast {
   width: 30px;
-  bottom: 80px;
+  bottom: 8vh;
 }
 
 .icono_perfil {
   height: 30px;
-  bottom: 120px;
+  bottom: 3vh;
 }
 
 .infoPunto {
