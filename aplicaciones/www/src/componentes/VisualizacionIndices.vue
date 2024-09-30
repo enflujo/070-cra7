@@ -15,7 +15,7 @@ async function cargarDatos() {
 cargarDatos().catch(console.error);
 
 const multiplicadorAncho: number = 0.96; // medida en vw
-const alturaContenedor: number = 180;
+const alturaContenedor: number = 160;
 
 let distanciaTotal: number = 0;
 let distanciaParcial: number = 0;
@@ -151,11 +151,13 @@ onMounted(async () => {
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
 
       const xZona = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
+
+      // ¿Dejar el ancho en 1 o haver el cálculo?
       const ancho = 1; /*
         convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho) < 3
           ? convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho) - 0.5
           : 2; */
-      console.log(ancho);
+
       distanciaTotal += distanciaParcial;
       const x = convertirEscala(distanciaTotal, 0, 25, 0, window.innerWidth * multiplicadorAncho);
 
@@ -321,17 +323,19 @@ function convertirEscala(
 
 <style lang="scss">
 @import '../scss/constantes';
+@import '../scss/general';
 
 #contenedorVis {
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  left: 2.5vw;
+  left: 2em;
+  bottom: 0;
 }
 
 #contenedorTrazos {
   // Ancho del contenedor
   width: 95vw;
-  height: 180px;
+  height: 160px;
   border: 1px black solid;
   margin-bottom: 2em;
 }
@@ -398,6 +402,9 @@ function convertirEscala(
 #etiqProximidad {
   border-color: var(--colorProximidad);
 }
+#etiqCaminabilidad {
+  border-color: var(--colorCaminabilidad);
+}
 
 .trazo {
   fill: none;
@@ -423,7 +430,7 @@ function convertirEscala(
   bottom: 14px;
   background-color: rgba(16, 255, 255, 0.222);
   border: rgba(10, 197, 248, 0.5) solid 1px;
-  height: 180px;
+  height: 160px;
   opacity: 0.1;
   cursor: pointer;
   z-index: 99;
