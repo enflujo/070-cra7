@@ -12,6 +12,7 @@ import type { Punto } from '@/tipos/compartidos';
 
 import { usarCerebro } from './utilidades/cerebro';
 
+const puntos: Ref<Punto[]> = ref([]);
 const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
 const podcasts: Ref<{ id: string; x: number }[]> = ref([]);
 const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
@@ -19,12 +20,16 @@ const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const fichaVisible: Ref<boolean> = ref(false);
 
-const lugarElegido: Ref<string> = ref('1'); //Cómo se trae desde el cerebro?
+const cerebro = usarCerebro();
 
+//const lugarElegido: Ref<string> = ref('1'); //Cómo se trae desde el cerebro?
+console.log(cerebro.lugarElegido);
 //lugarElegido.value = '1'; // ¿Dónde se define esto para que abajo no se ueje de que puede ser nulo?
 
 function abrirFicha(id: string) {
-  lugarElegido.value = id;
+  cerebro.lugarElegido = id;
+
+  console.log(cerebro.lugarElegido);
   idPodcast.value = id;
   idLugar.value = id;
   fichaVisible.value = true;
@@ -73,16 +78,16 @@ let distanciaTotal = 0;
 
 onMounted(async () => {
   // Punto por lugar
-  const puntos = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
+  puntos.value = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
 
   // Calcular lugar de cada punto por lugar y pintarlos
-  for (let i = 0; i < puntos.length; i++) {
+  for (let i = 0; i < puntos.value.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
       // Dibujar el resto de puntos
     } else {
-      const puntoA = puntos[i - 1];
-      const puntoB = puntos[i];
+      const puntoA = puntos.value[i - 1];
+      const puntoB = puntos.value[i];
 
       if (puntoA.lat && puntoA.lon && puntoB.lat && puntoB.lon) {
         const distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
@@ -137,7 +142,7 @@ function convertirEscala(
   <div id="cra7">
     <!-- <div id="fondoMontaña"></div> -->
 
-    <div id="ilustraciones">
+    <div class="elementosPunto" v-for="punto in puntos">
       <img
         class="ilustracion"
         v-for="ilustracion in ilustraciones"
@@ -146,11 +151,9 @@ function convertirEscala(
         alt=""
         :style="`left:${ilustracion.x}vw`"
       />
-    </div>
 
-    <div id="iconos_podcast">
       <img
-        @click="abrirFicha(lugarElegido)"
+        @click="abrirFicha(punto.slug)"
         class="icono icono_podcast"
         v-for="podcast in podcasts"
         :key="podcast.id"
@@ -158,9 +161,9 @@ function convertirEscala(
         alt=""
         :style="`left:${podcast.x}vw`"
       />
-    </div>
-    <div id="iconos_perfiles">
+
       <img
+        @click="abrirFicha(punto.slug)"
         class="icono icono_perfil"
         v-for="perfil in perfiles"
         :key="perfil.id"
@@ -168,9 +171,9 @@ function convertirEscala(
         alt=""
         :style="`left:${perfil.x}vw`"
       />
-    </div>
 
-    <FichaLugar v-if="fichaVisible" :id="lugarElegido" :cerrar="cerrarFicha" />
+      <FichaLugar v-if="fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
+    </div>
   </div>
   <VisualizacionIndices />
 </template>
@@ -217,6 +220,7 @@ function convertirEscala(
 
   &:hover {
     opacity: 1;
+    //filter: brightness(0.5);
   }
 }
 
