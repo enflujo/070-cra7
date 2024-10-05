@@ -13,6 +13,7 @@ import type { Punto } from '@/tipos/compartidos';
 import { usarCerebro } from './utilidades/cerebro';
 
 const puntos: Ref<Punto[]> = ref([]);
+const puntosUbicados: Ref<Punto[]> = ref([]);
 const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
 const podcasts: Ref<{ id: string; x: number }[]> = ref([]);
 const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
@@ -22,14 +23,8 @@ const fichaVisible: Ref<boolean> = ref(false);
 
 const cerebro = usarCerebro();
 
-//const lugarElegido: Ref<string> = ref('1'); //Cómo se trae desde el cerebro?
-console.log(cerebro.lugarElegido);
-//lugarElegido.value = '1'; // ¿Dónde se define esto para que abajo no se ueje de que puede ser nulo?
-
 function abrirFicha(id: string) {
   cerebro.lugarElegido = id;
-
-  console.log(cerebro.lugarElegido);
   idPodcast.value = id;
   idLugar.value = id;
   fichaVisible.value = true;
@@ -40,26 +35,6 @@ function cerrarFicha() {
   idLugar.value = null;
   fichaVisible.value = false;
 }
-
-/** Si se definen así los props desde un objeto,
- * toca usar el v-bind="" en elemento de vue para pasar los props.
- * Ver explicación en: https://vuejs.org/guide/components/props.html#binding-multiple-properties-using-an-object
- * */
-const personajePrueba: ElementoPaisaje = {
-  nombre: 'Elemento personaje',
-  descripcion: 'descripción personaje',
-};
-
-const podcastPrueba: ElementoPaisaje = {
-  id: 'pd4',
-  nombre: 'Elemento podcast',
-  descripcion: 'descripción podcast',
-};
-
-const relatoPrueba: ElementoPaisaje = {
-  nombre: 'Elemento personaje',
-  descripcion: 'Relato bla bla',
-};
 
 async function cargarDatos() {
   try {
@@ -80,10 +55,13 @@ onMounted(async () => {
   // Punto por lugar
   puntos.value = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
 
+  puntosUbicados.value = puntos.value;
+
   // Calcular lugar de cada punto por lugar y pintarlos
   for (let i = 0; i < puntos.value.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
+      puntosUbicados.value[i].ubicacionX = 0;
       // Dibujar el resto de puntos
     } else {
       const puntoA = puntos.value[i - 1];
@@ -96,6 +74,8 @@ onMounted(async () => {
         const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
         // const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho);
         distanciaTotal += distanciaParcial;
+
+        puntosUbicados.value[i].ubicacionX = x;
 
         if (puntoB.ilustraciones) {
           ilustraciones.value.push({ nombre: 'iglesia_san_francisco', x });
@@ -142,34 +122,31 @@ function convertirEscala(
   <div id="cra7">
     <!-- <div id="fondoMontaña"></div> -->
 
-    <div class="elementosPunto" v-for="punto in puntos">
+    <div class="elementosPunto" v-for="punto in puntosUbicados" :key="punto.slug">
       <img
         class="ilustracion"
-        v-for="ilustracion in ilustraciones"
-        :key="ilustracion.nombre"
-        :src="`/imagenes/${ilustracion.nombre}.png`"
+        v-if="punto.ilustraciones"
+        :src="`/imagenes/${punto.ilustraciones}.png`"
         alt=""
-        :style="`left:${ilustracion.x}vw`"
+        :style="`left:${punto.ubicacionX}vw`"
       />
 
       <img
         @click="abrirFicha(punto.slug)"
         class="icono icono_podcast"
-        v-for="podcast in podcasts"
-        :key="podcast.id"
+        v-if="punto.podcast"
         src="/imagenes/icono_podcast.png"
-        alt=""
-        :style="`left:${podcast.x}vw`"
+        alt="ícono abrir podcast"
+        :style="`left:${punto.ubicacionX}vw`"
       />
 
       <img
         @click="abrirFicha(punto.slug)"
         class="icono icono_perfil"
-        v-for="perfil in perfiles"
-        :key="perfil.id"
+        v-if="punto.perfil"
         src="/imagenes/icono_perfil.png"
-        alt=""
-        :style="`left:${perfil.x}vw`"
+        alt="ícono abrir perfil"
+        :style="`left:${punto.ubicacionX}vw`"
       />
 
       <FichaLugar v-if="fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
@@ -197,8 +174,6 @@ function convertirEscala(
   top: 15vw;
   height: 30vh;
   position: absolute;
-
-  //position: relative;
 
   #fondoMontaña {
     background-image: url('/imagenes/silueta_montaña_prueba.png');
