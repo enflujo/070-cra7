@@ -71,9 +71,11 @@ onMounted(async () => {
         const distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
         // ir calculando la distancia total sumando las parciales
         // distancia total = 24.7921;
-        const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
+
         // const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho);
         distanciaTotal += distanciaParcial;
+
+        const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
 
         puntosUbicados.value[i].ubicacionX = x;
 
@@ -133,7 +135,7 @@ function convertirEscala(
 
       <img
         @click="abrirFicha(punto.slug)"
-        class="icono icono_podcast"
+        class="icono iconoPodcast"
         v-if="punto.podcast"
         src="/imagenes/icono_podcast.png"
         alt="ícono abrir podcast"
@@ -142,12 +144,14 @@ function convertirEscala(
 
       <img
         @click="abrirFicha(punto.slug)"
-        class="icono icono_perfil"
+        class="icono iconoPerfil"
         v-if="punto.perfil"
         src="/imagenes/icono_perfil.png"
         alt="ícono abrir perfil"
         :style="`left:${punto.ubicacionX}vw`"
       />
+
+      <p class="nombreCalle" :style="`left:${punto.ubicacionX}vw`">{{ punto.nombre }}</p>
 
       <FichaLugar v-if="fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
     </div>
@@ -204,14 +208,20 @@ function convertirEscala(
   cursor: pointer;
 }
 
-.icono_podcast {
+.iconoPodcast {
   width: 30px;
   bottom: 8vh;
 }
 
-.icono_perfil {
+.iconoPerfil {
   height: 30px;
   bottom: 3vh;
+}
+
+.nombreCalle {
+  position: absolute;
+  bottom: -3vh;
+  font-size: 0.7em;
 }
 
 .infoPunto {
