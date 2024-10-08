@@ -119,7 +119,10 @@ function convertirEscala(
 </script>
 
 <template>
-  <h1 id="titulo">Habitabilidad en la cra 7 de Bogotá</h1>
+  <div id="titulo">
+    <h1>24/7</h1>
+    <h2>Habitabilidad en la cra 7 de Bogotá</h2>
+  </div>
 
   <div id="cra7">
     <!-- <div id="fondoMontaña"></div> -->
@@ -166,9 +169,19 @@ function convertirEscala(
   display: flex;
 }
 #titulo {
-  margin: 0.5em auto;
+  margin: 2em auto;
   display: block;
   font-family: var(--fuenteTitulo);
+  text-align: center;
+
+  h1 {
+    margin: 0;
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--fuenteTitulo);
+  }
 }
 
 #cra7 {
