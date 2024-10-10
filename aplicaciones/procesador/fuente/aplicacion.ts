@@ -38,7 +38,7 @@ export const estructuras: Estructuras = {
       'Proximidad (15 min)',
     ],
     tramos: {
-      'Plaza de Bolivar': [459],
+      'Plaza de Bolívar': [459],
       'Avenida Jiménez': [458, 457, 456, 455],
       'Calle 19': [456, 455, 354, 993],
       'Calle 26': [354, 993, 352],
