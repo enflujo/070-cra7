@@ -120,7 +120,7 @@ onMounted(() => {
     <span id="cerrar" @click="cerrar">X</span>
 
     <!--   <Podcast :id="podcast.id" /> -->
-    <h2>{{ cerebro.lugarElegido }}</h2>
+    <h2>{{ cerebro.lugarElegido?.replace('-', ' ') }}</h2>
     <div v-if="hayPodcast" class="contenedorPodcast">
       <h3>{{ nombrePodcast }}</h3>
       <p>{{ descripcionPodcast }}</p>
@@ -144,7 +144,7 @@ onMounted(() => {
   width: 40vw;
   height: 85vh;
   padding: 1em;
-  background-color: var(--rosaTrans);
+  background-color: var(--lila);
   position: fixed;
   top: 2em;
   left: 2vw;

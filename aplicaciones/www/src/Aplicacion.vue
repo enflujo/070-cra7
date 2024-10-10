@@ -133,7 +133,7 @@ function convertirEscala(
         v-if="punto.ilustraciones"
         :src="`/imagenes/${punto.ilustraciones}.png`"
         alt=""
-        :style="`left:${punto.ubicacionX}vw`"
+        :style="`left:${punto.ubicacionX - 5}vw`"
       />
 
       <img
@@ -193,6 +193,7 @@ function convertirEscala(
   top: 15vw;
   height: 30vh;
   position: absolute;
+  margin: 0 5vw;
 
   #fondoMontaña {
     background-image: url('/imagenes/silueta_montaña_prueba.png');
@@ -209,8 +210,9 @@ function convertirEscala(
 .ilustracion {
   bottom: 2vh;
   position: absolute;
-  height: 48vh;
-  opacity: 0.7;
+  height: auto;
+  width: 16vw;
+  //opacity: 0.7;
 
   &:hover {
     opacity: 1;

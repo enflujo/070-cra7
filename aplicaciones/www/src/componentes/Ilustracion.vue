@@ -14,7 +14,7 @@ defineProps<ElementoPaisaje>();
 
 <style lang="scss" scoped>
 .contenedorImg {
-  max-width: 32vw;
+  max-width: 25vw;
   padding: 0em;
   position: absolute;
   top: 178px;
