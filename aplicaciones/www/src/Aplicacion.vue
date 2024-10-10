@@ -120,8 +120,10 @@ function convertirEscala(
 
 <template>
   <div id="titulo">
-    <h1>24/7</h1>
-    <h2>Habitabilidad en la cra 7 de Bogotá</h2>
+    <h1>
+      <p>VEINTICUATRO</p>
+      <p>SIETE</p>
+    </h1>
   </div>
 
   <div id="cra7">
@@ -173,6 +175,7 @@ function convertirEscala(
   display: block;
   font-family: var(--fuenteTitulo);
   text-align: center;
+  color: var(--amarilloTitulo);
 
   h1 {
     margin: 0;
