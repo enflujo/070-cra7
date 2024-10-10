@@ -21,6 +21,8 @@ const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const fichaVisible: Ref<boolean> = ref(false);
 
+// Agregar efecto: https://codepen.io/1cgonza/pen/zYgobpj
+
 const cerebro = usarCerebro();
 
 function abrirFicha(id: string) {
