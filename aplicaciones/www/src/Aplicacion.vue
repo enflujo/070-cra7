@@ -120,10 +120,8 @@ function convertirEscala(
 
 <template>
   <div id="titulo">
-    <h1>
-      <p>VEINTICUATRO</p>
-      <p>SIETE</p>
-    </h1>
+    <h1>VEINTICUATRO</h1>
+    <h1>SIETE</h1>
   </div>
 
   <div id="cra7">
@@ -179,6 +177,7 @@ function convertirEscala(
 
   h1 {
     margin: 0;
+    font-size: 4em;
   }
 
   h2 {
