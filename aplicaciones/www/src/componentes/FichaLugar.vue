@@ -136,9 +136,6 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '../scss/constantes';
-@import '../scss/general';
-
 #fichaLugar {
   border: 1px solid black;
   width: 40vw;

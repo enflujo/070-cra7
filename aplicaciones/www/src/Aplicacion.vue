@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas } from './utilidades/ayudas';
 import type { ElementoPaisaje } from './tipos';
@@ -11,6 +11,7 @@ import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 import type { Punto } from '@/tipos/compartidos';
 
 import { usarCerebro } from './utilidades/cerebro';
+import Titulo from './componentes/Titulo.vue';
 
 const puntos: Ref<Punto[]> = ref([]);
 const puntosUbicados: Ref<Punto[]> = ref([]);
@@ -20,8 +21,6 @@ const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const fichaVisible: Ref<boolean> = ref(false);
-
-// Agregar efecto: https://codepen.io/1cgonza/pen/zYgobpj
 
 const cerebro = usarCerebro();
 
@@ -54,6 +53,9 @@ const multiplicadorAncho = 6; // valor para multiplicar 100vw por
 let distanciaTotal = 0;
 
 onMounted(async () => {
+  let listaLaFuente = await document.fonts.ready;
+  console.log(listaLaFuente);
+
   // Punto por lugar
   puntos.value = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
 
@@ -121,10 +123,12 @@ function convertirEscala(
 </script>
 
 <template>
-  <div id="titulo">
+  <!--  <div id="titulo">
     <h1>VEINTICUATRO</h1>
     <h1>SIETE</h1>
-  </div>
+  </div> -->
+
+  <Titulo />
 
   <div id="cra7">
     <!-- <div id="fondoMontaña"></div> -->
@@ -165,6 +169,7 @@ function convertirEscala(
 </template>
 
 <style lang="scss">
+@import 'scss/constantes';
 @import 'scss/general';
 
 #aplicacion {
