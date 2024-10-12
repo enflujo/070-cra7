@@ -1,13 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap');
+
 :root {
   /// Fuentes tipográficas hemochas
-  --fuenteParrafo: 'Inter', 'Helvetica', 'Roboto', 'Arial', 'Tahoma', 'Verdana', sans-serif;
-  --fuenteNumeros: 'IBM Plex Mono', 'Courier New', monospace;
-  --fuenteLogo: mixta-pro, 'Garamond', 'Georgia', 'Times', serif;
+  --fuentePrincipal: 'Share Tech Mono', monospace;
+  --fuentePrincipalPeso: 400;
+  --fuenteEstilo: normal;
+  --fuenteTitulo: 'Rubik Bubbles', system-ui;
 
   // Paleta
-  --colorAmbiente: #7cd11c;
-  --colorInfraestructura: rgb(5, 19, 208);
-  --colorHabitabilidad: rgb(65, 134, 56);
-  --colorMovilidad: rgb(144, 5, 208);
-  --colorSeguridad: rgb(208, 178, 5);
+  --colorAmbiente: #00ae52;
+  --colorInfraestructura: #59e2d7;
+  --colorHabitabilidad: #ff6900;
+  --colorMovilidad: #ff4319;
+  --colorSeguridad: #8b5feb;
+  --colorProximidad: #ec5dbc;
+  --colorCaminabilidad: #febc01;
+
+  // Colores Nefasta
+
+  --rojo: #ff4319;
+  --naranja2: #fe6901;
+  --amarillo: #febc01;
+  --piel: #f5d68e;
+  --menta: #7bce9c;
+  --azul: #59e3d6;
+  --verde: #00ae52;
+  --morado: #8b5feb;
+  --lila: #fcccfa;
+  --rosa: #ec5dbc;
+
+  --amarilloTitulo: #f3d78e;
+  --verdeFondo: #7acf9c;
 }

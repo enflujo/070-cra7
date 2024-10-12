@@ -17,5 +17,10 @@
   },
   "devDependencies": {
     "prettier": "^3.3.3"
+  },
+  "dependencies": {
+    "pinia": "^2.2.3",
+    "workspace": "^0.0.1-preview.1",
+    "www": "workspace:^"
   }
 }

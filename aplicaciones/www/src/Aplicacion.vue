@@ -1,37 +1,41 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas } from './utilidades/ayudas';
 import type { ElementoPaisaje } from './tipos';
 import Personaje from './componentes/Personaje.vue';
 import Podcast from './componentes/Podcast.vue';
 import Relato from './componentes/Relato.vue';
+import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 import type { Punto } from '@/tipos/compartidos';
 
+import { usarCerebro } from './utilidades/cerebro';
+import Titulo from './componentes/Titulo.vue';
+
+const puntos: Ref<Punto[]> = ref([]);
+const puntosUbicados: Ref<Punto[]> = ref([]);
 const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
+const podcasts: Ref<{ id: string; x: number }[]> = ref([]);
+const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
+const idPodcast: Ref<string | null> = ref(null);
+const idLugar: Ref<string | null> = ref(null);
+const fichaVisible: Ref<boolean> = ref(false);
 
-/** Si se definen así los props desde un objeto,
- * toca usar el v-bind="" en elemento de vue para pasar los props.
- * Ver explicación en: https://vuejs.org/guide/components/props.html#binding-multiple-properties-using-an-object
- * */
-const personajePrueba: ElementoPaisaje = {
-  nombre: 'Elemento personaje',
-  descripcion: 'descripción personaje',
-  ubicacion: '0',
-};
+const cerebro = usarCerebro();
 
-const podcastPrueba: ElementoPaisaje = {
-  nombre: 'Elemento podcast',
-  descripcion: 'descripción podcast',
-  ubicacion: '1',
-};
+function abrirFicha(id: string) {
+  cerebro.lugarElegido = id;
+  idPodcast.value = id;
+  idLugar.value = id;
+  fichaVisible.value = true;
+}
 
-const relatoPrueba: ElementoPaisaje = {
-  nombre: 'Elemento personaje',
-  descripcion: 'Relato bla bla',
-  ubicacion: '2',
-};
+function cerrarFicha() {
+  idPodcast.value = null;
+  idLugar.value = null;
+  fichaVisible.value = false;
+}
 
 async function cargarDatos() {
   try {
@@ -45,32 +49,45 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const multiplicadorAncho = 3; // valor para multiplicar 100vw por
+const multiplicadorAncho = 6; // valor para multiplicar 100vw por
 let distanciaTotal = 0;
 
 onMounted(async () => {
   // Punto por lugar
-  const puntos = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
+  puntos.value = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
+
+  puntosUbicados.value = puntos.value;
 
   // Calcular lugar de cada punto por lugar y pintarlos
-  for (let i = 0; i < puntos.length; i++) {
+  for (let i = 0; i < puntos.value.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
+      puntosUbicados.value[i].ubicacionX = 0;
       // Dibujar el resto de puntos
     } else {
-      const puntoA = puntos[i - 1];
-      const puntoB = puntos[i];
+      const puntoA = puntos.value[i - 1];
+      const puntoB = puntos.value[i];
 
       if (puntoA.lat && puntoA.lon && puntoB.lat && puntoB.lon) {
         const distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
         // ir calculando la distancia total sumando las parciales
         // distancia total = 24.7921;
-        const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
+
         // const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho);
         distanciaTotal += distanciaParcial;
 
+        const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
+
+        puntosUbicados.value[i].ubicacionX = x;
+
         if (puntoB.ilustraciones) {
           ilustraciones.value.push({ nombre: 'iglesia_san_francisco', x });
+        }
+        if (puntoB.podcast) {
+          podcasts.value.push({ id: puntoB.podcast, x });
+        }
+        if (puntoB.perfil) {
+          perfiles.value.push({ id: puntoB.perfil, x });
         }
       }
     }
@@ -103,40 +120,84 @@ function convertirEscala(
 </script>
 
 <template>
-  <h1 id="titulo">Habitabilidad en la cra 7 de Bogotá</h1>
+  <!--  <div id="titulo">
+    <h1>VEINTICUATRO</h1>
+    <h1>SIETE</h1>
+  </div> -->
+
+  <Titulo />
 
   <div id="cra7">
     <!-- <div id="fondoMontaña"></div> -->
-    <VisualizacionIndices />
 
-    <div id="ilustraciones">
+    <div class="elementosPunto" v-for="punto in puntosUbicados" :key="punto.slug">
       <img
         class="ilustracion"
-        v-for="ilustracion in ilustraciones"
-        :key="ilustracion.nombre"
-        :src="`/imagenes/${ilustracion.nombre}.png`"
+        v-if="punto.ilustraciones"
+        :src="`/imagenes/${punto.ilustraciones}.png`"
         alt=""
-        :style="`left:${ilustracion.x}vw`"
+        :style="`left:${punto.ubicacionX - 5}vw`"
       />
-    </div>
 
-    <!--     <Ilustracion v-bind="ilustraciones[0]" /> -->
-    <Personaje v-bind="personajePrueba" />
-    <Podcast v-bind="podcastPrueba" />
-    <Relato v-bind="relatoPrueba" />
+      <img
+        @click="abrirFicha(punto.slug)"
+        class="icono iconoPodcast"
+        v-if="punto.podcast"
+        src="/imagenes/icono_podcast.png"
+        alt="ícono abrir podcast"
+        :style="`left:${punto.ubicacionX}vw`"
+      />
+
+      <img
+        @click="abrirFicha(punto.slug)"
+        class="icono iconoPerfil"
+        v-if="punto.perfil"
+        src="/imagenes/icono_perfil.png"
+        alt="ícono abrir perfil"
+        :style="`left:${punto.ubicacionX}vw`"
+      />
+
+      <p class="nombreCalle" :style="`left:${punto.ubicacionX}vw`">{{ punto.nombre }}</p>
+
+      <FichaLugar v-if="fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
+    </div>
   </div>
+  <VisualizacionIndices />
 </template>
 
 <style lang="scss">
+@import 'scss/constantes';
+@import 'scss/general';
+
+#aplicacion {
+  display: flex;
+}
 #titulo {
-  position: fixed;
+  margin: 2em auto;
+  display: block;
+  font-family: var(--fuenteTitulo);
+  text-align: center;
+  color: var(--amarilloTitulo);
+
+  h1 {
+    margin: 0;
+    font-size: 4em;
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--fuenteTitulo);
+  }
 }
 
 #cra7 {
   /*  background-color: rgb(243, 156, 255);
   height: 8px; */
   width: 300vw; // debe ser igual que anchoEnPantalla
-  //position: relative;
+  top: 15vw;
+  height: 30vh;
+  position: absolute;
+  margin: 0 5vw;
 
   #fondoMontaña {
     background-image: url('/imagenes/silueta_montaña_prueba.png');
@@ -151,9 +212,37 @@ function convertirEscala(
 }
 
 .ilustracion {
-  width: 100px;
+  bottom: 2vh;
   position: absolute;
-  bottom: 0;
+  height: auto;
+  width: 16vw;
+  //opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+    //filter: brightness(0.5);
+  }
+}
+
+.icono {
+  position: absolute;
+  cursor: pointer;
+}
+
+.iconoPodcast {
+  width: 30px;
+  bottom: 8vh;
+}
+
+.iconoPerfil {
+  height: 30px;
+  bottom: 3vh;
+}
+
+.nombreCalle {
+  position: absolute;
+  bottom: -3vh;
+  font-size: 0.7em;
 }
 
 .infoPunto {
@@ -162,6 +251,6 @@ function convertirEscala(
   font-size: 0.8em;
   text-align: center;
   text-transform: lowercase;
-  top: 270px;
+  bottom: -1.2em;
 }
 </style>

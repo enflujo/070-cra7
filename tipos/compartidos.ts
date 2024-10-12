@@ -44,6 +44,7 @@ export interface Punto {
   ilustraciones?: string[];
   podcast?: string;
   perfil?: string;
+  ubicacionX?: number;
 }
 
 export type LlavesDatosPunto =
