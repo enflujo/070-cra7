@@ -53,9 +53,6 @@ const multiplicadorAncho = 6; // valor para multiplicar 100vw por
 let distanciaTotal = 0;
 
 onMounted(async () => {
-  let listaLaFuente = await document.fonts.ready;
-  console.log(listaLaFuente);
-
   // Punto por lugar
   puntos.value = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
 

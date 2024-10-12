@@ -6,7 +6,6 @@ onMounted(async () => {
   if (!contenedorTitulo.value) return;
 
   let listaLaFuente = await document.fonts.ready;
-  console.log(listaLaFuente);
 
   const texto = new Blotter.Text('SIETE', {
     family: 'Rubik Bubbles',
