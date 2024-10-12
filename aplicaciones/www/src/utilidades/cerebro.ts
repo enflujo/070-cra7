@@ -1,10 +1,11 @@
+import type { Cerebro } from '@/tipos';
 import { defineStore } from 'pinia';
 
 // Guargar qué lugar está elegido para que quede disponible para todos los componentes
 export const usarCerebro = defineStore('cerebro', {
-  state: () => {
+  state: (): Cerebro => {
     return {
-      lugarElegido: null as string | null,
+      lugarElegido: '',
     };
   },
 

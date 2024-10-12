@@ -11,3 +11,7 @@ export interface FichaIndicador {
   descripcion: string;
   unidadMedida: string;
 }
+
+export interface Cerebro {
+  lugarElegido: string | null;
+}
