@@ -15,7 +15,7 @@ async function cargarDatos() {
 cargarDatos().catch(console.error);
 
 const multiplicadorAncho: number = 0.96; // medida en vw
-const alturaContenedor: number = 160;
+const alturaContenedor: number = 120;
 
 let distanciaTotal: number = 0;
 let distanciaParcial: number = 0;
@@ -216,8 +216,15 @@ onMounted(async () => {
       contenedorZonas.appendChild(zona);
 
       zona.addEventListener('mouseenter', () => {
-        infoPuntoA.innerText = `${puntoA.nombre}`;
-        infoPuntoA.style.left = `${xZona - 1}vw`;
+        infoPuntoA.innerHTML = `<h4>${puntoA.nombre}</h4>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloAmbiente"></span> ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloCaminabilidad"></span> caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloHabitabilidad"></span>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloInfraestructura"></span>infraestructura: ${puntoA.infraestructura ? puntoA.infraestructura : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloMovilidad"></span>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloProximidad"></span>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloSeguridad"></span>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>`;
+        infoPuntoA.style.left = `${xZona + 1}vw`;
         infoPuntoA.style.display = 'block';
       });
       zona.addEventListener('mouseleave', () => {
@@ -254,7 +261,9 @@ onMounted(async () => {
       circulosMovilidad.append(circuloMovilidad);
       circulosSeguridad.append(circuloSeguridad);
       circulosProximidad.append(circuloProximidad);
-      circulosCaminabilidad.append(circuloCaminabilidad);
+      if (yCaminabilidad) {
+        circulosCaminabilidad.append(circuloCaminabilidad);
+      }
     }
 
     trazoHabitabilidad.setAttribute('d', lineaHabitabilidad);
@@ -284,13 +293,13 @@ function convertirEscala(
 <template>
   <div id="contenedorVis">
     <div id="etiquetas">
-      <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
       <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
+      <p class="etiqueta" id="etiqCaminabilidad">Caminabilidad</p>
+      <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
       <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
       <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
-      <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
       <p class="etiqueta" id="etiqProximidad">Proximidad</p>
-      <p class="etiqueta" id="etiqCaminabilidad">Caminabilidad</p>
+      <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
     </div>
     <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
       <path id="trazoHabitabilidad" class="trazo" />
@@ -336,9 +345,9 @@ function convertirEscala(
   // Ancho del contenedor
   background-color: white;
   width: 95vw;
-  height: 160px;
+  height: 120px;
   border: 1px black solid;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 
 #trazoHabitabilidad {
@@ -420,6 +429,51 @@ function convertirEscala(
 }
 
 .infoPunto {
+  min-width: fit-content;
+  width: 160px;
+  background-color: white;
+  padding: 0.5em 1em;
+  p,
+  h4 {
+    margin: 0;
+    text-align: start;
+  }
+
+  .elementoEtiqueta {
+    display: flex;
+    align-items: center;
+  }
+
+  .circuloEtiqueta {
+    height: 4px;
+    width: 4px;
+    margin-right: 0.5em;
+    border-radius: 50%;
+    display: block;
+    background-color: black;
+  }
+
+  #circuloAmbiente {
+    background-color: var(--colorAmbiente);
+  }
+  #circuloCaminabilidad {
+    background-color: var(--colorCaminabilidad);
+  }
+  #circuloHabitabilidad {
+    background-color: var(--colorHabitabilidad);
+  }
+  #circuloInfraestructura {
+    background-color: var(--colorInfraestructura);
+  }
+  #circuloMovilidad {
+    background-color: var(--colorMovilidad);
+  }
+  #circuloProximidad {
+    background-color: var(--colorProximidad);
+  }
+  #circuloSeguridad {
+    background-color: var(--colorSeguridad);
+  }
 }
 
 .lineasCalle {
@@ -428,13 +482,13 @@ function convertirEscala(
 
 .zona {
   position: absolute;
-  bottom: 14px;
+  bottom: 0px;
   background-color: rgba(16, 255, 255, 0.222);
   border: rgba(10, 197, 248, 0.5) solid 1px;
-  height: 160px;
+  height: 119px;
   opacity: 0.1;
   cursor: pointer;
-  z-index: 99;
+  z-index: 10;
 }
 .zona:hover {
   opacity: 0.9;
