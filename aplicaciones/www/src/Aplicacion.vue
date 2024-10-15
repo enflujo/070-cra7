@@ -194,7 +194,7 @@ function convertirEscala(
   /*  background-color: rgb(243, 156, 255);
   height: 8px; */
   width: 300vw; // debe ser igual que anchoEnPantalla
-  top: 15vw;
+  top: 16vw;
   height: 30vh;
   position: absolute;
   margin: 0 5vw;
@@ -215,7 +215,7 @@ function convertirEscala(
   bottom: 2vh;
   position: absolute;
   height: auto;
-  width: 16vw;
+  width: 22vw;
   //opacity: 0.7;
 
   &:hover {

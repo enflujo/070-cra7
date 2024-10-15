@@ -15,7 +15,7 @@ async function cargarDatos() {
 cargarDatos().catch(console.error);
 
 const multiplicadorAncho: number = 0.96; // medida en vw
-const alturaContenedor: number = 160;
+const alturaContenedor: number = 120;
 
 let distanciaTotal: number = 0;
 let distanciaParcial: number = 0;
@@ -216,8 +216,15 @@ onMounted(async () => {
       contenedorZonas.appendChild(zona);
 
       zona.addEventListener('mouseenter', () => {
-        infoPuntoA.innerText = `${puntoA.nombre}`;
-        infoPuntoA.style.left = `${xZona - 1}vw`;
+        infoPuntoA.innerHTML = `<h4>${puntoA.nombre}</h4>
+        <p>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
+        <p>ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
+        <p>infraestructura: ${puntoA.infraestructura ? puntoA.infraestructura : 'sin información'}</p>
+        <p>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p> 
+        <p>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>
+        <p>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
+        <p>caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>`;
+        infoPuntoA.style.left = `${xZona + 1}vw`;
         infoPuntoA.style.display = 'block';
       });
       zona.addEventListener('mouseleave', () => {
@@ -254,7 +261,9 @@ onMounted(async () => {
       circulosMovilidad.append(circuloMovilidad);
       circulosSeguridad.append(circuloSeguridad);
       circulosProximidad.append(circuloProximidad);
-      circulosCaminabilidad.append(circuloCaminabilidad);
+      if (yCaminabilidad) {
+        circulosCaminabilidad.append(circuloCaminabilidad);
+      }
     }
 
     trazoHabitabilidad.setAttribute('d', lineaHabitabilidad);
@@ -336,9 +345,9 @@ function convertirEscala(
   // Ancho del contenedor
   background-color: white;
   width: 95vw;
-  height: 160px;
+  height: 120px;
   border: 1px black solid;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 
 #trazoHabitabilidad {
@@ -420,6 +429,15 @@ function convertirEscala(
 }
 
 .infoPunto {
+  min-width: fit-content;
+  width: 160px;
+  background-color: white;
+  padding: 0.5em 1em;
+  p,
+  h4 {
+    margin: 0;
+    text-align: start;
+  }
 }
 
 .lineasCalle {
@@ -428,10 +446,10 @@ function convertirEscala(
 
 .zona {
   position: absolute;
-  bottom: 14px;
+  bottom: 0px;
   background-color: rgba(16, 255, 255, 0.222);
   border: rgba(10, 197, 248, 0.5) solid 1px;
-  height: 160px;
+  height: 119px;
   opacity: 0.1;
   cursor: pointer;
   z-index: 99;
