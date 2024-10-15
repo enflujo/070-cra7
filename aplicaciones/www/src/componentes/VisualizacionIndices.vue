@@ -488,7 +488,7 @@ function convertirEscala(
   height: 119px;
   opacity: 0.1;
   cursor: pointer;
-  z-index: 99;
+  z-index: 10;
 }
 .zona:hover {
   opacity: 0.9;

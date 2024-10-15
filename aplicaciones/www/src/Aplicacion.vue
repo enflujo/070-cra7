@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas } from './utilidades/ayudas';
-import type { ElementoPaisaje } from './tipos';
-import Personaje from './componentes/Personaje.vue';
-import Podcast from './componentes/Podcast.vue';
-import Relato from './componentes/Relato.vue';
 import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 import type { Punto } from '@/tipos/compartidos';
 
 import { usarCerebro } from './utilidades/cerebro';
 import Titulo from './componentes/Titulo.vue';
+import SobreProyecto from './componentes/SobreProyecto.vue';
 
 const puntos: Ref<Punto[]> = ref([]);
 const puntosUbicados: Ref<Punto[]> = ref([]);
@@ -21,6 +18,8 @@ const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const fichaVisible: Ref<boolean> = ref(false);
+
+const contenedorSobreProyecto: Ref<HTMLDivElement | undefined> = ref();
 
 const cerebro = usarCerebro();
 
@@ -94,17 +93,6 @@ onMounted(async () => {
   }
 });
 
-/*const ilustracion = createVNode(Ilustracion, {
-  nombre: 'Elemento Ilustración',
-  descripcion: 'Ilustración bla bla',
-  ubicacion: '3',
-  ruta: '/imagenes/iglesia_san_francisco.png',
-})*/
-
-/* if (contenedorIlustraciones) {
-  contenedorIlustraciones.appendChild(ilustracion);
-} */
-
 function convertirEscala(
   valor: number,
   escalaBaseMin: number,
@@ -120,12 +108,9 @@ function convertirEscala(
 </script>
 
 <template>
-  <!--  <div id="titulo">
-    <h1>VEINTICUATRO</h1>
-    <h1>SIETE</h1>
-  </div> -->
-
   <Titulo />
+
+  <SobreProyecto />
 
   <div id="cra7">
     <!-- <div id="fondoMontaña"></div> -->
