@@ -217,13 +217,13 @@ onMounted(async () => {
 
       zona.addEventListener('mouseenter', () => {
         infoPuntoA.innerHTML = `<h4>${puntoA.nombre}</h4>
-        <p>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
         <p>ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
+        <p>caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>
+        <p>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
         <p>infraestructura: ${puntoA.infraestructura ? puntoA.infraestructura : 'sin información'}</p>
-        <p>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p> 
-        <p>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>
+        <p>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p>
         <p>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
-        <p>caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>`;
+        <p>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>`;
         infoPuntoA.style.left = `${xZona + 1}vw`;
         infoPuntoA.style.display = 'block';
       });
@@ -293,13 +293,13 @@ function convertirEscala(
 <template>
   <div id="contenedorVis">
     <div id="etiquetas">
-      <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
       <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
+      <p class="etiqueta" id="etiqCaminabilidad">Caminabilidad</p>
+      <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
       <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
       <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
-      <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
       <p class="etiqueta" id="etiqProximidad">Proximidad</p>
-      <p class="etiqueta" id="etiqCaminabilidad">Caminabilidad</p>
+      <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
     </div>
     <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
       <path id="trazoHabitabilidad" class="trazo" />
