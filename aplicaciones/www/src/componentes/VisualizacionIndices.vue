@@ -217,13 +217,13 @@ onMounted(async () => {
 
       zona.addEventListener('mouseenter', () => {
         infoPuntoA.innerHTML = `<h4>${puntoA.nombre}</h4>
-        <p>ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
-        <p>caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>
-        <p>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
-        <p>infraestructura: ${puntoA.infraestructura ? puntoA.infraestructura : 'sin información'}</p>
-        <p>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p>
-        <p>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
-        <p>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>`;
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloAmbiente"></span> ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloCaminabilidad"></span> caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloHabitabilidad"></span>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloInfraestructura"></span>infraestructura: ${puntoA.infraestructura ? puntoA.infraestructura : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloMovilidad"></span>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloProximidad"></span>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloSeguridad"></span>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>`;
         infoPuntoA.style.left = `${xZona + 1}vw`;
         infoPuntoA.style.display = 'block';
       });
@@ -437,6 +437,42 @@ function convertirEscala(
   h4 {
     margin: 0;
     text-align: start;
+  }
+
+  .elementoEtiqueta {
+    display: flex;
+    align-items: center;
+  }
+
+  .circuloEtiqueta {
+    height: 4px;
+    width: 4px;
+    margin-right: 0.5em;
+    border-radius: 50%;
+    display: block;
+    background-color: black;
+  }
+
+  #circuloAmbiente {
+    background-color: var(--colorAmbiente);
+  }
+  #circuloCaminabilidad {
+    background-color: var(--colorCaminabilidad);
+  }
+  #circuloHabitabilidad {
+    background-color: var(--colorHabitabilidad);
+  }
+  #circuloInfraestructura {
+    background-color: var(--colorInfraestructura);
+  }
+  #circuloMovilidad {
+    background-color: var(--colorMovilidad);
+  }
+  #circuloProximidad {
+    background-color: var(--colorProximidad);
+  }
+  #circuloSeguridad {
+    background-color: var(--colorSeguridad);
   }
 }
 
