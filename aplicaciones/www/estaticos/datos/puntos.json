@@ -2,7 +2,7 @@
     {
         "id": "0",
         "slug": "plaza-de-bolivar",
-        "nombre": "Plaza de Bolivar",
+        "nombre": "Plaza de Bolívar",
         "caminabilidad": 0.53,
         "seguridad": 0.63,
         "movilidad": 0.75,
