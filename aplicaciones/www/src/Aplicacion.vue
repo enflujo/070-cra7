@@ -120,8 +120,8 @@ function convertirEscala(
         class="ilustracion"
         v-if="punto.ilustraciones"
         :src="`/imagenes/${punto.ilustraciones}.png`"
-        alt=""
-        :style="`left:${punto.ubicacionX - 5}vw`"
+        :alt="`${punto.ilustraciones}`"
+        :style="`left:${punto.ilustraciones[0] === 'seminario_conciliar' ? punto.ubicacionX - 11 : punto.ubicacionX - 5}vw`"
       />
 
       <img
@@ -179,7 +179,7 @@ function convertirEscala(
   /*  background-color: rgb(243, 156, 255);
   height: 8px; */
   width: 300vw; // debe ser igual que anchoEnPantalla
-  top: 16vw;
+  bottom: 12vw;
   height: 30vh;
   position: absolute;
   margin: 0 5vw;
@@ -197,10 +197,10 @@ function convertirEscala(
 }
 
 .ilustracion {
-  bottom: 2vh;
+  bottom: 10vh;
   position: absolute;
   height: auto;
-  width: 22vw;
+  width: 23vw;
   //opacity: 0.7;
 
   &:hover {
