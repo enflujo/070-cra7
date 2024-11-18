@@ -9,7 +9,7 @@ onMounted(async () => {
 
   const texto = new Blotter.Text('SIETE', {
     family: 'Rubik Bubbles',
-    size: 240,
+    size: 210,
     fill: '#F3D78E',
   });
 
@@ -56,8 +56,12 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 #contenedorTitulo {
+  display: block;
+  margin-left: 25vw;
+  position: absolute;
   text-align: center;
-  width: 100vw;
+  top: 0;
+  z-index: 9;
 }
 body {
   background-color: #7acf9c;
@@ -65,9 +69,9 @@ body {
 
 .texto {
   font-family: 'Rubik Bubbles', system-ui;
-  font-weight: 400;
+  font-weight: 370;
   font-style: normal;
-  font-size: 120px;
+  font-size: 110px;
   display: block;
   text-align: center;
   color: #f3d78e;

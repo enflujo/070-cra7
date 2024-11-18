@@ -108,42 +108,46 @@ function convertirEscala(
 </script>
 
 <template>
-  <Titulo />
-
   <SobreProyecto />
 
   <div id="cra7">
-    <!-- <div id="fondoMontaña"></div> -->
+    <Titulo />
+    <div id="fondoCalle"></div>
+    <div id="contenedorElementos">
+      <div class="elementosPunto" v-for="punto in puntosUbicados" :key="punto.slug">
+        <img
+          class="ilustracion"
+          v-if="punto.ilustraciones"
+          :src="`/imagenes/lugares/${punto.ilustraciones}.png`"
+          :alt="`${punto.ilustraciones}`"
+          :style="`left:${punto.ilustraciones[0] === 'seminario_conciliar' || punto.ilustraciones[0] === 'abastos_codabas' ? punto.ubicacionX - 12 : punto.ubicacionX - 5}vw`"
+        />
 
-    <div class="elementosPunto" v-for="punto in puntosUbicados" :key="punto.slug">
-      <img
-        class="ilustracion"
-        v-if="punto.ilustraciones"
-        :src="`/imagenes/${punto.ilustraciones}.png`"
-        :alt="`${punto.ilustraciones}`"
-        :style="`left:${punto.ilustraciones[0] === 'seminario_conciliar' ? punto.ubicacionX - 11 : punto.ubicacionX - 5}vw`"
-      />
+        <img
+          @click="abrirFicha(punto.slug)"
+          class="icono iconoPodcast"
+          v-if="punto.podcast"
+          src="/imagenes/icono_podcast.png"
+          alt="ícono abrir podcast"
+          :style="`left:${punto.ubicacionX}vw`"
+        />
 
-      <img
-        @click="abrirFicha(punto.slug)"
-        class="icono iconoPodcast"
-        v-if="punto.podcast"
-        src="/imagenes/icono_podcast.png"
-        alt="ícono abrir podcast"
-        :style="`left:${punto.ubicacionX}vw`"
-      />
+        <img
+          @click="abrirFicha(punto.slug)"
+          class="icono iconoPerfil"
+          v-if="punto.perfil"
+          src="/imagenes/icono_perfil.png"
+          alt="ícono abrir perfil"
+          :style="`left:${punto.ubicacionX}vw`"
+        />
 
-      <img
-        @click="abrirFicha(punto.slug)"
-        class="icono iconoPerfil"
-        v-if="punto.perfil"
-        src="/imagenes/icono_perfil.png"
-        alt="ícono abrir perfil"
-        :style="`left:${punto.ubicacionX}vw`"
-      />
-
-      <p class="nombreCalle" :style="`left:${punto.ubicacionX}vw`">{{ punto.nombre }}</p>
-
+        <p
+          class="nombreCalle"
+          :style="`left:${punto.ubicacionX - 1}vw; padding:${punto.nombre === 'Plaza de Bolívar' || punto.nombre === 'Avenida Jiménez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
+        >
+          {{ punto.nombre }}
+        </p>
+      </div>
       <FichaLugar v-if="fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
     </div>
   </div>
@@ -156,43 +160,36 @@ function convertirEscala(
 
 #aplicacion {
   display: flex;
-}
-#titulo {
-  margin: 2em auto;
-  display: block;
-  font-family: var(--fuenteTitulo);
-  text-align: center;
-  color: var(--amarilloTitulo);
-
-  h1 {
-    margin: 0;
-    font-size: 4em;
-  }
-
-  h2 {
-    margin: 0;
-    font-family: var(--fuenteTitulo);
-  }
+  width: 600vw;
 }
 
 #cra7 {
-  /*  background-color: rgb(243, 156, 255);
-  height: 8px; */
-  width: 300vw; // debe ser igual que anchoEnPantalla
-  bottom: 12vw;
-  height: 30vh;
-  position: absolute;
-  margin: 0 5vw;
+  background-image: url(/imagenes/fondos/montanias_septimazo.png);
+  background-position: top;
+  background-size: contain;
+  position: relative;
+  top: 0;
+  height: 60vh;
+  width: 600vw;
 
-  #fondoMontaña {
-    background-image: url('/imagenes/silueta_montaña_prueba.png');
-    left: 0;
-    top: 0;
-    background-position: bottom;
-    height: 15vw;
-    width: 99vw;
-    opacity: 0.2;
+  #fondoCalle {
+    background-image: url(/imagenes/fondos/calle_septimazo.png);
+    height: 400px;
     position: absolute;
+    width: 600vw;
+    bottom: -4vw;
+    background-position: bottom;
+    background-size: contain;
+    background-repeat: repeat-x;
+  }
+
+  #contenedorElementos {
+    padding: 0 0 0 3vw;
+    width: 594vw;
+    height: 70vh;
+    position: absolute;
+    left: 3vw;
+    top: 14px;
   }
 }
 
@@ -201,11 +198,9 @@ function convertirEscala(
   position: absolute;
   height: auto;
   width: 23vw;
-  //opacity: 0.7;
 
   &:hover {
     opacity: 1;
-    //filter: brightness(0.5);
   }
 }
 
@@ -228,6 +223,10 @@ function convertirEscala(
   position: absolute;
   bottom: -3vh;
   font-size: 0.7em;
+  width: 40px;
+  text-align: center;
+  background-color: #f5d68ed7;
+  border-radius: 5px;
 }
 
 .infoPunto {
