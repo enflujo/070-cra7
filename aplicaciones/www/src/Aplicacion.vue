@@ -235,6 +235,7 @@ function convertirEscala(
 
 // Etiqueta del lugar ilustrado
 .etiquetaIlustracion {
+  font-family: var(--fuentePrincipal);
   bottom: 5vh;
   position: absolute;
   height: 1em;
