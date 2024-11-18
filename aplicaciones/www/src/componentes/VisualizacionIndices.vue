@@ -347,7 +347,7 @@ function convertirEscala(
 #contenedorTrazos {
   // Ancho del contenedor
   background-color: white;
-  width: 95vw;
+  width: 96vw;
   height: 120px;
   border: 1px black solid;
   margin-bottom: 1em;

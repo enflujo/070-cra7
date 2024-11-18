@@ -6,6 +6,8 @@ export const usarCerebro = defineStore('cerebro', {
   state: (): Cerebro => {
     return {
       lugarElegido: '',
+      fichaVisible: false,
+      infoVisible: true,
     };
   },
 

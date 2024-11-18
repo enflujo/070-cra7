@@ -17,30 +17,34 @@ const podcasts: Ref<{ id: string; x: number }[]> = ref([]);
 const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
-const fichaVisible: Ref<boolean> = ref(false);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
-
-const contenedorSobreProyecto: Ref<HTMLDivElement | undefined> = ref();
+const botonInformacion: Ref<HTMLDivElement | null> = ref(null);
 
 const cerebro = usarCerebro();
 
 let ratonSobreLugar: string = '';
 
+// Funciones para abrir y cerrar ficha de cada lugar
 function abrirFicha(id: string) {
   cerebro.lugarElegido = id;
   idPodcast.value = id;
   idLugar.value = id;
-  fichaVisible.value = true;
+  cerebro.fichaVisible = true;
 }
 
 function cerrarFicha() {
   idPodcast.value = null;
   idLugar.value = null;
-  fichaVisible.value = false;
+  cerebro.fichaVisible = false;
+}
+
+// Función para abrir información sobre el proyecto
+function abrirInfo() {
+  cerebro.infoVisible = true;
 }
 
 // Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
-function mostrarNombreLugar(event: MouseEvent, id: string) {
+function mostrarNombreLugar(id: string) {
   const punto = puntosUbicados.value.find((punto) => punto.id === id);
 
   if (!punto?.ilustraciones || !etiquetaIlustracion.value) return;
@@ -56,6 +60,20 @@ function ocultarNombreLugar() {
   if (!etiquetaIlustracion.value) return;
   etiquetaIlustracion.value.innerText = '';
   etiquetaIlustracion.value.style.display = 'none';
+}
+
+// Cerrar ficha o info de proyecto al hacer clic afuera
+function clicFuera(evento: MouseEvent) {
+  evento.stopPropagation();
+
+  const elemento = evento.target as HTMLElement;
+  const botonAbrir = elemento.classList.contains('botonAbrir');
+  const fichaLugar = elemento.classList.contains('fichaLugar');
+  const infoProyecto = elemento.classList.contains('infoProyecto');
+
+  if (botonAbrir || fichaLugar || infoProyecto) return;
+  cerebro.infoVisible = false;
+  cerebro.fichaVisible = false;
 }
 
 async function cargarDatos() {
@@ -76,7 +94,6 @@ let distanciaTotal = 0;
 onMounted(async () => {
   // Punto por lugar
   puntos.value = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
-
   puntosUbicados.value = puntos.value;
 
   // Calcular lugar de cada punto por lugar y pintarlos
@@ -130,66 +147,89 @@ function convertirEscala(
 </script>
 
 <template>
-  <SobreProyecto />
+  <div id="contenedorGeneral" @click="clicFuera($event)">
+    <span ref="botonInformacion" id="botonInformacion" @click="abrirInfo" class="botonAbrir">?</span>
+    <SobreProyecto v-if="cerebro.infoVisible" />
 
-  <div id="cra7">
-    <Titulo />
-    <div id="fondoCalle"></div>
-    <div id="contenedorElementos">
-      <div class="elementosPunto" v-for="punto in puntosUbicados" :key="punto.slug">
-        <img
-          @mouseenter="mostrarNombreLugar($event, punto.id)"
-          @mouseleave="ocultarNombreLugar"
-          class="ilustracion"
-          v-if="punto.ilustraciones"
-          :src="`/imagenes/lugares/${punto.ilustraciones}.png`"
-          :alt="`${punto.ilustraciones}`"
-          :style="`left:${punto.ilustraciones[0] === 'seminario_conciliar' || punto.ilustraciones[0] === 'abastos_codabas' ? punto.ubicacionX - 12 : punto.ubicacionX - 5}vw`"
-        />
+    <div id="cra7">
+      <Titulo />
+      <div id="fondoCalle"></div>
+      <div id="contenedorElementos">
+        <div class="elementosPunto" v-for="punto in puntosUbicados" :key="punto.slug">
+          <img
+            @mouseenter="mostrarNombreLugar(punto.id)"
+            @mouseleave="ocultarNombreLugar"
+            class="ilustracion"
+            v-if="punto.ilustraciones"
+            :src="`/imagenes/lugares/${punto.ilustraciones}.png`"
+            :alt="`${punto.ilustraciones}`"
+            :style="`left:${punto.ilustraciones[0] === 'Seminario Conciliar' || punto.ilustraciones[0] === 'Centro de abastos Codabas' ? punto.ubicacionX - 12 : punto.ubicacionX - 5}vw`"
+          />
 
-        <!--Quizás hay que quitar esos íconos y dejar solo el nombre de la calle para abrir ficha. 
+          <!--Quizás hay que quitar esos íconos y dejar solo el nombre de la calle para abrir ficha. 
         Depende de si todos los puntos van a tener alguna información-->
-        <!--        <img
-          @click="abrirFicha(punto.slug)"
-          class="icono iconoPodcast"
-          v-if="punto.podcast"
-          src="/imagenes/icono_podcast.png"
-          alt="ícono abrir podcast"
-          :style="`left:${punto.ubicacionX}vw`"
-        />
+          <img
+            @click="abrirFicha(punto.slug)"
+            class="icono iconoPodcast botonAbrir"
+            v-if="punto.podcast"
+            src="/imagenes/icono_podcast.png"
+            alt="ícono abrir podcast"
+            :style="`left:${punto.ubicacionX}vw`"
+          />
 
-        <img
-          @click="abrirFicha(punto.slug)"
-          class="icono iconoPerfil"
-          v-if="punto.perfil"
-          src="/imagenes/icono_perfil.png"
-          alt="ícono abrir perfil"
-          :style="`left:${punto.ubicacionX}vw`"
-        /> -->
+          <img
+            @click="abrirFicha(punto.slug)"
+            class="icono iconoPerfil botonAbrir"
+            v-if="punto.perfil"
+            src="/imagenes/icono_perfil.png"
+            alt="ícono abrir perfil"
+            :style="`left:${punto.ubicacionX}vw`"
+          />
 
-        <p
-          @click="abrirFicha(punto.id)"
-          class="nombreCalle"
-          :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX ? punto.ubicacionX - 1 : 0}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
-        >
-          {{ punto.nombre }}
-        </p>
+          <p
+            @click="abrirFicha(punto.id)"
+            class="nombreCalle"
+            :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX ? punto.ubicacionX - 1 : 0}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
+          >
+            {{ punto.nombre }}
+          </p>
 
-        <FichaLugar v-if="fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
+          <FichaLugar v-if="cerebro.fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
+        </div>
+        <div ref="etiquetaIlustracion" class="etiquetaIlustracion" :style="``"></div>
       </div>
-      <div ref="etiquetaIlustracion" class="etiquetaIlustracion" :style="``"></div>
     </div>
+    <VisualizacionIndices />
   </div>
-  <VisualizacionIndices />
 </template>
 
 <style lang="scss">
 @import 'scss/constantes';
 @import 'scss/general';
 
+#botonInformacion {
+  display: block;
+  padding: 0.5em;
+  border-radius: 50%;
+  background-color: var(--piel);
+  position: fixed;
+  text-align: center;
+  height: 1em;
+  width: 1em;
+  right: 10px;
+  top: 10px;
+  opacity: 0.7;
+  cursor: pointer;
+  z-index: 10;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 #aplicacion {
   display: flex;
-  width: 600vw;
+  width: 604vw;
 }
 
 #cra7 {
@@ -199,13 +239,13 @@ function convertirEscala(
   position: relative;
   top: 0;
   height: 60vh;
-  width: 600vw;
+  width: 604vw;
 
   #fondoCalle {
     background-image: url(/imagenes/fondos/calle_septimazo.png);
     height: 400px;
     position: absolute;
-    width: 600vw;
+    width: 100%;
     bottom: -4vw;
     background-position: bottom;
     background-size: contain;
@@ -244,6 +284,7 @@ function convertirEscala(
   background-color: #f5d68ed7;
   border-radius: 5px;
   padding: 0.5em;
+  display: none;
 }
 
 .icono {

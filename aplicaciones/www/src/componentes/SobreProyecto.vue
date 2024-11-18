@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import { type Ref, ref, onMounted } from 'vue';
+import { usarCerebro } from '../utilidades/cerebro';
 
 const cerrar: Ref<HTMLDivElement | undefined> = ref();
 const contenedorInfo: Ref<HTMLDivElement | undefined> = ref();
 
+const cerebro = usarCerebro();
+
 function cerrarInfo() {
   if (!contenedorInfo.value) return;
-  contenedorInfo.value.style.display = 'none';
-  console.log('cerrar');
+  cerebro.infoVisible = false;
 }
 
 onMounted(async () => {});
 </script>
 
 <template>
-  <div ref="contenedorInfo" id="contenedorInfo">
+  <div ref="contenedorInfo" class="infoProyecto visible">
     <div id="cerrar" ref="cerrar" :onclick="cerrarInfo">X</div>
     <h2>VEINTICUATRO SIETE</h2>
     <p>Descripción del proyecto</p>
@@ -22,17 +24,22 @@ onMounted(async () => {});
 </template>
 
 <style lang="scss">
-#contenedorInfo {
-  position: absolute;
+.infoProyecto {
+  position: fixed;
   left: 5vw;
   top: 5vh;
   border: 1px solid black;
-  width: 90vw;
+  width: 50vw;
   height: 85vh;
   background-color: var(--menta);
   padding: 1em;
   display: block;
   z-index: 100;
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
 }
 
 #cerrar {

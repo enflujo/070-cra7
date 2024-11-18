@@ -97,6 +97,10 @@ const perfiles: ElementoPaisaje[] = [
   },
 ];
 
+function cerrar() {
+  cerebro.fichaVisible = false;
+}
+
 onMounted(() => {
   const podcast = podcasts.find((podcast) => podcast.id === cerebro.lugarElegido);
   const perfil = perfiles.find((perfil) => perfil.id === cerebro.lugarElegido);
@@ -116,7 +120,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="fichaLugar">
+  <div class="fichaLugar">
     <span id="cerrar" @click="cerrar">X</span>
 
     <!--   <Podcast :id="podcast.id" /> -->
@@ -136,15 +140,15 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-#fichaLugar {
+.fichaLugar {
   border: 1px solid black;
-  width: 40vw;
+  width: 50vw;
   height: 85vh;
   padding: 1em;
   background-color: var(--lila);
   position: fixed;
-  top: 2em;
-  left: 2vw;
+  top: 5vh;
+  left: 5vw;
   z-index: 9;
 }
 
