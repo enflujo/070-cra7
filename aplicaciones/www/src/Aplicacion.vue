@@ -18,10 +18,13 @@ const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const fichaVisible: Ref<boolean> = ref(false);
+const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
 
 const contenedorSobreProyecto: Ref<HTMLDivElement | undefined> = ref();
 
 const cerebro = usarCerebro();
+
+let ratonSobreLugar: string = '';
 
 function abrirFicha(id: string) {
   cerebro.lugarElegido = id;
@@ -34,6 +37,25 @@ function cerrarFicha() {
   idPodcast.value = null;
   idLugar.value = null;
   fichaVisible.value = false;
+}
+
+// Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
+function mostrarNombreLugar(event: MouseEvent, id: string) {
+  const punto = puntosUbicados.value.find((punto) => punto.id === id);
+
+  if (!punto?.ilustraciones || !etiquetaIlustracion.value) return;
+  ratonSobreLugar = punto?.ilustraciones[0];
+
+  etiquetaIlustracion.value.innerText = ratonSobreLugar.split('_').join(' ');
+  etiquetaIlustracion.value.style.left = `${punto.ubicacionX}vw`;
+  etiquetaIlustracion.value.style.bottom = `250px`;
+  etiquetaIlustracion.value.style.display = 'block';
+}
+
+function ocultarNombreLugar() {
+  if (!etiquetaIlustracion.value) return;
+  etiquetaIlustracion.value.innerText = '';
+  etiquetaIlustracion.value.style.display = 'none';
 }
 
 async function cargarDatos() {
@@ -116,6 +138,8 @@ function convertirEscala(
     <div id="contenedorElementos">
       <div class="elementosPunto" v-for="punto in puntosUbicados" :key="punto.slug">
         <img
+          @mouseenter="mostrarNombreLugar($event, punto.id)"
+          @mouseleave="ocultarNombreLugar"
           class="ilustracion"
           v-if="punto.ilustraciones"
           :src="`/imagenes/lugares/${punto.ilustraciones}.png`"
@@ -123,7 +147,9 @@ function convertirEscala(
           :style="`left:${punto.ilustraciones[0] === 'seminario_conciliar' || punto.ilustraciones[0] === 'abastos_codabas' ? punto.ubicacionX - 12 : punto.ubicacionX - 5}vw`"
         />
 
-        <img
+        <!--Quizás hay que quitar esos íconos y dejar solo el nombre de la calle para abrir ficha. 
+        Depende de si todos los puntos van a tener alguna información-->
+        <!--        <img
           @click="abrirFicha(punto.slug)"
           class="icono iconoPodcast"
           v-if="punto.podcast"
@@ -139,16 +165,19 @@ function convertirEscala(
           src="/imagenes/icono_perfil.png"
           alt="ícono abrir perfil"
           :style="`left:${punto.ubicacionX}vw`"
-        />
+        /> -->
 
         <p
+          @click="abrirFicha(punto.id)"
           class="nombreCalle"
-          :style="`left:${punto.ubicacionX - 1}vw; padding:${punto.nombre === 'Plaza de Bolívar' || punto.nombre === 'Avenida Jiménez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
+          :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX ? punto.ubicacionX - 1 : 0}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
         >
           {{ punto.nombre }}
         </p>
+
+        <FichaLugar v-if="fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
       </div>
-      <FichaLugar v-if="fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
+      <div ref="etiquetaIlustracion" class="etiquetaIlustracion" :style="``"></div>
     </div>
   </div>
   <VisualizacionIndices />
@@ -204,6 +233,18 @@ function convertirEscala(
   }
 }
 
+// Etiqueta del lugar ilustrado
+.etiquetaIlustracion {
+  bottom: 5vh;
+  position: absolute;
+  height: 1em;
+  font-size: 1em;
+  text-align: center;
+  background-color: #f5d68ed7;
+  border-radius: 5px;
+  padding: 0.5em;
+}
+
 .icono {
   position: absolute;
   cursor: pointer;
@@ -223,10 +264,10 @@ function convertirEscala(
   position: absolute;
   bottom: -3vh;
   font-size: 0.7em;
-  width: 40px;
   text-align: center;
   background-color: #f5d68ed7;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .infoPunto {

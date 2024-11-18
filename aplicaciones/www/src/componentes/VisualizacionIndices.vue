@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref, Ref } from 'vue';
 import { distanciaEntreCoordenadas } from '../utilidades/ayudas';
 
 async function cargarDatos() {
@@ -13,6 +13,8 @@ async function cargarDatos() {
 }
 
 cargarDatos().catch(console.error);
+
+const infoPuntoA: Ref<HTMLElement | null> = ref(null);
 
 const multiplicadorAncho: number = 0.96; // medida en vw
 const alturaContenedor: number = 120;
@@ -31,7 +33,7 @@ let lineaCaminabilidad: string = `M 0 ${alturaContenedor}`;
 
 onMounted(async () => {
   const contenedorZonas: HTMLElement = document.getElementById('contenedorZonas') as HTMLElement;
-  const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
+  //const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
 
   // Cargar datos
   const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
@@ -209,14 +211,14 @@ onMounted(async () => {
 
       zona.classList.add('zona');
       zona.style.width = `${ancho}vw`;
-      zona.style.left = `${xZona - ancho / 2}vw`; //`${distanciaTotal}%`
-      //  zona.style.bottom = '14px';
+      zona.style.left = `${xZona - ancho / 2}vw`;
 
       // Agregar cada punto a la línea de la 7
       contenedorZonas.appendChild(zona);
 
       zona.addEventListener('mouseenter', () => {
-        infoPuntoA.innerHTML = `<h4>${puntoA.nombre}</h4>
+        if (!infoPuntoA.value) return;
+        infoPuntoA.value.innerHTML = `<h4>${puntoA.nombre}</h4>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloAmbiente"></span> ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloCaminabilidad"></span> caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloHabitabilidad"></span>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
@@ -224,12 +226,13 @@ onMounted(async () => {
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloMovilidad"></span>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloProximidad"></span>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloSeguridad"></span>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>`;
-        infoPuntoA.style.left = `${xZona + 1}vw`;
-        infoPuntoA.style.display = 'block';
+        infoPuntoA.value.style.left = `${xZona + 1}vw`;
+        infoPuntoA.value.style.display = 'block';
       });
       zona.addEventListener('mouseleave', () => {
-        infoPuntoA.innerText = '';
-        infoPuntoA.style.display = 'none';
+        if (!infoPuntoA.value) return;
+        infoPuntoA.value.innerText = '';
+        infoPuntoA.value.style.display = 'none';
       });
 
       if (i < puntos.length - 1) {
@@ -325,7 +328,7 @@ function convertirEscala(
     </svg>
 
     <div id="contenedorZonas">
-      <div class="infoPunto" id="infoPuntoA"></div>
+      <div class="infoPunto" ref="infoPuntoA" id="infoPuntoA"></div>
     </div>
   </div>
 </template>

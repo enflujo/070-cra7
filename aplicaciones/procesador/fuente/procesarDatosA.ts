@@ -86,7 +86,7 @@ export default async (): Promise<Punto[]> => {
          * En esta fila están los puntos como nombres de las columnas
          */
         if (numeroFila === 1) {
-          const slugPrimerPunto = slugificar('Plaza de Bolivar');
+          const slugPrimerPunto = slugificar('Plaza de Bolívar');
           let guardandoPuntos = false;
           let id = 0;
 
