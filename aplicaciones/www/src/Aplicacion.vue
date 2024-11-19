@@ -24,6 +24,17 @@ const cerebro = usarCerebro();
 
 let ratonSobreLugar: string = '';
 
+const arboles: string[] = [
+  'arbol1',
+  'arbol2',
+  'arbol3',
+  'borrachero',
+  'palmera',
+  'yarumoamarillo',
+  'yarumorosa',
+  'yarumoverde',
+];
+
 // Funciones para abrir y cerrar ficha de cada lugar
 function abrirFicha(id: string) {
   cerebro.lugarElegido = id;
@@ -144,6 +155,10 @@ function convertirEscala(
     escalaDestinoMin
   );
 }
+
+function numeroAleatorio(maximo: number) {
+  return Math.floor(Math.random() * maximo);
+}
 </script>
 
 <template>
@@ -166,8 +181,26 @@ function convertirEscala(
             :style="`left:${punto.ilustraciones[0] === 'Seminario Conciliar' || punto.ilustraciones[0] === 'Centro de abastos Codabas' ? punto.ubicacionX - 12 : punto.ubicacionX - 5}vw`"
           />
 
-          <!--Quizás hay que quitar esos íconos y dejar solo el nombre de la calle para abrir ficha. 
-        Depende de si todos los puntos van a tener alguna información-->
+          <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
+          <img
+            @click="abrirFicha(punto.slug)"
+            class="arbol"
+            v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
+            :src="`/imagenes/vegetacion/${arboles[numeroAleatorio(arboles.length)]}.png`"
+            alt="árbol"
+            :style="`left:${punto.ubicacionX - 5}vw`"
+          />
+
+          <img
+            @click="abrirFicha(punto.slug)"
+            class="arbol"
+            v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
+            :src="`/imagenes/vegetacion/${arboles[numeroAleatorio(arboles.length)]}.png`"
+            alt="árbol"
+            :style="`left:${punto.ubicacionX - 2}vw`"
+          />
+
+          <!--íconos de podcast y perfil-->
           <img
             @click="abrirFicha(punto.slug)"
             class="icono iconoPodcast botonAbrir"
@@ -183,7 +216,7 @@ function convertirEscala(
             v-if="punto.perfil"
             src="/imagenes/icono_perfil2.png"
             alt="ícono abrir perfil"
-            :style="`left:${punto.ubicacionX}vw`"
+            :style="`left:${punto.ubicacionX - 3}vw`"
           />
 
           <p
@@ -271,6 +304,11 @@ function convertirEscala(
     opacity: 1;
   }
 }
+.arbol {
+  position: absolute;
+  height: 90px;
+  bottom: 90px;
+}
 
 // Etiqueta del lugar ilustrado
 .etiquetaIlustracion {
@@ -289,6 +327,7 @@ function convertirEscala(
 .icono {
   position: absolute;
   cursor: pointer;
+  z-index: 9;
 }
 
 .iconoPodcast {
@@ -301,7 +340,7 @@ function convertirEscala(
 
 .iconoPerfil {
   height: 35px;
-  bottom: 130px;
+  bottom: 180px;
   background: var(--amarillo);
   border-radius: 50%;
   padding: 0.3em;
