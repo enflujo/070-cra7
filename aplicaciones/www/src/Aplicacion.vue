@@ -219,6 +219,16 @@ function numeroAleatorio(maximo: number) {
             :style="`left:${punto.ubicacionX - 3}vw`"
           />
 
+          <img
+            @click="punto.slug === 'calle-32' ? abrirFicha(punto.slug) : ''"
+            class="icono iconoPajaro"
+            :class="punto.slug === 'calle-32' ? 'texto' : ''"
+            v-if="punto.txtPajaros"
+            src="/imagenes/icono_pajaro.png"
+            alt="ícono abrir perfil"
+            :style="`left:${punto.ubicacionX - 3}vw; bottom:${210 + numeroAleatorio(60)}px`"
+          />
+
           <p
             class="nombreCalle"
             :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX ? punto.ubicacionX - 1 : 0}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
@@ -326,8 +336,11 @@ function numeroAleatorio(maximo: number) {
 
 .icono {
   position: absolute;
-  cursor: pointer;
   z-index: 9;
+}
+
+.botonAbrir {
+  cursor: pointer;
 }
 
 .iconoPodcast {
@@ -344,6 +357,17 @@ function numeroAleatorio(maximo: number) {
   background: var(--amarillo);
   border-radius: 50%;
   padding: 0.3em;
+}
+
+.iconoPajaro {
+  height: 35px;
+  border-radius: 50%;
+  padding: 0.3em;
+
+  &.texto {
+    //background-color: var(--amarillo);
+    cursor: pointer;
+  }
 }
 
 .nombreCalle {

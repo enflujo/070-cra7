@@ -27,7 +27,8 @@ export default async (puntos: Punto[], aire: Aire): Promise<Punto[]> => {
         primeraFilaProcesada = true;
       }
 
-      const { nombre, latitud, longitud, puntoRuido, ilustracion, idAire, perfil, podcast } = obj.formatted.obj;
+      const { nombre, latitud, longitud, puntoRuido, ilustracion, idAire, txtPajaros, perfil, podcast } =
+        obj.formatted.obj;
 
       const slug = slugificar(nombre);
       const punto = puntos.find((punto) => punto.slug == slug);
@@ -65,6 +66,11 @@ export default async (puntos: Punto[], aire: Aire): Promise<Punto[]> => {
           } else {
             errata.push({ fila: numeroFila, error: `El punto ${idAire} no existe en los datos de aire` });
           }
+        }
+
+        /** Texto sobre pájaros */
+        if (txtPajaros) {
+          punto.txtPajaros = txtPajaros;
         }
 
         /** Coordenadas de los puntos */

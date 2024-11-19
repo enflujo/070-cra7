@@ -41,6 +41,7 @@ export interface Punto {
   caminabilidad?: number;
   idRuido?: string;
   idAire?: string;
+  txtPajaros?: string;
   ilustraciones?: string[];
   podcast?: string;
   perfil?: string;
