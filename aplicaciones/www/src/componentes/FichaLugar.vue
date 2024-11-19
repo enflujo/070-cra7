@@ -150,6 +150,7 @@ onMounted(() => {
   top: 5vh;
   left: 5vw;
   z-index: 9;
+  padding: 3em 6em;
 }
 
 #cerrar {

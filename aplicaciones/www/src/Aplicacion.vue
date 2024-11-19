@@ -181,13 +181,12 @@ function convertirEscala(
             @click="abrirFicha(punto.slug)"
             class="icono iconoPerfil botonAbrir"
             v-if="punto.perfil"
-            src="/imagenes/icono_perfil.png"
+            src="/imagenes/icono_perfil2.png"
             alt="ícono abrir perfil"
             :style="`left:${punto.ubicacionX}vw`"
           />
 
           <p
-            @click="abrirFicha(punto.id)"
             class="nombreCalle"
             :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX ? punto.ubicacionX - 1 : 0}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
           >
@@ -211,7 +210,7 @@ function convertirEscala(
   display: block;
   padding: 0.5em;
   border-radius: 50%;
-  background-color: var(--piel);
+  background-color: var(--lila);
   position: fixed;
   text-align: center;
   height: 1em;
@@ -293,13 +292,19 @@ function convertirEscala(
 }
 
 .iconoPodcast {
-  width: 30px;
-  bottom: 8vh;
+  width: 35px;
+  bottom: 180px;
+  background: var(--amarillo);
+  border-radius: 50%;
+  padding: 0.3em;
 }
 
 .iconoPerfil {
-  height: 30px;
-  bottom: 3vh;
+  height: 35px;
+  bottom: 130px;
+  background: var(--amarillo);
+  border-radius: 50%;
+  padding: 0.3em;
 }
 
 .nombreCalle {
@@ -309,7 +314,6 @@ function convertirEscala(
   text-align: center;
   background-color: #f5d68ed7;
   border-radius: 5px;
-  cursor: pointer;
 }
 
 .infoPunto {
