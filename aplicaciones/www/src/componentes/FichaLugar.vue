@@ -12,6 +12,8 @@ const descripcionPerfil: Ref<string> = ref('');
 const descripcionTextoPajaro: Ref<string> = ref('');
 
 const ruta: Ref<string> = ref('');
+const rutaPodcast: Ref<string> = ref('');
+
 const hayPodcast: Ref<boolean> = ref(false);
 const hayPerfil: Ref<boolean> = ref(false);
 const hayTextoPajaro: Ref<boolean> = ref(false);
@@ -21,20 +23,24 @@ const cerebro = usarCerebro();
 const podcasts: ElementoPaisaje[] = [
   {
     id: 'calle-170',
-    nombre: 'Aire y ruido',
-    descripcion: 'descripción pd1',
+    ruta: 'https://open.spotify.com/embed/episode/4KLNWodM68BNvhxlmKY7fu?utm_source=generator',
+    nombre: '¿Qué nos dicen las aves sobre la calidad del aire y el ruido de Bogotá?',
+    descripcion:
+      'En este episodio quisimos hacer algo diferente: entender los efectos que tiene vivir en una ciudad como Bogotá, no para los humanos sino para otros seres, como las aves, que habitan con nosotros desde otra altura. <br> <br> ¿Qué nos dicen las palomas, torcazas, mirlas, colibríes, reinitas y demás aves sobre el ruido y la contaminación en la capital? <br> <br> En este episodio de Veinticuatro Siete, la médica veterinaria Arlen Patricia Gómez y el profesor Ricardo Morales nos explican cómo estos factores medioambientales pueden hacer que Bogotá sea más o menos habitable para los humanos y otros seres con los que convivimos.',
   },
-  {
+  /*  {
     id: 'calle-60',
     nombre: 'Ciudad 15 min',
     descripcion: 'descripción pd2',
-  },
+  }, */
   {
     id: 'calle-67',
-    nombre: 'Ciudad 15 min',
-    descripcion: 'descripción pd2',
+    ruta: 'https://open.spotify.com/embed/episode/6SOndW9Jo3nPKpzBp9IEul?utm_source=generator',
+    nombre: 'Una ciudad para moverse, una ciudad para quedarse',
+    descripcion:
+      '¿Cómo construir soluciones de movilidad para que las personas no solo piensen en moverse, en llegar de un punto a otro en una ciudad, sino que se quieran quedar a vivir allí? ¿Se puede pensar en soluciones para transportarse mejor pero también para vivir mejor? <br> <br> En este segundo episodio de Veinticuatro Siete, el profesor e ingeniero Carlos Moncada nos explica cómo pensar una movilidad sostenible para hacer ciudades más habitables.',
   },
-  {
+  /*   {
     id: 'calle-70',
     nombre: 'Ciudad 15 min',
     descripcion: 'descripción pd2',
@@ -43,7 +49,7 @@ const podcasts: ElementoPaisaje[] = [
     id: 'calle-72',
     nombre: 'Ciudad 15 min',
     descripcion: 'descripción pd2',
-  },
+  }, */
   {
     id: 'calle-100',
     nombre: 'Movilidad / Congestión',
@@ -51,8 +57,10 @@ const podcasts: ElementoPaisaje[] = [
   },
   {
     id: 'calle-32',
-    nombre: 'Habitabilidad',
-    descripcion: 'descripción pd4',
+    ruta: 'https://open.spotify.com/embed/episode/4LjdcPIIOWgX6hw58sTZ4h?utm_source=generator',
+    nombre: 'Una ciudad habitable: ¿es chévere vivir en Bgotá?',
+    descripcion:
+      '¿Qué significa que una ciudad sea habitable? ¿Qué factores inciden en que consideremos que una ciudad es más o menos agradable para vivir? ¿Pueden los trancones y la contaminación de una ciudad afectar la salud física y mental de quienes vivimos allí? <br> <br> En este episodio de Veiticuatro Siete, la profesora y médica Olga Lucía Sarmiento nos explicará el concepto de habitabilidad urbana, y usará como ejemplo la carrera Séptima, una de las avenidas más importantes y representativas de Bogotá.',
   },
 ];
 
@@ -132,6 +140,7 @@ onMounted(() => {
   if (podcast) {
     if (podcast.nombre) nombrePodcast.value = podcast.nombre;
     if (podcast.descripcion) descripcionPodcast.value = podcast.descripcion;
+    if (podcast.ruta) rutaPodcast.value = podcast.ruta;
     hayPodcast.value = true;
   }
 
@@ -152,12 +161,20 @@ onMounted(() => {
   <div class="fichaLugar">
     <span id="cerrar" @click="cerrar">X</span>
 
-    <!--   <Podcast :id="podcast.id" /> -->
-    <h2>{{ cerebro.lugarElegido?.replace('-', ' ') }}</h2>
+    <!--   <h2>{{ cerebro.lugarElegido?.replace('-', ' ') }}</h2> -->
     <div v-if="hayPodcast" class="contenedorPodcast">
       <h3>{{ nombrePodcast }}</h3>
-      <p>{{ descripcionPodcast }}</p>
-      <audio :src="ruta" controls="true"></audio>
+      <iframe
+        style="border-radius: 12px"
+        :src="rutaPodcast"
+        width="100%"
+        height="152"
+        frameBorder="0"
+        allowfullscreen=""
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+      ></iframe>
+      <p v-html="descripcionPodcast"></p>
     </div>
 
     <div v-if="hayPerfil" class="contenedorPersonaje">
@@ -176,16 +193,15 @@ onMounted(() => {
 <style lang="scss" scoped>
 .fichaLugar {
   border: 1px solid black;
-  width: 40vw;
   height: 80vh;
+  width: 30vw;
   overflow: auto;
-  padding: 1em;
   background-color: var(--lila);
   position: fixed;
   top: 5vh;
   left: 5vw;
   z-index: 10;
-  padding: 3em 6em;
+  padding: 5em 8em;
 }
 
 #cerrar {
