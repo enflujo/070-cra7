@@ -225,7 +225,7 @@ function numeroAleatorio(maximo: number) {
             @click="abrirFicha(punto.slug)"
             class="icono iconoPerfil botonAbrir"
             v-if="punto.perfil"
-            src="/imagenes/icono_perfil2.png"
+            src="/imagenes/icono_perfil.png"
             alt="ícono abrir perfil"
             :style="`left:${(punto.ubicacionX || 0) - 3}vw`"
           />
@@ -246,9 +246,8 @@ function numeroAleatorio(maximo: number) {
           >
             {{ punto.nombre }}
           </p>
-
-          <FichaLugar v-if="cerebro.fichaVisible" :id="punto.slug" :cerrar="cerrarFicha" />
         </div>
+        <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
         <div ref="etiquetaIlustracion" class="etiquetaIlustracion" :style="``"></div>
       </div>
     </div>

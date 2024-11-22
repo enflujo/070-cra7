@@ -163,10 +163,13 @@ onMounted(() => {
 
     <!--   <h2>{{ cerebro.lugarElegido?.replace('-', ' ') }}</h2> -->
     <div v-if="hayPodcast" class="contenedorPodcast">
-      <h3>{{ nombrePodcast }}</h3>
+      <div class="tituloContenido">
+        <img class="iconoFicha iconoPodcast" src="../../estaticos/imagenes/icono_podcast.png" />
+        <h3>{{ nombrePodcast }}</h3>
+      </div>
       <iframe
         style="border-radius: 12px"
-        :src="rutaPodcast"
+        src="https://open.spotify.com/embed/episode/4KLNWodM68BNvhxlmKY7fu?utm_source=generator"
         width="100%"
         height="152"
         frameBorder="0"
@@ -177,13 +180,20 @@ onMounted(() => {
     </div>
 
     <div v-if="hayPerfil" class="contenedorPersonaje">
-      <h3>{{ nombrePerfil }}</h3>
+      <div class="tituloContenido">
+        <img class="iconoFicha iconoPerfil" src="../../estaticos/imagenes/icono_perfil.png" />
+        <h3>{{ nombrePerfil }}</h3>
+      </div>
+
       <p>{{ descripcionPerfil }}</p>
       <video :src="ruta" controls="true"></video>
     </div>
 
     <div v-if="hayTextoPajaro" class="contenedorTexto">
-      <h3>Pájaros</h3>
+      <div class="tituloContenido">
+        <img class="iconoFicha iconoPajaro" src="../../estaticos/imagenes/icono_pajaro.png" />
+        <h3>Pájaros</h3>
+      </div>
       <p v-html="descripcionTextoPajaro"></p>
     </div>
   </div>
@@ -213,7 +223,13 @@ onMounted(() => {
     font-weight: 600;
   }
 }
-.contenedorPodcast {
+.tituloContenido {
+  display: inline-flex;
+  align-items: center;
+  .iconoFicha {
+    margin-right: 1em;
+    background: transparent;
+  }
 }
 
 .contenedorPersonaje {
