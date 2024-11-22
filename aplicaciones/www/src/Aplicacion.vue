@@ -15,6 +15,8 @@ const puntosUbicados: Ref<Punto[]> = ref([]);
 const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
 const podcasts: Ref<{ id: string; x: number }[]> = ref([]);
 const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
+const arbolesElegidos: Ref<string[]> = ref([]);
+const alturaPajaros: Ref<number[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
@@ -141,6 +143,15 @@ onMounted(async () => {
       }
     }
   }
+
+  // Generar índices para árboles que van a pintarse y alturas para los pájaros
+  puntosUbicados.value.forEach((punto) => {
+    if (!punto.ambiente) return;
+    let arbol = arboles[numeroAleatorio(arboles.length)];
+    let altura = 210 + numeroAleatorio(60);
+    arbolesElegidos.value.push(arbol);
+    alturaPajaros.value.push(altura);
+  });
 });
 
 function convertirEscala(
@@ -170,7 +181,7 @@ function numeroAleatorio(maximo: number) {
       <Titulo />
       <div id="fondoCalle"></div>
       <div id="contenedorElementos">
-        <div class="elementosPunto" v-for="punto in puntosUbicados" :key="punto.slug">
+        <div class="elementosPunto" v-for="(punto, i) in puntosUbicados" :key="punto.slug">
           <img
             @mouseenter="mostrarNombreLugar(punto.id)"
             @mouseleave="ocultarNombreLugar"
@@ -178,7 +189,7 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.ilustraciones"
             :src="`/imagenes/lugares/${punto.ilustraciones}.png`"
             :alt="`${punto.ilustraciones}`"
-            :style="`left:${punto.ilustraciones[0] === 'Seminario Conciliar' || punto.ilustraciones[0] === 'Centro de abastos Codabas' ? punto.ubicacionX - 12 : punto.ubicacionX - 5}vw`"
+            :style="`left:${punto.ilustraciones[0] === 'Seminario Conciliar' || punto.ilustraciones[0] === 'Centro de abastos Codabas' ? (punto.ubicacionX || 0) - 12 : (punto.ubicacionX || 0) - 5}vw`"
           />
 
           <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
@@ -186,18 +197,18 @@ function numeroAleatorio(maximo: number) {
             @click="abrirFicha(punto.slug)"
             class="arbol"
             v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
-            :src="`/imagenes/vegetacion/${arboles[numeroAleatorio(arboles.length)]}.png`"
+            :src="`/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
-            :style="`left:${punto.ubicacionX - 5}vw`"
+            :style="`left:${(punto.ubicacionX || 0) - 5}vw`"
           />
 
           <img
             @click="abrirFicha(punto.slug)"
             class="arbol"
             v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
-            :src="`/imagenes/vegetacion/${arboles[numeroAleatorio(arboles.length)]}.png`"
+            :src="`/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
-            :style="`left:${punto.ubicacionX - 2}vw`"
+            :style="`left:${(punto.ubicacionX || 0) - 2}vw`"
           />
 
           <!--íconos de podcast y perfil-->
@@ -216,7 +227,7 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.perfil"
             src="/imagenes/icono_perfil2.png"
             alt="ícono abrir perfil"
-            :style="`left:${punto.ubicacionX - 3}vw`"
+            :style="`left:${(punto.ubicacionX || 0) - 3}vw`"
           />
 
           <img
@@ -226,7 +237,7 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.txtPajaros"
             src="/imagenes/icono_pajaro.png"
             alt="ícono abrir perfil"
-            :style="`left:${punto.ubicacionX - 3}vw; bottom:${210 + numeroAleatorio(60)}px`"
+            :style="`left:${(punto.ubicacionX || 0) - 3}vw; bottom:${alturaPajaros[i]}px`"
           />
 
           <p
@@ -318,6 +329,7 @@ function numeroAleatorio(maximo: number) {
   position: absolute;
   height: 90px;
   bottom: 90px;
+  z-index: 9;
 }
 
 // Etiqueta del lugar ilustrado

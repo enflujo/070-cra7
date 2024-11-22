@@ -18,7 +18,7 @@ onMounted(async () => {});
 <template>
   <div ref="contenedorInfo" class="infoProyecto visible">
     <div id="cerrar" ref="cerrar" :onclick="cerrarInfo">X</div>
-    <h2>VEINTICUATRO SIETE</h2>
+    <h2>VEINTICUATRO / SIETE</h2>
     <p>
       Lorem ipsum dolor sit amet consectetur adipiscing elit, cubilia proin cum placerat nullam fringilla nascetur,
       magnis laoreet ut tristique litora congue. Cras lobortis litora varius vulputate per mollis sollicitudin elementum
