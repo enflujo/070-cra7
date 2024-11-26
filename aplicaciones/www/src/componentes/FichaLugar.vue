@@ -20,50 +20,6 @@ const hayTextoPajaro: Ref<boolean> = ref(false);
 
 const cerebro = usarCerebro();
 
-const podcasts: ElementoPaisaje[] = [
-  {
-    id: 'calle-170',
-    ruta: 'https://open.spotify.com/embed/episode/4KLNWodM68BNvhxlmKY7fu?utm_source=generator',
-    nombre: '¿Qué nos dicen las aves sobre la calidad del aire y el ruido de Bogotá?',
-    descripcion:
-      'En este episodio quisimos hacer algo diferente: entender los efectos que tiene vivir en una ciudad como Bogotá, no para los humanos sino para otros seres, como las aves, que habitan con nosotros desde otra altura. <br> <br> ¿Qué nos dicen las palomas, torcazas, mirlas, colibríes, reinitas y demás aves sobre el ruido y la contaminación en la capital? <br> <br> En este episodio de Veinticuatro Siete, la médica veterinaria Arlen Patricia Gómez y el profesor Ricardo Morales nos explican cómo estos factores medioambientales pueden hacer que Bogotá sea más o menos habitable para los humanos y otros seres con los que convivimos.',
-  },
-  /*  {
-    id: 'calle-60',
-    nombre: 'Ciudad 15 min',
-    descripcion: 'descripción pd2',
-  }, */
-  {
-    id: 'calle-67',
-    ruta: 'https://open.spotify.com/embed/episode/6SOndW9Jo3nPKpzBp9IEul?utm_source=generator',
-    nombre: 'Una ciudad para moverse, una ciudad para quedarse',
-    descripcion:
-      '¿Cómo construir soluciones de movilidad para que las personas no solo piensen en moverse, en llegar de un punto a otro en una ciudad, sino que se quieran quedar a vivir allí? ¿Se puede pensar en soluciones para transportarse mejor pero también para vivir mejor? <br> <br> En este segundo episodio de Veinticuatro Siete, el profesor e ingeniero Carlos Moncada nos explica cómo pensar una movilidad sostenible para hacer ciudades más habitables.',
-  },
-  /*   {
-    id: 'calle-70',
-    nombre: 'Ciudad 15 min',
-    descripcion: 'descripción pd2',
-  },
-  {
-    id: 'calle-72',
-    nombre: 'Ciudad 15 min',
-    descripcion: 'descripción pd2',
-  }, */
-  {
-    id: 'calle-100',
-    nombre: 'Movilidad / Congestión',
-    descripcion: 'descripción pd3',
-  },
-  {
-    id: 'calle-32',
-    ruta: 'https://open.spotify.com/embed/episode/4LjdcPIIOWgX6hw58sTZ4h?utm_source=generator',
-    nombre: 'Una ciudad habitable: ¿es chévere vivir en Bgotá?',
-    descripcion:
-      '¿Qué significa que una ciudad sea habitable? ¿Qué factores inciden en que consideremos que una ciudad es más o menos agradable para vivir? ¿Pueden los trancones y la contaminación de una ciudad afectar la salud física y mental de quienes vivimos allí? <br> <br> En este episodio de Veiticuatro Siete, la profesora y médica Olga Lucía Sarmiento nos explicará el concepto de habitabilidad urbana, y usará como ejemplo la carrera Séptima, una de las avenidas más importantes y representativas de Bogotá.',
-  },
-];
-
 const perfiles: ElementoPaisaje[] = [
   {
     id: 'calle-32',
@@ -133,16 +89,17 @@ function cerrar() {
 }
 
 onMounted(() => {
-  const podcast = podcasts.find((podcast) => podcast.id === cerebro.lugarElegido);
+  /* No elimino esto aún hasta que no decidamos si en estas fichas habrá podcasts*/
+  //const podcast = podcasts.find((podcast) => podcast.id === cerebro.lugarElegido);
   const perfil = perfiles.find((perfil) => perfil.id === cerebro.lugarElegido);
   const textoPajaro = textosPajaros.find((texto) => texto.id === cerebro.lugarElegido);
 
-  if (podcast) {
+  /*  if (podcast) {
     if (podcast.nombre) nombrePodcast.value = podcast.nombre;
     if (podcast.descripcion) descripcionPodcast.value = podcast.descripcion;
     if (podcast.ruta) rutaPodcast.value = podcast.ruta;
     hayPodcast.value = true;
-  }
+  } */
 
   if (perfil) {
     if (perfil.nombre) nombrePerfil.value = perfil.nombre;
@@ -158,11 +115,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="fichaLugar">
+  <div class="ficha fichaLugar">
     <span id="cerrar" @click="cerrar">X</span>
 
     <!--   <h2>{{ cerebro.lugarElegido?.replace('-', ' ') }}</h2> -->
-    <div v-if="hayPodcast" class="contenedorPodcast">
+    <!--     <div v-if="hayPodcast" class="contenedorPodcast">
       <div class="tituloContenido">
         <img class="iconoFicha iconoPodcast" src="/imagenes/icono_podcast.png" />
         <h3>{{ nombrePodcast }}</h3>
@@ -177,7 +134,7 @@ onMounted(() => {
         loading="lazy"
       ></iframe>
       <p v-html="descripcionPodcast"></p>
-    </div>
+    </div> -->
 
     <div v-if="hayPerfil" class="contenedorPersonaje">
       <div class="tituloContenido">
@@ -200,29 +157,6 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.fichaLugar {
-  border: 1px solid black;
-  height: 80vh;
-  width: 30vw;
-  overflow: auto;
-  background-color: var(--lila);
-  position: fixed;
-  top: 5vh;
-  left: 5vw;
-  z-index: 10;
-  padding: 5em 8em;
-}
-
-#cerrar {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  cursor: pointer;
-
-  &:hover {
-    font-weight: 600;
-  }
-}
 .tituloContenido {
   display: inline-flex;
   align-items: center;

@@ -16,4 +16,5 @@ export interface Cerebro {
   lugarElegido: string | null;
   fichaVisible: boolean;
   infoVisible: boolean;
+  podcastVisible: boolean;
 }

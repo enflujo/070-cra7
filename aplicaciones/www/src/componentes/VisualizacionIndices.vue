@@ -298,13 +298,13 @@ function convertirEscala(
 <template>
   <div id="contenedorVis">
     <div id="etiquetas">
-      <p class="etiqueta" id="etiqAmbiente">Ambiente</p>
-      <p class="etiqueta" id="etiqCaminabilidad">Caminabilidad</p>
-      <p class="etiqueta" id="etiqHabitabilidad">Habitabilidad</p>
-      <p class="etiqueta" id="etiqInfraestructura">Infraestructura</p>
-      <p class="etiqueta" id="etiqMovilidad">Movilidad</p>
-      <p class="etiqueta" id="etiqProximidad">Proximidad</p>
-      <p class="etiqueta" id="etiqSeguridad">Seguridad</p>
+      <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
+      <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
+      <p class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
+      <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
+      <p class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
+      <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
+      <p class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
     </div>
     <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
       <path id="trazoHabitabilidad" class="trazo" />
@@ -387,7 +387,7 @@ function convertirEscala(
   display: flex;
 }
 
-.etiqueta {
+.etiquetaDatos {
   border-bottom: 2px solid;
   width: fit-content;
   font-size: 0.8em;

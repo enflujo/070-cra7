@@ -16,7 +16,7 @@ onMounted(async () => {});
 </script>
 
 <template>
-  <div ref="contenedorInfo" class="infoProyecto visible">
+  <div ref="contenedorInfo" class="ficha infoProyecto visible">
     <div id="cerrar" ref="cerrar" :onclick="cerrarInfo">X</div>
     <h2>VEINTICUATRO / SIETE</h2>
     <p>
@@ -38,24 +38,6 @@ onMounted(async () => {});
 </template>
 
 <style lang="scss">
-.infoProyecto {
-  position: fixed;
-  left: 5vw;
-  top: 5vh;
-  border: 1px solid black;
-  width: 40vw;
-  height: 85vh;
-  background-color: var(--lila);
-  padding: 3em 6em;
-  display: block;
-  z-index: 100;
-  opacity: 0;
-
-  &.visible {
-    opacity: 1;
-  }
-}
-
 #cerrar {
   background-color: var(--menta);
   border-radius: 50%;

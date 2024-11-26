@@ -9,17 +9,22 @@ import type { Punto } from '@/tipos/compartidos';
 import { usarCerebro } from './utilidades/cerebro';
 import Titulo from './componentes/Titulo.vue';
 import SobreProyecto from './componentes/SobreProyecto.vue';
+import { ElementoPaisaje } from './tipos';
+import Podcast from './componentes/Podcast.vue';
 
 const puntos: Ref<Punto[]> = ref([]);
 const puntosUbicados: Ref<Punto[]> = ref([]);
 const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
-const podcasts: Ref<{ id: string; x: number }[]> = ref([]);
+//const podcasts: Ref<{ id: string; x: number; titulo: string }[]> = ref([]);
 const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
 const arbolesElegidos: Ref<string[]> = ref([]);
 const alturaPajaros: Ref<number[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
+const tituloPodcast: Ref<HTMLElement | null> = ref(null);
+const podcastElegido: Ref<ElementoPaisaje | null> = ref(null);
+
 const botonInformacion: Ref<HTMLDivElement | null> = ref(null);
 
 const cerebro = usarCerebro();
@@ -35,6 +40,35 @@ const arboles: string[] = [
   'yarumoamarillo',
   'yarumorosa',
   'yarumoverde',
+];
+
+const podcasts: ElementoPaisaje[] = [
+  {
+    id: '1',
+    ruta: 'https://open.spotify.com/embed/episode/4KLNWodM68BNvhxlmKY7fu?utm_source=generator',
+    nombre: '¿Qué nos dicen las aves sobre la calidad del aire y el ruido de Bogotá?',
+    descripcion:
+      'En este episodio quisimos hacer algo diferente: entender los efectos que tiene vivir en una ciudad como Bogotá, no para los humanos sino para otros seres, como las aves, que habitan con nosotros desde otra altura. <br> <br> ¿Qué nos dicen las palomas, torcazas, mirlas, colibríes, reinitas y demás aves sobre el ruido y la contaminación en la capital? <br> <br> En este episodio de Veinticuatro Siete, la médica veterinaria Arlen Patricia Gómez y el profesor Ricardo Morales nos explican cómo estos factores medioambientales pueden hacer que Bogotá sea más o menos habitable para los humanos y otros seres con los que convivimos.',
+  },
+  {
+    id: '2',
+    ruta: 'https://open.spotify.com/embed/episode/6SOndW9Jo3nPKpzBp9IEul?utm_source=generator',
+    nombre: 'Una ciudad para moverse, una ciudad para quedarse',
+    descripcion:
+      '¿Cómo construir soluciones de movilidad para que las personas no solo piensen en moverse, en llegar de un punto a otro en una ciudad, sino que se quieran quedar a vivir allí? ¿Se puede pensar en soluciones para transportarse mejor pero también para vivir mejor? <br> <br> En este segundo episodio de Veinticuatro Siete, el profesor e ingeniero Carlos Moncada nos explica cómo pensar una movilidad sostenible para hacer ciudades más habitables.',
+  },
+  {
+    id: '3',
+    nombre: 'Movilidad / Congestión',
+    descripcion: 'descripción pd3',
+  },
+  {
+    id: '4',
+    ruta: 'https://open.spotify.com/embed/episode/4LjdcPIIOWgX6hw58sTZ4h?utm_source=generator',
+    nombre: 'Una ciudad habitable: ¿es chévere vivir en Bogotá?',
+    descripcion:
+      '¿Qué significa que una ciudad sea habitable? ¿Qué factores inciden en que consideremos que una ciudad es más o menos agradable para vivir? ¿Pueden los trancones y la contaminación de una ciudad afectar la salud física y mental de quienes vivimos allí? <br> <br> En este episodio de Veiticuatro Siete, la profesora y médica Olga Lucía Sarmiento nos explicará el concepto de habitabilidad urbana, y usará como ejemplo la carrera Séptima, una de las avenidas más importantes y representativas de Bogotá.',
+  },
 ];
 
 // Funciones para abrir y cerrar ficha de cada lugar
@@ -57,7 +91,26 @@ function abrirInfo() {
 }
 
 // Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
-function mostrarNombreLugar(id: string) {
+function mostrarTituloPodcast(titulo: string, evento: MouseEvent) {
+  if (!tituloPodcast.value) return;
+  tituloPodcast.value.innerText = titulo;
+  tituloPodcast.value.style.display = 'block';
+  tituloPodcast.value.style.top = `${evento.clientY - 200}px`;
+}
+
+function ocultarEtiquetaPodcast() {
+  if (!tituloPodcast.value) return;
+  tituloPodcast.value.innerText = '';
+  tituloPodcast.value.style.display = 'none';
+}
+
+function elegirPodcast(podcast: ElementoPaisaje) {
+  podcastElegido.value = podcast;
+  cerebro.podcastVisible = true;
+}
+
+// Mostrar los nombres de los podcasts cuando el ratón está encima
+function mostrarEtiquetaLugar(id: string) {
   const punto = puntosUbicados.value.find((punto) => punto.id === id);
 
   if (!punto?.ilustraciones || !etiquetaIlustracion.value) return;
@@ -69,7 +122,7 @@ function mostrarNombreLugar(id: string) {
   etiquetaIlustracion.value.style.display = 'block';
 }
 
-function ocultarNombreLugar() {
+function ocultarEtiquetaLugar() {
   if (!etiquetaIlustracion.value) return;
   etiquetaIlustracion.value.innerText = '';
   etiquetaIlustracion.value.style.display = 'none';
@@ -82,11 +135,13 @@ function clicFuera(evento: MouseEvent) {
   const elemento = evento.target as HTMLElement;
   const botonAbrir = elemento.classList.contains('botonAbrir');
   const fichaLugar = elemento.classList.contains('fichaLugar');
+  const fichaPodcast = elemento.classList.contains('fichaPodcast');
   const infoProyecto = elemento.classList.contains('infoProyecto');
 
-  if (botonAbrir || fichaLugar || infoProyecto) return;
+  if (botonAbrir || fichaLugar || infoProyecto || fichaPodcast) return;
   cerebro.infoVisible = false;
   cerebro.fichaVisible = false;
+  cerebro.podcastVisible = false;
 }
 
 async function cargarDatos() {
@@ -124,7 +179,6 @@ onMounted(async () => {
         // ir calculando la distancia total sumando las parciales
         // distancia total = 24.7921;
 
-        // const ancho = convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho);
         distanciaTotal += distanciaParcial;
 
         const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
@@ -135,7 +189,7 @@ onMounted(async () => {
           ilustraciones.value.push({ nombre: 'iglesia_san_francisco', x });
         }
         if (puntoB.podcast) {
-          podcasts.value.push({ id: puntoB.podcast, x });
+          // podcasts.value.push({ id: puntoB.podcast, x });
         }
         if (puntoB.perfil) {
           perfiles.value.push({ id: puntoB.perfil, x });
@@ -176,6 +230,18 @@ function numeroAleatorio(maximo: number) {
   <div id="contenedorGeneral" @click="clicFuera($event)">
     <span ref="botonInformacion" id="botonInformacion" @click="abrirInfo" class="botonAbrir">?</span>
     <SobreProyecto v-if="cerebro.infoVisible" />
+    <div id="contenedorIconos">
+      <img
+        v-for="podcast in podcasts"
+        @click="elegirPodcast(podcast)"
+        @mouseenter="mostrarTituloPodcast(podcast.nombre, $event)"
+        @mouseleave="ocultarEtiquetaPodcast"
+        class="iconoPodcast botonAbrir"
+        src="/imagenes/icono_podcast.png"
+        alt="ícono abrir podcast"
+      />
+      <p ref="tituloPodcast" class="tituloPodcast"></p>
+    </div>
 
     <div id="cra7">
       <Titulo />
@@ -183,8 +249,8 @@ function numeroAleatorio(maximo: number) {
       <div id="contenedorElementos">
         <div class="elementosPunto" v-for="(punto, i) in puntosUbicados" :key="punto.slug">
           <img
-            @mouseenter="mostrarNombreLugar(punto.id)"
-            @mouseleave="ocultarNombreLugar"
+            @mouseenter="mostrarEtiquetaLugar(punto.id)"
+            @mouseleave="ocultarEtiquetaLugar"
             class="ilustracion"
             v-if="punto.ilustraciones"
             :src="`/imagenes/lugares/${punto.ilustraciones}.png`"
@@ -212,14 +278,14 @@ function numeroAleatorio(maximo: number) {
           />
 
           <!--íconos de podcast y perfil-->
-          <img
+          <!-- <img
             @click="abrirFicha(punto.slug)"
             class="icono iconoPodcast botonAbrir"
             v-if="punto.podcast"
             src="/imagenes/icono_podcast.png"
             alt="ícono abrir podcast"
             :style="`left:${punto.ubicacionX}vw`"
-          />
+          /> -->
 
           <img
             @click="abrirFicha(punto.slug)"
@@ -249,9 +315,15 @@ function numeroAleatorio(maximo: number) {
           </p>
         </div>
         <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
-        <div ref="etiquetaIlustracion" class="etiquetaIlustracion" :style="``"></div>
+
+        <div ref="etiquetaIlustracion" class="etiqueta etiquetaIlustracion"></div>
       </div>
     </div>
+    <Podcast
+      v-if="cerebro.podcastVisible"
+      :podcast="podcastElegido ? podcastElegido : undefined"
+      :cerrar="cerrarFicha"
+    />
     <VisualizacionIndices />
   </div>
 </template>
@@ -333,9 +405,8 @@ function numeroAleatorio(maximo: number) {
 }
 
 // Etiqueta del lugar ilustrado
-.etiquetaIlustracion {
+.etiqueta {
   font-family: var(--fuentePrincipal);
-  bottom: 5vh;
   position: absolute;
   height: 1em;
   font-size: 1em;
@@ -343,6 +414,10 @@ function numeroAleatorio(maximo: number) {
   background-color: #f5d68ed7;
   border-radius: 5px;
   padding: 0.5em;
+}
+
+.etiquetaIlustracion {
+  bottom: 5vh;
   display: none;
 }
 
@@ -355,12 +430,35 @@ function numeroAleatorio(maximo: number) {
   cursor: pointer;
 }
 
-.iconoPodcast {
-  width: 35px;
-  bottom: 180px;
-  background: var(--amarillo);
-  border-radius: 50%;
-  padding: 0.3em;
+#contenedorIconos {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 40px;
+  top: 22vh;
+  z-index: 11;
+  border-radius: 15px;
+  padding: 0.4em;
+
+  .iconoPodcast {
+    width: 35px;
+    border-radius: 50%;
+    padding: 0.3em;
+    margin: 0.3em;
+    background: #ffffffde;
+  }
+
+  .tituloPodcast {
+    position: absolute;
+    display: none;
+    width: 200px;
+    background-color: #ffffffde;
+    right: 70px;
+    padding: 0.7em;
+    text-align: right;
+    font-size: 0.9em;
+    border-radius: 5px;
+  }
 }
 
 .iconoPerfil {
@@ -377,7 +475,6 @@ function numeroAleatorio(maximo: number) {
   padding: 0.3em;
 
   &.texto {
-    //background-color: var(--amarillo);
     cursor: pointer;
   }
 }

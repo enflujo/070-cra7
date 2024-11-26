@@ -17,3 +17,28 @@ body {
   background-color: var(--verdeFondo);
   margin: 0;
 }
+
+// Estilo fichas
+.ficha {
+  border: 1px solid black;
+  height: 65vh;
+  width: 30vw;
+  overflow: auto;
+  background-color: var(--lila);
+  position: fixed;
+  top: 5vh;
+  left: 5vw;
+  z-index: 10;
+  padding: 5em 8em;
+}
+
+#cerrar {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: 600;
+  }
+}
