@@ -242,6 +242,7 @@ function numeroAleatorio(maximo: number) {
 
           <p
             class="nombreCalle"
+            :id="punto.slug"
             :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX ? punto.ubicacionX - 1 : 0}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
           >
             {{ punto.nombre }}

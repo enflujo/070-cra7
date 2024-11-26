@@ -140,7 +140,7 @@ onMounted(async () => {
       const puntoA = puntos[i - 1];
       const puntoB = puntos[i];
 
-      const zona = document.createElement('div');
+      const zona = document.createElement('a');
 
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -211,6 +211,7 @@ onMounted(async () => {
 
       zona.classList.add('zona');
       zona.style.width = `${ancho}vw`;
+      zona.href = `#${puntoA.slug}`;
       zona.style.left = `${xZona - ancho / 2}vw`;
 
       // Agregar cada punto a la línea de la 7
@@ -229,6 +230,7 @@ onMounted(async () => {
         infoPuntoA.value.style.left = `${xZona + 1}vw`;
         infoPuntoA.value.style.display = 'block';
       });
+
       zona.addEventListener('mouseleave', () => {
         if (!infoPuntoA.value) return;
         infoPuntoA.value.innerText = '';
