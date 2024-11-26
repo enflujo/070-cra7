@@ -164,7 +164,7 @@ onMounted(() => {
     <!--   <h2>{{ cerebro.lugarElegido?.replace('-', ' ') }}</h2> -->
     <div v-if="hayPodcast" class="contenedorPodcast">
       <div class="tituloContenido">
-        <img class="iconoFicha iconoPodcast" src="../../estaticos/imagenes/icono_podcast.png" />
+        <img class="iconoFicha iconoPodcast" src="/imagenes/icono_podcast.png" />
         <h3>{{ nombrePodcast }}</h3>
       </div>
       <iframe
@@ -181,7 +181,7 @@ onMounted(() => {
 
     <div v-if="hayPerfil" class="contenedorPersonaje">
       <div class="tituloContenido">
-        <img class="iconoFicha iconoPerfil" src="../../estaticos/imagenes/icono_perfil.png" />
+        <img class="iconoFicha iconoPerfil" src="/imagenes/icono_perfil.png" />
         <h3>{{ nombrePerfil }}</h3>
       </div>
 
@@ -191,7 +191,7 @@ onMounted(() => {
 
     <div v-if="hayTextoPajaro" class="contenedorTexto">
       <div class="tituloContenido">
-        <img class="iconoFicha iconoPajaro" src="../../estaticos/imagenes/icono_pajaro.png" />
+        <img class="iconoFicha iconoPajaro" src="/imagenes/icono_pajaro.png" />
         <h3>Pájaros</h3>
       </div>
       <p v-html="descripcionTextoPajaro"></p>
