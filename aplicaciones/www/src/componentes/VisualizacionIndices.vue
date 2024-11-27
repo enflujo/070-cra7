@@ -2,7 +2,7 @@
 import { onMounted, ref, Ref } from 'vue';
 import { distanciaEntreCoordenadas } from '../utilidades/ayudas';
 
-async function cargarDatos() {
+/* async function cargarDatos() {
   try {
     const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
 
@@ -12,7 +12,7 @@ async function cargarDatos() {
   }
 }
 
-cargarDatos().catch(console.error);
+cargarDatos().catch(console.error); */
 
 const infoPuntoA: Ref<HTMLElement | null> = ref(null);
 

@@ -6,12 +6,13 @@ export default defineConfig({
   plugins: [vue()],
   rollupOptions: {
     // Add _all_ external dependencies here
-    external: ["blotter"],
+    external: ['blotter'],
     output: {
       globals: {
-        blotter: "blotter"
+        blotter: 'blotter',
       },
     },
+  },
   clearScreen: false,
   build: {
     outDir: 'publico',

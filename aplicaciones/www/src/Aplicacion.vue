@@ -146,8 +146,7 @@ function clicFuera(evento: MouseEvent) {
 
 async function cargarDatos() {
   try {
-    const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
-
+    //const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
     // console.log(ruido);
   } catch (error) {
     console.error('Error descargando datos del ruido', error);
