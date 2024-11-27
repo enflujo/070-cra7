@@ -17,10 +17,6 @@ export default defineConfig({
           Blotter: 'window.Blotter',
         },
       },
-      input: {
-        principal: resolve(__dirname, 'index.html'),
-        otras: resolve(__dirname, '404.html'),
-      },
     },
     outDir: 'publico',
     assetsDir: 'estaticos',
