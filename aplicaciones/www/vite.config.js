@@ -5,14 +5,18 @@ import vue from '@vitejs/plugin-vue';
 
 /** @type {import("vite").UserConfig} */
 export default defineConfig({
+  base: '/070-cra7/',
   plugins: [vue()],
   clearScreen: false,
   build: {
     rollupOptions: {
-      //external: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/2621168/blotter.min.js',
       output: {
         globals: {
           Blotter: 'window.Blotter',
+        },
+        input: {
+          principal: resolve(__dirname, 'index.html'),
+          otras: resolve(__dirname, '404.html'),
         },
       },
     },
@@ -21,4 +25,16 @@ export default defineConfig({
     sourcemap: true,
   },
   publicDir: 'estaticos',
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
 });
