@@ -2,7 +2,7 @@
 import { usarCerebro } from '../utilidades/cerebro';
 import type { ElementoPaisaje } from '../tipos';
 
-const props = defineProps<{ podcast: ElementoPaisaje | undefined; cerrar: () => void }>();
+defineProps<{ podcast: ElementoPaisaje | undefined; cerrar: () => void }>();
 
 const cerebro = usarCerebro();
 function cerrar() {

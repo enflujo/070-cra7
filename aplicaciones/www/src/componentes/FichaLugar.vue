@@ -3,18 +3,18 @@ import { onMounted, ref, type Ref } from 'vue';
 import type { ElementoPaisaje } from '../tipos';
 import { usarCerebro } from '../utilidades/cerebro';
 
-const props = defineProps<{ id: string; cerrar: () => void }>();
+defineProps<{ id: string; cerrar: () => void }>();
 
-const nombrePodcast: Ref<string> = ref('');
+//const nombrePodcast: Ref<string> = ref('');
 const nombrePerfil: Ref<string> = ref('');
-const descripcionPodcast: Ref<string> = ref('');
+//const descripcionPodcast: Ref<string> = ref('');
 const descripcionPerfil: Ref<string> = ref('');
 const descripcionTextoPajaro: Ref<string> = ref('');
 
 const ruta: Ref<string> = ref('');
-const rutaPodcast: Ref<string> = ref('');
+//const rutaPodcast: Ref<string> = ref('');
 
-const hayPodcast: Ref<boolean> = ref(false);
+//const hayPodcast: Ref<boolean> = ref(false);
 const hayPerfil: Ref<boolean> = ref(false);
 const hayTextoPajaro: Ref<boolean> = ref(false);
 
