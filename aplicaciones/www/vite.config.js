@@ -14,10 +14,6 @@ export default defineConfig({
         globals: {
           Blotter: 'window.Blotter',
         },
-        input: {
-          principal: resolve(__dirname, 'index.html'),
-          otras: resolve(__dirname, '404.html'),
-        },
       },
     },
     outDir: 'publico',
