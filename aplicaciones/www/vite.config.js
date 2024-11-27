@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { resolve } from 'path';
 import vue from '@vitejs/plugin-vue';
 
 // https://vitejs.dev/config/
@@ -15,12 +16,21 @@ export default defineConfig({
           Blotter: 'window.Blotter',
         },
       },
+      input: {
+        principal: resolve(__dirname, 'index.html'),
+        otras: resolve(__dirname, '404.html'),
+      },
     },
     outDir: 'publico',
     assetsDir: 'estaticos',
     sourcemap: true,
   },
   publicDir: 'estaticos',
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
   css: {
     preprocessorOptions: {
       scss: {
