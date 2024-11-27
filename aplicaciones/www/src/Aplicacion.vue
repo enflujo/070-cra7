@@ -4,13 +4,13 @@ import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas } from './utilidades/ayudas';
 import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
-import type { Punto } from '@/tipos/compartidos';
 
 import { usarCerebro } from './utilidades/cerebro';
 import Titulo from './componentes/Titulo.vue';
 import SobreProyecto from './componentes/SobreProyecto.vue';
 import { ElementoPaisaje } from './tipos';
 import Podcast from './componentes/Podcast.vue';
+import type { Punto } from '@/tipos/compartidos';
 
 const puntos: Ref<Punto[]> = ref([]);
 const puntosUbicados: Ref<Punto[]> = ref([]);
