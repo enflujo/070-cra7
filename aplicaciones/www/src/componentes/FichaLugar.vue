@@ -2,6 +2,7 @@
 import { onMounted, ref, type Ref } from 'vue';
 import type { ElementoPaisaje } from '../tipos';
 import { usarCerebro } from '../utilidades/cerebro';
+import { base } from '@/utilidades/ayudas';
 
 defineProps<{ id: string; cerrar: () => void }>();
 
@@ -138,7 +139,7 @@ onMounted(() => {
 
     <div v-if="hayPerfil" class="contenedorPersonaje">
       <div class="tituloContenido">
-        <img class="iconoFicha iconoPerfil" src="/imagenes/icono_perfil.png" />
+        <img class="iconoFicha iconoPerfil" :src="`${base}/imagenes/icono_perfil.png`" />
         <h3>{{ nombrePerfil }}</h3>
       </div>
 
@@ -148,7 +149,7 @@ onMounted(() => {
 
     <div v-if="hayTextoPajaro" class="contenedorTexto">
       <div class="tituloContenido">
-        <img class="iconoFicha iconoPajaro" src="/imagenes/icono_pajaro.png" />
+        <img class="iconoFicha iconoPajaro" :src="`${base}/imagenes/icono_pajaro.png`" />
         <h3>Pájaros</h3>
       </div>
       <p v-html="descripcionTextoPajaro"></p>

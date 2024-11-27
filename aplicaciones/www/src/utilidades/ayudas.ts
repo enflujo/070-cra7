@@ -23,3 +23,5 @@ export const distanciaEntreCoordenadas = (lat1: number, lon1: number, lat2: numb
 
   return radio * c;
 };
+
+export const base = import.meta.env.BASE_URL;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
-import { distanciaEntreCoordenadas } from './utilidades/ayudas';
+import { distanciaEntreCoordenadas, base } from './utilidades/ayudas';
 import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
@@ -160,7 +160,7 @@ let distanciaTotal = 0;
 
 onMounted(async () => {
   // Punto por lugar
-  puntos.value = (await fetch('/datos/puntos.json').then((res) => res.json())) as Punto[];
+  puntos.value = (await fetch(`${import.meta.env.BASE_URL}/datos/puntos.json`).then((res) => res.json())) as Punto[];
   puntosUbicados.value = puntos.value;
 
   // Calcular lugar de cada punto por lugar y pintarlos
@@ -236,7 +236,7 @@ function numeroAleatorio(maximo: number) {
         @mouseenter="mostrarTituloPodcast(podcast.nombre, $event)"
         @mouseleave="ocultarEtiquetaPodcast"
         class="iconoPodcast botonAbrir"
-        src="/imagenes/icono_podcast.png"
+        :src="`${base}/imagenes/icono_podcast.png`"
         alt="ícono abrir podcast"
       />
       <p ref="tituloPodcast" class="tituloPodcast"></p>
@@ -252,7 +252,7 @@ function numeroAleatorio(maximo: number) {
             @mouseleave="ocultarEtiquetaLugar"
             class="ilustracion"
             v-if="punto.ilustraciones"
-            :src="`/imagenes/lugares/${punto.ilustraciones}.png`"
+            :src="`${base}/imagenes/lugares/${punto.ilustraciones}.png`"
             :alt="`${punto.ilustraciones}`"
             :style="`left:${punto.ilustraciones[0] === 'Seminario Conciliar' || punto.ilustraciones[0] === 'Centro de abastos Codabas' ? (punto.ubicacionX || 0) - 12 : (punto.ubicacionX || 0) - 5}vw`"
           />
@@ -262,7 +262,7 @@ function numeroAleatorio(maximo: number) {
             @click="abrirFicha(punto.slug)"
             class="arbol"
             v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
-            :src="`/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
+            :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
             :style="`left:${(punto.ubicacionX || 0) - 5}vw`"
           />
@@ -271,7 +271,7 @@ function numeroAleatorio(maximo: number) {
             @click="abrirFicha(punto.slug)"
             class="arbol"
             v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
-            :src="`/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
+            :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
             :style="`left:${(punto.ubicacionX || 0) - 2}vw`"
           />
@@ -290,7 +290,7 @@ function numeroAleatorio(maximo: number) {
             @click="abrirFicha(punto.slug)"
             class="icono iconoPerfil botonAbrir"
             v-if="punto.perfil"
-            src="/imagenes/icono_perfil.png"
+            :src="`${base}/imagenes/icono_perfil.png`"
             alt="ícono abrir perfil"
             :style="`left:${(punto.ubicacionX || 0) - 3}vw`"
           />
@@ -300,7 +300,7 @@ function numeroAleatorio(maximo: number) {
             class="icono iconoPajaro"
             :class="punto.slug === 'calle-32' ? 'texto' : ''"
             v-if="punto.txtPajaros"
-            src="/imagenes/icono_pajaro.png"
+            :src="`${base}/imagenes/icono_pajaro.png`"
             alt="ícono abrir perfil"
             :style="`left:${(punto.ubicacionX || 0) - 3}vw; bottom:${alturaPajaros[i]}px`"
           />

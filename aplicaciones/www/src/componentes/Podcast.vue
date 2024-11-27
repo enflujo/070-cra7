@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { usarCerebro } from '../utilidades/cerebro';
 import type { ElementoPaisaje } from '../tipos';
+import { base } from '@/utilidades/ayudas';
 
 defineProps<{ podcast: ElementoPaisaje | undefined; cerrar: () => void }>();
 
@@ -15,7 +16,7 @@ function cerrar() {
     <span id="cerrar" @click="cerrar">X</span>
 
     <div class="tituloContenido">
-      <img class="iconoPodcast" src="/imagenes/icono_podcast.png" />
+      <img class="iconoPodcast" :src="`${base}/imagenes/icono_podcast.png`" />
       <h3>{{ podcast ? podcast.nombre : '' }}</h3>
     </div>
     <iframe

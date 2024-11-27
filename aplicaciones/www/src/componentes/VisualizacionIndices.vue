@@ -36,7 +36,7 @@ onMounted(async () => {
   //const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
 
   // Cargar datos
-  const puntos = await fetch('/datos/puntos.json').then((res) => res.json());
+  const puntos = await fetch(`${import.meta.env.BASE_URL}/datos/puntos.json`).then((res) => res.json());
 
   // Habitabilidad
   const trazoHabitabilidad: SVGPathElement = document.getElementById('trazoHabitabilidad') as HTMLElement &
