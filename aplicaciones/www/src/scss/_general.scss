@@ -22,14 +22,14 @@ body {
 .ficha {
   border: 1px solid black;
   height: 65vh;
-  width: 30vw;
+  width: 35vw;
   overflow: auto;
   background-color: var(--lila);
   position: fixed;
   top: 5vh;
   left: 5vw;
   z-index: 10;
-  padding: 5em 8em;
+  padding: 5em 6em;
 }
 
 #cerrar {
