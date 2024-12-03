@@ -1,20 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref, Ref } from 'vue';
+import { onMounted, ref, Ref, watch } from 'vue';
 import { distanciaEntreCoordenadas } from '../utilidades/ayudas';
+import { usarCerebro } from '@/utilidades/cerebro';
 
-/* async function cargarDatos() {
-  try {
-    const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
-
-    // console.log(ruido);
-  } catch (error) {
-    console.error('Error descargando datos del ruido', error);
-  }
-}
-
-cargarDatos().catch(console.error); */
+const cerebro = usarCerebro();
 
 const infoPuntoA: Ref<HTMLElement | null> = ref(null);
+const nombresCalles: Ref<HTMLElement | null> = ref(null);
 
 const multiplicadorAncho: number = 0.96; // medida en vw
 const alturaContenedor: number = 120;
@@ -30,6 +22,10 @@ let lineaMovilidad: string = `M 0 ${alturaContenedor}`;
 let lineaSeguridad: string = `M 0 ${alturaContenedor}`;
 let lineaProximidad: string = `M 0 ${alturaContenedor}`;
 let lineaCaminabilidad: string = `M 0 ${alturaContenedor}`;
+
+let puntosCalle: { nombreAbreviado: string; x: number }[] = [];
+
+watch(puntosCalle, () => {});
 
 onMounted(async () => {
   const contenedorZonas: HTMLElement = document.getElementById('contenedorZonas') as HTMLElement;
@@ -75,7 +71,16 @@ onMounted(async () => {
   // Calcular lugar de cada punto y pintarlos
   for (let i = 0; i < puntos.length; i++) {
     // Dibujar el primer punto
+
     if (i === 0) {
+      //   puntosCalle.push({ nombreAbreviado: 'Plaza de Bolívar', x: 0 });
+
+      const nombreCalle = document.createElement('p');
+      nombreCalle.classList.add('calle');
+      nombreCalle.style.left = '-1.2vw';
+      nombreCalle.innerText = 'Plaza de Bolívar';
+      nombresCalles.value?.appendChild(nombreCalle);
+
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloInfraestructura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -153,6 +158,26 @@ onMounted(async () => {
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
 
       const xZona = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
+
+      //puntosCalle.push({ nombreAbreviado: puntoA.nombre, x: x });
+
+      /*   if (i === 1) {
+        const nombreCalle = document.createElement('p');
+        nombreCalle.classList.add('calle');
+        nombreCalle.style.left = zona.style.left = `${xZona + 0.5}vw`;
+        nombreCalle.innerText = `${puntoB.nombre}`;
+
+        nombresCalles.value?.appendChild(nombreCalle);
+      } */
+
+      if (i > 0) {
+        const nombreCalle = document.createElement('p');
+        nombreCalle.classList.add('calle');
+        nombreCalle.style.left = zona.style.left = `${xZona + 0.5}vw`;
+        nombreCalle.innerText = `${puntoB.nombre}`;
+
+        nombresCalles.value?.appendChild(nombreCalle);
+      }
 
       // ¿Dejar el ancho en 1 o haver el cálculo?
       const ancho = 1; /*
@@ -293,18 +318,61 @@ function convertirEscala(
     escalaDestinoMin
   );
 }
+
+function cerrar() {
+  cerebro.graficasVisibles = false;
+}
 </script>
 
 <template>
   <div id="contenedorVis">
+    <span id="cerrar" @click="cerrar">X</span>
+
     <div id="etiquetas">
-      <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
-      <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
-      <p class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
-      <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
-      <p class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
-      <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
-      <p class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
+      <h2>Índices</h2>
+      <p>
+        Esta gráfica muestra siete índices medidos durante la investigación a lo largo de la Carrera Séptima. Los
+        valores van de 0 a 1.
+      </p>
+      <p class="infoIndicador">
+        <span id="etiqAmbiente" class="etiquetaDatos">Ambiente:</span> Son las condiciones del entorno natural que puede
+        ser afectado por las intervenciones urbanas de la ciudad. Para este proyecto, las condiciones de ambiente se
+        miden a partir de la calidad del ruido y el aire, el arbolado urbano y la avifauna.
+      </p>
+      <p class="infoIndicador">
+        <span id="etiqCaminabilidad" class="etiquetaDatos">Caminabilidad:</span> Se refiere a la capacidad que tienen
+        las personas de moverse caminando por la infraestructura pública.
+      </p>
+      <p class="infoIndicador">
+        <span id="etiqHabitabilidad" class="etiquetaDatos">Habitabilidad:</span> La habitabilidad hace referencia a un
+        barrio seguro, con un ambiente sin contaminación, hogar cerca al transporte, donde se puede caminar y andar en
+        bicicleta y está cerca de servicios de salud, educación, cultura y recreación (Badland, 2014). En pocas
+        palabras, ¿qué tan chévere es vivir en esta ciudad?
+      </p>
+      <p class="infoIndicador">
+        <span id="etiqInfraestructura" class="etiquetaDatos">Infraestructura:</span> Se refiere a la provisión de
+        infraestructura pública y social para que las personas accedan a servicios esenciales y tengan espacios de
+        encuentro. Se mide a través de espacio público efectivo que tiene un carácter permanente, como zonas verdes,
+        parques, plazas y plazoletas. También a través de indicadores como la caminabilidad, la proximidad a estos
+        servicios esenciales, la seguridad y la comodidad para desplazarse en las vías.
+      </p>
+      <p class="infoIndicador">
+        <span id="etiqMovilidad" class="etiquetaDatos">Movilidad:</span> La movilidad se refiere a la capacidad de las
+        personas para ocupar, usar y desplazarse en el espacio público para acceder a bienes y servicios de la ciudad,
+        oportunidades de trabajo, educación, recreación y otros espacios de convivencia. La inversión en infraestructura
+        de transporte no solo facilita la movilidad, sino que también promueve la equidad social al proporcionar acceso
+        a oportunidades a todos los estratos poblacionales.
+      </p>
+      <p class="infoIndicador">
+        <span id="etiqProximidad" class="etiquetaDatos">Proximidad:</span> Se refiere a la capacidad que tiene una
+        persona en un determinado lugar a acceder caminando a sus necesidades básicas y a trabajo, salud, educación y
+        parques, cerca a su vivienda y sin tener que moverse en carro o en moto.
+      </p>
+      <p class="infoIndicador">
+        <span id="etiqSeguridad" class="etiquetaDatos">Seguridad:</span>La seguridad se refiere a la capacidad que
+        tienen las personas de usar el espacio público con tranquilidad, a diferentes horas del día y sin importar su
+        edad, género, raza y condición social.
+      </p>
     </div>
     <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
       <path id="trazoHabitabilidad" class="trazo" />
@@ -328,7 +396,7 @@ function convertirEscala(
       <path id="trazoCaminabilidad" class="trazo" />
       <g id="circulosCaminabilidad"></g>
     </svg>
-
+    <div id="nombresCalles" ref="nombresCalles"></div>
     <div id="contenedorZonas">
       <div class="infoPunto" ref="infoPuntoA" id="infoPuntoA"></div>
     </div>
@@ -340,10 +408,14 @@ function convertirEscala(
 @import '../scss/general';
 
 #contenedorVis {
+  background: #fff0f5;
+  display: block;
+  height: 100vh;
+  overflow-y: auto;
+  width: 100vw;
   position: fixed;
-  bottom: 0;
-  left: 2em;
-  bottom: 0;
+  top: 0;
+  z-index: 99;
 }
 
 #contenedorTrazos {
@@ -385,13 +457,20 @@ function convertirEscala(
 
 #etiquetas {
   display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin-bottom: 2em;
+  padding: 0 2em;
 }
 
+.infoIndicador {
+  font-size: 0.9em;
+  margin: 0 2em 0.5em 0em;
+  line-height: 1.3em;
+}
 .etiquetaDatos {
   border-bottom: 2px solid;
-  width: fit-content;
-  font-size: 0.8em;
-  margin: 0 1em 0.5em 0em;
+  font-weight: bold;
 }
 
 #etiqHabitabilidad {
@@ -503,5 +582,14 @@ function convertirEscala(
   height: 215px;
   position: absolute;
   bottom: 22px;
+}
+#nombresCalles {
+}
+.calle {
+  font-size: 0.7em;
+  position: fixed;
+  transform: rotate(-90deg);
+  margin: 0;
+  height: 0.7em;
 }
 </style>

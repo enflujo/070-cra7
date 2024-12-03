@@ -324,7 +324,7 @@ function numeroAleatorio(maximo: number) {
       :podcast="podcastElegido ? podcastElegido : undefined"
       :cerrar="cerrarFicha"
     />
-    <VisualizacionIndices />
+    <VisualizacionIndices v-if="cerebro.graficasVisibles" />
   </div>
 </template>
 
@@ -363,7 +363,7 @@ function numeroAleatorio(maximo: number) {
   background-size: contain;
   position: relative;
   top: 0;
-  height: 60vh;
+  height: 100vh;
   width: 604vw;
 
   #fondoCalle {
@@ -371,19 +371,17 @@ function numeroAleatorio(maximo: number) {
     height: 400px;
     position: absolute;
     width: 100%;
-    bottom: -4vw;
+    bottom: 0vw;
     background-position: bottom;
     background-size: contain;
     background-repeat: repeat-x;
   }
 
   #contenedorElementos {
-    padding: 0 0 0 3vw;
-    width: 594vw;
-    height: 70vh;
-    position: absolute;
     left: 3vw;
-    top: 14px;
+    padding: 0 0 0 3vw;
+    position: absolute;
+    bottom: 20px;
   }
 }
 

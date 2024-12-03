@@ -17,4 +17,5 @@ export interface Cerebro {
   fichaVisible: boolean;
   infoVisible: boolean;
   podcastVisible: boolean;
+  graficasVisibles: boolean;
 }
