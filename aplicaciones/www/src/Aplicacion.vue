@@ -156,7 +156,7 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const multiplicadorAncho = 6; // valor para multiplicar 100vw por
+const multiplicadorAncho = 8; // valor para multiplicar 100vw por
 let distanciaTotal = 0;
 
 onMounted(async () => {
@@ -168,7 +168,7 @@ onMounted(async () => {
   for (let i = 0; i < puntos.value.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
-      puntosUbicados.value[i].ubicacionX = 0;
+      puntosUbicados.value[i].ubicacionX = -5;
       // Dibujar el resto de puntos
     } else {
       const puntoA = puntos.value[i - 1];
@@ -188,9 +188,7 @@ onMounted(async () => {
         if (puntoB.ilustraciones) {
           ilustraciones.value.push({ nombre: 'iglesia_san_francisco', x });
         }
-        if (puntoB.podcast) {
-          // podcasts.value.push({ id: puntoB.podcast, x });
-        }
+
         if (puntoB.perfil) {
           perfiles.value.push({ id: puntoB.perfil, x });
         }
@@ -255,7 +253,7 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.ilustraciones"
             :src="`${base}/imagenes/lugares/${punto.ilustraciones}.png`"
             :alt="`${punto.ilustraciones}`"
-            :style="`left:${punto.ilustraciones[0] === 'Seminario Conciliar' || punto.ilustraciones[0] === 'Centro de abastos Codabas' ? (punto.ubicacionX || 0) - 12 : (punto.ubicacionX || 0) - 5}vw`"
+            :style="`left:${punto.ilustraciones[0] === 'Seminario Conciliar' || punto.ilustraciones[0] === 'Centro de abastos Codabas' ? (punto.ubicacionX || 0) - 14 : (punto.ubicacionX || 0) - 3}vw`"
           />
 
           <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
@@ -309,7 +307,7 @@ function numeroAleatorio(maximo: number) {
           <p
             class="nombreCalle"
             :id="punto.slug"
-            :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX ? punto.ubicacionX - 1 : 0}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
+            :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX && punto.slug !== 'plaza-de-bolivar' ? punto.ubicacionX - 1 : 1}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
           >
             {{ punto.nombre }}
           </p>
@@ -354,7 +352,7 @@ function numeroAleatorio(maximo: number) {
 
 #aplicacion {
   display: flex;
-  width: 604vw;
+  width: 804vw;
 }
 
 #cra7 {
@@ -364,7 +362,7 @@ function numeroAleatorio(maximo: number) {
   position: relative;
   top: 0;
   height: 60vh;
-  width: 604vw;
+  width: 804vw;
 
   #fondoCalle {
     background-image: url(/imagenes/fondos/calle_septimazo.png);
@@ -391,7 +389,7 @@ function numeroAleatorio(maximo: number) {
   bottom: 10vh;
   position: absolute;
   height: auto;
-  width: 23vw;
+  width: 35vw;
 
   &:hover {
     opacity: 1;

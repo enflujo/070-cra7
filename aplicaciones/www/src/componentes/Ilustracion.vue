@@ -19,7 +19,7 @@ defineProps<ElementoPaisaje>();
   position: absolute;
   top: 178px;
   img {
-    width: 15%;
+    width: 20%;
   }
 }
 </style>
