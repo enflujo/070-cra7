@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
-import { distanciaEntreCoordenadas, base } from './utilidades/ayudas';
+import { distanciaEntreCoordenadas, base, convertirEscala } from './utilidades/ayudas';
 import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
@@ -206,19 +206,6 @@ onMounted(async () => {
   });
 });
 
-function convertirEscala(
-  valor: number,
-  escalaBaseMin: number,
-  escalaBaseMax: number,
-  escalaDestinoMin: number,
-  escalaDestinoMax: number
-): number {
-  return (
-    ((valor - escalaBaseMin) * (escalaDestinoMax - escalaDestinoMin)) / (escalaBaseMax - escalaBaseMin) +
-    escalaDestinoMin
-  );
-}
-
 function numeroAleatorio(maximo: number) {
   return Math.floor(Math.random() * maximo);
 }
@@ -307,7 +294,7 @@ function numeroAleatorio(maximo: number) {
           <p
             class="nombreCalle"
             :id="punto.slug"
-            :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX && punto.slug !== 'plaza-de-bolivar' ? punto.ubicacionX - 1 : 1}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
+            :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX && punto.slug !== 'plaza-de-bolivar' ? punto.ubicacionX - 1.5 : -1.5}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
           >
             {{ punto.nombre }}
           </p>
@@ -361,7 +348,7 @@ function numeroAleatorio(maximo: number) {
   background-size: contain;
   position: relative;
   top: 0;
-  height: 60vh;
+  height: 65vh;
   width: 804vw;
 
   #fondoCalle {
@@ -378,7 +365,7 @@ function numeroAleatorio(maximo: number) {
   #contenedorElementos {
     padding: 0 0 0 3vw;
     width: 594vw;
-    height: 70vh;
+    height: 65vh;
     position: absolute;
     left: 3vw;
     top: 14px;
@@ -386,7 +373,7 @@ function numeroAleatorio(maximo: number) {
 }
 
 .ilustracion {
-  bottom: 10vh;
+  bottom: 0vh;
   position: absolute;
   height: auto;
   width: 35vw;
@@ -398,7 +385,7 @@ function numeroAleatorio(maximo: number) {
 .arbol {
   position: absolute;
   height: 90px;
-  bottom: 90px;
+  bottom: 5px;
   z-index: 9;
 }
 
@@ -479,19 +466,19 @@ function numeroAleatorio(maximo: number) {
 
 .nombreCalle {
   position: absolute;
-  bottom: -3vh;
+  bottom: -5vh;
   font-size: 0.7em;
   text-align: center;
   background-color: #f5d68ed7;
   border-radius: 5px;
 }
 
-.infoPunto {
+/* .infoPunto {
   display: none;
   position: absolute;
   font-size: 0.8em;
   text-align: center;
   text-transform: lowercase;
-  bottom: -1.2em;
-}
+  top: 75px;
+} */
 </style>
