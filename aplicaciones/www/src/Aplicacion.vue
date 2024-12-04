@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas, base, convertirEscala } from './utilidades/ayudas';
+import slugificar from 'slug';
 import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
@@ -120,7 +121,7 @@ function mostrarEtiquetaLugar(id: string) {
   ratonSobreLugar = punto?.ilustraciones[0];
 
   etiquetaIlustracion.value.innerText = ratonSobreLugar.split('_').join(' ');
-  etiquetaIlustracion.value.style.left = `${punto.ubicacionX ? punto.ubicacionX + 5 : 0}vw`;
+  etiquetaIlustracion.value.style.left = `${punto.ubicacionX ? punto.ubicacionX + 10 : 0}vw`;
   etiquetaIlustracion.value.style.bottom = `250px`;
   etiquetaIlustracion.value.style.display = 'block';
 }
@@ -236,10 +237,11 @@ function numeroAleatorio(maximo: number) {
             @mouseenter="mostrarEtiquetaLugar(punto.id)"
             @mouseleave="ocultarEtiquetaLugar"
             class="ilustracion"
+            :class="slugificar(punto.ilustraciones[0])"
             v-if="punto.ilustraciones"
             :src="`${base}/imagenes/lugares/${punto.ilustraciones}.png`"
             :alt="`${punto.ilustraciones}`"
-            :style="`left:${punto.ilustraciones[0] === 'Seminario Conciliar' || punto.ilustraciones[0] === 'Centro de abastos Codabas' ? (punto.ubicacionX || 0) - 14 : (punto.ubicacionX || 0) - 3}vw`"
+            :style="`left:${punto.ilustraciones[0] ? punto.ubicacionX : 0}vw`"
           />
 
           <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
@@ -385,6 +387,66 @@ function numeroAleatorio(maximo: number) {
 
   &:hover {
     opacity: 1;
+  }
+  &.plaza-de-bolivar {
+    transform: translate(0px, 26px) rotate(1deg);
+  }
+
+  &.planetario-de-bogota {
+    transform: translate(0px, -33px);
+  }
+
+  &.parque-nacional {
+    transform: translate(0px, -21px);
+  }
+  &.universidad-javeriana {
+    transform: translate(0px, -21px);
+  }
+
+  &.parque-de-los-hippies {
+    transform: translate(-81px, -29px);
+  }
+  &.edificio-caracol {
+    transform: translate(-22px, -24px);
+  }
+  &.edificio-los-venados {
+    transform: translate(40px, -24px);
+  }
+  &.escuela-de-caballeria {
+    transform: translateY(-14px);
+  }
+
+  &.subida-a-patios {
+    transform: translateY(27px);
+  }
+
+  &.museo-del-chico {
+    transform: translate(-32px, -19px);
+  }
+
+  &.seminario-conciliar {
+    width: 27vw;
+    transform: translate(-73px, -8px) rotate(2deg);
+  }
+
+  &.hacienda-santa-barbara {
+    transform: translate(15px, -10px);
+  }
+
+  &.centro-de-abastos-codabas {
+    transform: translateX(-150px);
+  }
+  &.barrio-el-codito {
+    transform: translate(120px, 9px) rotate(-1deg);
+  }
+  &.centro-comercial-palatino {
+    transform: translateY(20px);
+  }
+  &.hospital-simon-bolivar {
+    transform: translateY(-16px);
+  }
+  &.finca-la-suiza {
+    transform: translateY(20px) rotate(1deg);
   }
 }
 .arbol {
