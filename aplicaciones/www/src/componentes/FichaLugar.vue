@@ -119,24 +119,6 @@ onMounted(() => {
   <div class="ficha fichaLugar">
     <span id="cerrar" @click="cerrar">X</span>
 
-    <!--   <h2>{{ cerebro.lugarElegido?.replace('-', ' ') }}</h2> -->
-    <!--     <div v-if="hayPodcast" class="contenedorPodcast">
-      <div class="tituloContenido">
-        <img class="iconoFicha iconoPodcast" src="/imagenes/icono_podcast.png" />
-        <h3>{{ nombrePodcast }}</h3>
-      </div>
-      <iframe
-        style="border-radius: 12px"
-        src="https://open.spotify.com/embed/episode/4KLNWodM68BNvhxlmKY7fu?utm_source=generator"
-        width="100%"
-        height="152"
-        frameBorder="0"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy"
-      ></iframe>
-      <p v-html="descripcionPodcast"></p>
-    </div> -->
-
     <div v-if="hayPerfil" class="contenedorPersonaje">
       <div class="tituloContenido">
         <img class="iconoFicha iconoPerfil" :src="`${base}/imagenes/icono_perfil.png`" />
@@ -164,6 +146,7 @@ onMounted(() => {
   .iconoFicha {
     margin-right: 1em;
     background: transparent;
+    height: 45px;
   }
 }
 

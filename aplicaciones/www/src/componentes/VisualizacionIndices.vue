@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref, Ref } from 'vue';
+import { onMounted, ref, Ref, defineProps } from 'vue';
 import { convertirEscala, distanciaEntreCoordenadas } from '../utilidades/ayudas';
 import { Punto } from '@/tipos/compartidos';
+import { usarCerebro } from '@/utilidades/cerebro';
 
 /* async function cargarDatos() {
   try {
@@ -15,10 +16,13 @@ import { Punto } from '@/tipos/compartidos';
 
 cargarDatos().catch(console.error); */
 
+const props = defineProps<{ multiplicadorAncho: number }>();
+
+const cerebro = usarCerebro();
 const infoPuntoA: Ref<HTMLElement | null> = ref(null);
 const calles: Ref<HTMLElement | null> = ref(null);
 
-const multiplicadorAncho: number = 8.01; //0.96; // medida en vw
+//const multiplicadorAncho: number = 8.01; //0.96; // medida en vw
 const alturaContenedor: number = 250; // Debe ser la misma que #contenedorTrazos
 
 let puntoElegido: Ref<Punto | null> = ref(null);
@@ -212,7 +216,7 @@ onMounted(async () => {
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
 
       distanciaTotal += distanciaParcial;
-      const x = convertirEscala(distanciaTotal, 0, 25, 20, window.innerWidth * multiplicadorAncho);
+      const x = convertirEscala(distanciaTotal, 0, 25, 20, window.innerWidth * props.multiplicadorAncho);
 
       // Definir posición en y de cada punto por indicador
       const yInfraestructura = alturaContenedor - puntoB.infraestructura * alturaContenedor;
@@ -381,13 +385,13 @@ onMounted(async () => {
         en cada punto, los datos de cada indicador:
       </p>
       <div id="etiquetas">
-        <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
-        <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
-        <p class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
-        <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
-        <p class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
-        <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
-        <p class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
+        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
+        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
+        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
+        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
+        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
+        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
+        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
       </div>
     </div>
 
@@ -459,6 +463,7 @@ onMounted(async () => {
   border-bottom: 2px solid;
   width: fit-content;
   margin: 0 2em 0.5em 0em;
+  cursor: pointer;
 }
 
 #etiqHabitabilidad {

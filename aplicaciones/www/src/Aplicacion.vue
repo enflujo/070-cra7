@@ -12,6 +12,7 @@ import SobreProyecto from './componentes/SobreProyecto.vue';
 import { ElementoPaisaje } from './tipos';
 import Podcast from './componentes/Podcast.vue';
 import type { Punto } from '@/tipos/compartidos';
+import FichaIndicadores from './componentes/FichaIndicadores.vue';
 
 const puntos: Ref<Punto[]> = ref([]);
 const puntosUbicados: Ref<Punto[]> = ref([]);
@@ -292,7 +293,8 @@ function numeroAleatorio(maximo: number) {
       :podcast="podcastElegido ? podcastElegido : undefined"
       :cerrar="cerrarFicha"
     />
-    <VisualizacionIndices />
+    <VisualizacionIndices :multiplicadorAncho="8.01" />
+    <FichaIndicadores />
   </div>
 </template>
 
@@ -376,6 +378,7 @@ function numeroAleatorio(maximo: number) {
     animation-name: cambioColor;
     animation-duration: 3s;
     animation-iteration-count: infinite;
+    box-shadow: 5px 9px 7px #59593d;
   }
 }
 
@@ -477,10 +480,6 @@ function numeroAleatorio(maximo: number) {
 .icono {
   position: absolute;
   z-index: 9;
-}
-
-.botonAbrir {
-  cursor: pointer;
 }
 
 #contenedorIconos {

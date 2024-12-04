@@ -32,6 +32,15 @@ body {
   padding: 5em 6em;
 }
 
+.botonAbrir {
+  cursor: pointer;
+  border-radius: 50%;
+  display: block;
+  padding: 0.5em;
+  text-align: center;
+  z-index: 10;
+}
+
 #cerrar {
   position: absolute;
   right: 10px;
