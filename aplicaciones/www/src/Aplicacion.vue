@@ -294,7 +294,7 @@ function numeroAleatorio(maximo: number) {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import 'scss/constantes';
 @import 'scss/general';
 
@@ -350,6 +350,30 @@ function numeroAleatorio(maximo: number) {
     position: absolute;
     left: 3vw;
     top: 14px;
+  }
+
+  @keyframes cambioColor {
+    0% {
+      background-color: var(--amarillo);
+      height: 30px;
+    }
+    50% {
+      background-color: var(--rosa);
+      height: 40px;
+    }
+    100% {
+      background-color: var(--amarillo);
+      height: 30px;
+    }
+  }
+
+  .iconoPerfil {
+    bottom: 180px;
+    border-radius: 50%;
+    padding: 0.3em;
+    animation-name: cambioColor;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
   }
 }
 
@@ -426,14 +450,6 @@ function numeroAleatorio(maximo: number) {
     font-size: 0.9em;
     border-radius: 5px;
   }
-}
-
-.iconoPerfil {
-  height: 35px;
-  bottom: 180px;
-  background: var(--amarillo);
-  border-radius: 50%;
-  padding: 0.3em;
 }
 
 .iconoPajaro {
