@@ -448,7 +448,6 @@ onMounted(async () => {
 
   #titulo {
     margin: 0 3em 0.5em 0;
-    font-size: 0.8em;
   }
 }
 
@@ -459,7 +458,6 @@ onMounted(async () => {
 .etiquetaDatos {
   border-bottom: 2px solid;
   width: fit-content;
-  font-size: 0.8em;
   margin: 0 2em 0.5em 0em;
 }
 
@@ -533,7 +531,7 @@ onMounted(async () => {
 .zona {
   background-color: aqua;
   cursor: pointer;
-  height: 45vh;
+  height: 40vh;
   opacity: 0;
   position: absolute;
   top: 55vh;
