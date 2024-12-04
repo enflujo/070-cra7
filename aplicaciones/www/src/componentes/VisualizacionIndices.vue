@@ -533,7 +533,7 @@ onMounted(async () => {
 .zona {
   background-color: aqua;
   cursor: pointer;
-  height: 50vh;
+  height: 45vh;
   opacity: 0;
   position: absolute;
   top: 55vh;
@@ -596,9 +596,9 @@ onMounted(async () => {
 
 .calles {
   position: absolute;
-  bottom: 29vh;
+  bottom: 36vh;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 .nombreCalle {

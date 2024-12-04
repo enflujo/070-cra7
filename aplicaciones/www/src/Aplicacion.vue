@@ -120,7 +120,7 @@ function mostrarEtiquetaLugar(id: string) {
   ratonSobreLugar = punto?.ilustraciones[0];
 
   etiquetaIlustracion.value.innerText = ratonSobreLugar.split('_').join(' ');
-  etiquetaIlustracion.value.style.left = `${punto.ubicacionX}vw`;
+  etiquetaIlustracion.value.style.left = `${punto.ubicacionX ? punto.ubicacionX + 5 : 0}vw`;
   etiquetaIlustracion.value.style.bottom = `250px`;
   etiquetaIlustracion.value.style.display = 'block';
 }
@@ -320,7 +320,7 @@ function numeroAleatorio(maximo: number) {
 
 #aplicacion {
   display: flex;
-  width: 804vw;
+  width: 807vw;
 }
 
 #cra7 {
@@ -330,7 +330,7 @@ function numeroAleatorio(maximo: number) {
   position: relative;
   top: 0;
   height: 65vh;
-  width: 804vw;
+  width: 807vw;
 
   #fondoCalle {
     background-image: url(/imagenes/fondos/calle_septimazo.png);
@@ -384,6 +384,7 @@ function numeroAleatorio(maximo: number) {
 
 .etiquetaIlustracion {
   bottom: 5vh;
+  height: auto;
   display: none;
 }
 
