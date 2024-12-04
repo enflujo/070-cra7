@@ -457,6 +457,8 @@ onMounted(async () => {
 
 #etiquetas {
   display: flex;
+  z-index: 2;
+  position: relative;
 }
 
 .etiquetaDatos {
