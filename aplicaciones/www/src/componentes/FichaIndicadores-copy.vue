@@ -2,7 +2,7 @@
 import { onMounted, ref, Ref, watch } from 'vue';
 import { distanciaEntreCoordenadas } from '../utilidades/ayudas';
 import { usarCerebro } from '@/utilidades/cerebro';
-import VisualizacionIndices from './VisualizacionIndices.vue';
+//import VisualizacionIndices from './VisualizacionIndices.vue';
 
 const cerebro = usarCerebro();
 
