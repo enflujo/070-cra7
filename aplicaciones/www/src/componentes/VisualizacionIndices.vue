@@ -2,7 +2,6 @@
 import { onMounted, ref, Ref } from 'vue';
 import { convertirEscala, distanciaEntreCoordenadas } from '../utilidades/ayudas';
 import { Punto } from '@/tipos/compartidos';
-import InfoIndicadores from './InfoIndicadores.vue';
 
 /* async function cargarDatos() {
   try {
@@ -17,29 +16,31 @@ import InfoIndicadores from './InfoIndicadores.vue';
 cargarDatos().catch(console.error); */
 
 const infoPuntoA: Ref<HTMLElement | null> = ref(null);
+const calles: Ref<HTMLElement | null> = ref(null);
 
-const multiplicadorAncho: number = 8; //0.96; // medida en vw
+const multiplicadorAncho: number = 8.01; //0.96; // medida en vw
 const alturaContenedor: number = 250; // Debe ser la misma que #contenedorTrazos
 
 let puntoElegido: Ref<Punto | null> = ref(null);
-let xZona: Ref<number> = ref(0);
 
 let distanciaTotal: number = 0;
 let distanciaParcial: number = 0;
 const multiplicadorRadio = 12; // Multiplica los valores de los índices para pintar los círculos
+const inicioGrafica = 20;
+const ancho = 70; // Ancho zona
 
 // Definir el primer punto de todas las líneas
-let lineaHabitabilidad: string = `M 0 ${alturaContenedor}`;
-let lineaAmbiente: string = `M 0 ${alturaContenedor}`;
-let lineaInfraestructura: string = `M 0 ${alturaContenedor}`;
-let lineaMovilidad: string = `M 0 ${alturaContenedor}`;
-let lineaSeguridad: string = `M 0 ${alturaContenedor}`;
-let lineaProximidad: string = `M 0 ${alturaContenedor}`;
-let lineaCaminabilidad: string = `M 0 ${alturaContenedor}`;
+let lineaHabitabilidad: string = '';
+let lineaAmbiente: string = '';
+let lineaInfraestructura: string = '';
+let lineaMovilidad: string = '';
+let lineaSeguridad: string = '';
+let lineaProximidad: string = '';
+let lineaCaminabilidad: string = '';
 
 onMounted(async () => {
   const contenedorZonas: HTMLElement = document.getElementById('contenedorZonas') as HTMLElement;
-  //const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
+  const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
 
   // Cargar datos
   const puntos = await fetch(`${import.meta.env.BASE_URL}/datos/puntos.json`).then((res) => res.json());
@@ -91,17 +92,17 @@ onMounted(async () => {
       const circuloCaminabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
       // línea
-      lineaHabitabilidad += ` L 0 ${alturaContenedor - puntos[0].habitabilidad * alturaContenedor} `;
-      lineaAmbiente += ` L 0 ${alturaContenedor - puntos[0].ambiente * alturaContenedor} `;
-      lineaInfraestructura += ` L 0 ${alturaContenedor - puntos[0].infraestructura * alturaContenedor} `;
-      lineaMovilidad += ` L 0 ${alturaContenedor - puntos[0].movilidad * alturaContenedor} `;
-      lineaSeguridad += ` L 0 ${alturaContenedor - puntos[0].seguridad * alturaContenedor} `;
-      lineaProximidad += ` L 0 ${alturaContenedor - puntos[0].proximidad * alturaContenedor} `;
-      lineaCaminabilidad += ` L 0 ${alturaContenedor - puntos[0].caminabilidad * alturaContenedor} `;
+      lineaHabitabilidad += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].habitabilidad * alturaContenedor} `;
+      lineaAmbiente += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].ambiente * alturaContenedor} `;
+      lineaInfraestructura += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].infraestructura * alturaContenedor} `;
+      lineaMovilidad += `M ${inicioGrafica} ${alturaContenedor - puntos[0].movilidad * alturaContenedor} `;
+      lineaSeguridad += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].seguridad * alturaContenedor} `;
+      lineaProximidad += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].proximidad * alturaContenedor} `;
+      lineaCaminabilidad += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].caminabilidad * alturaContenedor} `;
 
       // puntos Habitabilidad
       circuloHabitabilidad.setAttribute('class', 'puntoIndicador habitabilidad');
-      circuloHabitabilidad.setAttribute('cx', '0');
+      circuloHabitabilidad.setAttribute('cx', `${inicioGrafica}`);
       circuloHabitabilidad.setAttribute('cy', `${alturaContenedor - puntos[0].habitabilidad * alturaContenedor}`);
       circuloHabitabilidad.setAttribute('r', `${puntos[0].habitabilidad * multiplicadorRadio}`);
 
@@ -109,7 +110,7 @@ onMounted(async () => {
 
       // puntos Ambiente
       circuloAmbiente.setAttribute('class', 'puntoIndicador ambiente');
-      circuloAmbiente.setAttribute('cx', '0');
+      circuloAmbiente.setAttribute('cx', `${inicioGrafica}`);
       circuloAmbiente.setAttribute('cy', `${alturaContenedor - puntos[0].ambiente * alturaContenedor}`);
       circuloAmbiente.setAttribute('r', `${puntos[0].ambiente * multiplicadorRadio}`);
 
@@ -117,7 +118,7 @@ onMounted(async () => {
 
       // Puntos Infraestructura
       circuloInfraestructura.setAttribute('class', 'puntoIndicador infraestructura');
-      circuloInfraestructura.setAttribute('cx', '0');
+      circuloInfraestructura.setAttribute('cx', `${inicioGrafica}`);
       circuloInfraestructura.setAttribute('cy', `${alturaContenedor - puntos[0].infraestructura * alturaContenedor}`);
       circuloInfraestructura.setAttribute('r', `${puntos[0].infraestructura * multiplicadorRadio}`);
 
@@ -125,15 +126,15 @@ onMounted(async () => {
 
       // Puntos Movilidad
       circuloMovilidad.setAttribute('class', 'puntoIndicador movilidad');
-      circuloMovilidad.setAttribute('cx', '0');
+      circuloMovilidad.setAttribute('cx', `${inicioGrafica}`);
       circuloMovilidad.setAttribute('cy', `${alturaContenedor - puntos[0].movilidad * alturaContenedor}`);
-      circulosMovilidad.setAttribute('r', `${puntos[0].movilidad * multiplicadorRadio}`);
+      circuloMovilidad.setAttribute('r', `${puntos[0].movilidad * multiplicadorRadio}`);
 
       circulosMovilidad.append(circuloMovilidad);
 
       // Puntos Seguridad
       circuloSeguridad.setAttribute('class', 'puntoIndicador seguridad');
-      circuloSeguridad.setAttribute('cx', '0');
+      circuloSeguridad.setAttribute('cx', `${inicioGrafica}`);
       circuloSeguridad.setAttribute('cy', `${alturaContenedor - puntos[0].seguridad * alturaContenedor}`);
       circuloSeguridad.setAttribute('r', `${puntos[0].seguridad * multiplicadorRadio}`);
 
@@ -141,7 +142,7 @@ onMounted(async () => {
 
       // Puntos Proximidad
       circuloProximidad.setAttribute('class', 'puntoIndicador proximidad');
-      circuloProximidad.setAttribute('cx', '0');
+      circuloProximidad.setAttribute('cx', `${inicioGrafica}`);
       circuloProximidad.setAttribute('cy', `${alturaContenedor - puntos[0].proximidad * alturaContenedor}`);
       circuloProximidad.setAttribute('r', `${puntos[0].proximidad * multiplicadorRadio}`);
 
@@ -149,11 +150,49 @@ onMounted(async () => {
 
       // Puntos Caminabilidad
       circuloCaminabilidad.setAttribute('class', 'puntoIndicador caminabilidad');
-      circuloCaminabilidad.setAttribute('cx', '0');
+      circuloCaminabilidad.setAttribute('cx', `${inicioGrafica}`);
       circuloCaminabilidad.setAttribute('cy', `${alturaContenedor - puntos[0].caminabilidad * alturaContenedor}`);
       circuloCaminabilidad.setAttribute('r', `${puntos[0].caminabilidad * multiplicadorRadio}`);
 
       circulosCaminabilidad.append(circuloCaminabilidad);
+
+      const calle = document.createElement('p');
+      calle.innerText = puntos[0].nombre;
+      calle.classList.add('nombreCalle');
+      calle.style.left = `${0}px`;
+      if (calles.value) {
+        calles.value.appendChild(calle);
+      }
+
+      const zona = document.createElement('a');
+
+      zona.classList.add('zona');
+      zona.style.width = `${ancho}px`;
+      zona.href = `#${puntos[0].slug}`;
+      zona.style.left = `0px`;
+
+      // Agregar cada punto a la línea de la 7
+      contenedorZonas.appendChild(zona);
+
+      zona.addEventListener('mouseenter', () => {
+        const puntoA = puntos[0];
+        infoPuntoA.innerHTML = `<h4>${puntoA.nombre}</h4>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloAmbiente"></span> ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloCaminabilidad"></span> caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloHabitabilidad"></span>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloInfraestructura"></span>infraestructura: ${puntoA.infraestructura ? puntoA.infraestructura : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloMovilidad"></span>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloProximidad"></span>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
+        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloSeguridad"></span>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>`;
+        infoPuntoA.style.left = `50px`;
+        infoPuntoA.style.display = 'block';
+      });
+
+      zona.addEventListener('mouseleave', () => {
+        puntoElegido.value = null;
+        infoPuntoA.innerText = '';
+        infoPuntoA.style.display = 'none';
+      });
 
       // Dibujar el resto de puntos
     } else {
@@ -172,16 +211,8 @@ onMounted(async () => {
 
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
 
-      xZona.value = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
-
-      // ¿Dejar el ancho en 1 o haver el cálculo?
-      const ancho = 1; /*
-        convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho) < 3
-          ? convertirEscala(distanciaParcial, 0, 25, 0, 100 * multiplicadorAncho) - 0.5
-          : 2; */
-
       distanciaTotal += distanciaParcial;
-      const x = convertirEscala(distanciaTotal, 0, 25, 0, window.innerWidth * multiplicadorAncho);
+      const x = convertirEscala(distanciaTotal, 0, 25, 20, window.innerWidth * multiplicadorAncho);
 
       // Definir posición en y de cada punto por indicador
       const yInfraestructura = alturaContenedor - puntoB.infraestructura * alturaContenedor;
@@ -233,22 +264,28 @@ onMounted(async () => {
       circuloCaminabilidad.setAttribute('cx', `${x}`);
       if (yCaminabilidad) {
         circuloCaminabilidad.setAttribute('cy', `${yCaminabilidad}`);
+        circuloCaminabilidad.setAttribute('r', `${puntoB.caminabilidad * multiplicadorRadio}`);
       }
-      circuloCaminabilidad.setAttribute('r', `${puntoB.caminabilidad * multiplicadorRadio}`);
+
+      // Agregar nombre de calles
+      const calle = document.createElement('p');
+      calle.innerText = puntoB.nombre;
+      calle.classList.add('nombreCalle');
+      calle.style.left = `${x - 25}px`;
+      if (calles.value) {
+        calles.value.appendChild(calle);
+      }
 
       zona.classList.add('zona');
-      zona.style.width = `${ancho}vw`;
+      zona.style.width = `${ancho}px`;
       zona.href = `#${puntoA.slug}`;
-      zona.style.left = `${xZona.value - ancho / 2}vw`;
+      zona.style.left = `${x - ancho / 4}px`;
 
       // Agregar cada punto a la línea de la 7
       contenedorZonas.appendChild(zona);
 
       zona.addEventListener('mouseenter', () => {
-        puntoElegido.value = puntoA;
-        //console.log(puntoElegido.value);
-        /* if (!infoPuntoA.value) return;
-        infoPuntoA.value.innerHTML = `<h4>${puntoA.nombre}</h4>
+        infoPuntoA.innerHTML = `<h4>${puntoB.nombre}</h4>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloAmbiente"></span> ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloCaminabilidad"></span> caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloHabitabilidad"></span>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
@@ -256,15 +293,14 @@ onMounted(async () => {
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloMovilidad"></span>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloProximidad"></span>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
         <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloSeguridad"></span>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>`;
-        infoPuntoA.value.style.left = `${xZona + 1}vw`;
-        infoPuntoA.value.style.display = 'block';*/
+        infoPuntoA.style.left = `${x + 30}px`;
+        infoPuntoA.style.display = 'block';
       });
 
       zona.addEventListener('mouseleave', () => {
         puntoElegido.value = null;
-        /* if (!infoPuntoA.value) return;
-        infoPuntoA.value.innerText = '';
-        infoPuntoA.value.style.display = 'none'; */
+        infoPuntoA.innerText = '';
+        infoPuntoA.style.display = 'none';
       });
 
       if (i < puntos.length - 1) {
@@ -314,6 +350,8 @@ onMounted(async () => {
 
 <template>
   <div id="contenedorVis">
+    <div class="calles" ref="calles"></div>
+
     <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
       <path id="trazoHabitabilidad" class="trazo" />
       <g id="circulosHabitabilidad"></g>
@@ -337,23 +375,24 @@ onMounted(async () => {
       <g id="circulosCaminabilidad"></g>
     </svg>
 
-    <div id="etiquetas">
+    <div id="contenedorEtiquetas">
       <p id="titulo">
         Índices medidos a lo largo de la carrera Séptima durante la investigación. Los valores van de 0 a 1 y muestran,
-        en cada punto, los datos de cada indicador.
+        en cada punto, los datos de cada indicador:
       </p>
-      <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
-      <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
-      <p class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
-      <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
-      <p class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
-      <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
-      <p class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
+      <div id="etiquetas">
+        <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
+        <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
+        <p class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
+        <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
+        <p class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
+        <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
+        <p class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
+      </div>
     </div>
 
     <div id="contenedorZonas">
-      <!--  <div class="infoPunto" ref="infoPuntoA" id="infoPuntoA"></div> -->
-      <InfoIndicadores :punto="puntoElegido" :style="`left:${xZona}`" :posX="xZona" :distanciaTotal="distanciaTotal" />
+      <div class="infoPunto" ref="infoPuntoA" id="infoPuntoA"></div>
     </div>
   </div>
 </template>
@@ -363,20 +402,17 @@ onMounted(async () => {
 @import '../scss/general';
 
 #contenedorVis {
-  left: 2em;
-  padding-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  // border: 1px black solid;
+  margin: 1em;
+  height: 285px;
 }
 
 #contenedorTrazos {
-  position: absolute;
-  top: 70vh;
-  // Ancho del contenedor
-  // background-color: var(--piel);
-  width: 800vw; //96vw;
-  height: 35vh;
-  // border: 2px black solid;
-  margin-bottom: 0.3em;
+  height: 270px;
   left: 3vw;
+  width: 800vw;
 }
 
 #trazoHabitabilidad {
@@ -407,26 +443,24 @@ onMounted(async () => {
   stroke: var(--colorCaminabilidad);
 }
 
-#etiquetas {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  position: absolute;
-  bottom: 0;
-  padding: 0em 4em;
+#contenedorEtiquetas {
+  padding: 0em 1em;
 
   #titulo {
     margin: 0 3em 0.5em 0;
     font-size: 0.8em;
-    border-bottom: var(--menta) 2px solid;
   }
+}
+
+#etiquetas {
+  display: flex;
 }
 
 .etiquetaDatos {
   border-bottom: 2px solid;
   width: fit-content;
   font-size: 0.8em;
-  margin: 0 1em 0.5em 0em;
+  margin: 0 2em 0.5em 0em;
 }
 
 #etiqHabitabilidad {
@@ -496,13 +530,27 @@ onMounted(async () => {
   }
 }
 
-/* .infoPunto {
+.zona {
+  background-color: aqua;
+  cursor: pointer;
+  height: 50vh;
+  opacity: 0;
+  position: absolute;
+  top: 55vh;
+  width: 70px;
+  z-index: 10;
+}
+
+.infoPunto {
+  display: none;
+  position: absolute;
   min-width: fit-content;
   width: 160px;
-  bottom: 0em;
+  top: 70vh;
   border: 2px black solid;
   background-color: var(--piel);
   padding: 0.5em 1em;
+  font-size: 0.8em;
   p,
   h4 {
     margin: 0;
@@ -544,29 +592,28 @@ onMounted(async () => {
   #circuloSeguridad {
     background-color: var(--colorSeguridad);
   }
-} */
+}
+
+.calles {
+  position: absolute;
+  bottom: 29vh;
+  display: flex;
+  align-items: flex-end;
+}
+
+.nombreCalle {
+  background-color: hsla(42, 84%, 76%, 1);
+  border-radius: 5px;
+  font-size: 0.7em;
+  position: absolute;
+  text-align: center;
+  padding: 0.5em;
+  z-index: 8;
+  min-width: 35px;
+  border: 1px black solid;
+}
 
 .lineasCalle {
   stroke: rgba(255, 24, 24, 0.3);
-}
-
-.zona {
-  position: absolute;
-  bottom: 26px;
-  background-color: rgba(16, 255, 255, 0.222);
-  border: rgba(10, 197, 248, 0.5) solid 1px;
-  height: 119px;
-  opacity: 0.1;
-  cursor: pointer;
-  z-index: 10;
-}
-.zona:hover {
-  opacity: 0.9;
-}
-
-#contenedorZonas {
-  height: 215px;
-  position: absolute;
-  bottom: 22px;
 }
 </style>

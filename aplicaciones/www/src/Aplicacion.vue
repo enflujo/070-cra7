@@ -24,10 +24,12 @@ const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
 const tituloPodcast: Ref<HTMLElement | null> = ref(null);
 const podcastElegido: Ref<ElementoPaisaje | null> = ref(null);
-
 const botonInformacion: Ref<HTMLDivElement | null> = ref(null);
 
 const cerebro = usarCerebro();
+
+const multiplicadorAncho = 8; // valor para multiplicar 100vw por
+let distanciaTotal = 0;
 
 let ratonSobreLugar: string = '';
 
@@ -156,9 +158,6 @@ async function cargarDatos() {
 
 cargarDatos().catch(console.error);
 
-const multiplicadorAncho = 8; // valor para multiplicar 100vw por
-let distanciaTotal = 0;
-
 onMounted(async () => {
   // Punto por lugar
   puntos.value = (await fetch(`${import.meta.env.BASE_URL}/datos/puntos.json`).then((res) => res.json())) as Punto[];
@@ -262,16 +261,6 @@ function numeroAleatorio(maximo: number) {
             :style="`left:${(punto.ubicacionX || 0) - 2}vw`"
           />
 
-          <!--íconos de podcast y perfil-->
-          <!-- <img
-            @click="abrirFicha(punto.slug)"
-            class="icono iconoPodcast botonAbrir"
-            v-if="punto.podcast"
-            src="/imagenes/icono_podcast.png"
-            alt="ícono abrir podcast"
-            :style="`left:${punto.ubicacionX}vw`"
-          /> -->
-
           <img
             @click="abrirFicha(punto.slug)"
             class="icono iconoPerfil botonAbrir"
@@ -290,14 +279,6 @@ function numeroAleatorio(maximo: number) {
             alt="ícono abrir perfil"
             :style="`left:${(punto.ubicacionX || 0) - 3}vw; bottom:${alturaPajaros[i]}px`"
           />
-
-          <p
-            class="nombreCalle"
-            :id="punto.slug"
-            :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX && punto.slug !== 'plaza-de-bolivar' ? punto.ubicacionX - 1.5 : -1.5}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
-          >
-            {{ punto.nombre }}
-          </p>
         </div>
         <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
 
@@ -356,7 +337,7 @@ function numeroAleatorio(maximo: number) {
     height: 400px;
     position: absolute;
     width: 100%;
-    bottom: -4vw;
+    bottom: 0vw;
     background-position: bottom;
     background-size: contain;
     background-repeat: repeat-x;
@@ -373,7 +354,7 @@ function numeroAleatorio(maximo: number) {
 }
 
 .ilustracion {
-  bottom: 0vh;
+  bottom: 53px;
   position: absolute;
   height: auto;
   width: 35vw;
@@ -384,9 +365,9 @@ function numeroAleatorio(maximo: number) {
 }
 .arbol {
   position: absolute;
-  height: 90px;
-  bottom: 5px;
-  z-index: 9;
+  height: 100px;
+  bottom: 15px;
+  z-index: 8;
 }
 
 // Etiqueta del lugar ilustrado
@@ -463,22 +444,4 @@ function numeroAleatorio(maximo: number) {
     cursor: pointer;
   }
 }
-
-.nombreCalle {
-  position: absolute;
-  bottom: -5vh;
-  font-size: 0.7em;
-  text-align: center;
-  background-color: #f5d68ed7;
-  border-radius: 5px;
-}
-
-/* .infoPunto {
-  display: none;
-  position: absolute;
-  font-size: 0.8em;
-  text-align: center;
-  text-transform: lowercase;
-  top: 75px;
-} */
 </style>
