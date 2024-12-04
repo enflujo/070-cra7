@@ -169,6 +169,13 @@ onMounted(() => {
 
 .contenedorPersonaje {
   margin-top: 2em;
+
+  .iconoPerfil {
+    bottom: 180px;
+    border-radius: 50%;
+    padding: 0.3em;
+    height: 45px;
+  }
 }
 
 .contenedorTexto {

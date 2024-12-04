@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
-import { distanciaEntreCoordenadas, base } from './utilidades/ayudas';
+import { distanciaEntreCoordenadas, base, convertirEscala } from './utilidades/ayudas';
+import slugificar from 'slug';
 import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
@@ -24,10 +25,12 @@ const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
 const tituloPodcast: Ref<HTMLElement | null> = ref(null);
 const podcastElegido: Ref<ElementoPaisaje | null> = ref(null);
-
 const botonInformacion: Ref<HTMLDivElement | null> = ref(null);
 
 const cerebro = usarCerebro();
+
+const multiplicadorAncho = 8; // valor para multiplicar 100vw por
+let distanciaTotal = 0;
 
 let ratonSobreLugar: string = '';
 
@@ -118,7 +121,7 @@ function mostrarEtiquetaLugar(id: string) {
   ratonSobreLugar = punto?.ilustraciones[0];
 
   etiquetaIlustracion.value.innerText = ratonSobreLugar.split('_').join(' ');
-  etiquetaIlustracion.value.style.left = `${punto.ubicacionX}vw`;
+  etiquetaIlustracion.value.style.left = `${punto.ubicacionX ? punto.ubicacionX + 10 : 0}vw`;
   etiquetaIlustracion.value.style.bottom = `250px`;
   etiquetaIlustracion.value.style.display = 'block';
 }
@@ -155,9 +158,6 @@ async function cargarDatos() {
 }
 
 cargarDatos().catch(console.error);
-
-const multiplicadorAncho = 8; // valor para multiplicar 100vw por
-let distanciaTotal = 0;
 
 onMounted(async () => {
   // Punto por lugar
@@ -206,19 +206,6 @@ onMounted(async () => {
   });
 });
 
-function convertirEscala(
-  valor: number,
-  escalaBaseMin: number,
-  escalaBaseMax: number,
-  escalaDestinoMin: number,
-  escalaDestinoMax: number
-): number {
-  return (
-    ((valor - escalaBaseMin) * (escalaDestinoMax - escalaDestinoMin)) / (escalaBaseMax - escalaBaseMin) +
-    escalaDestinoMin
-  );
-}
-
 function numeroAleatorio(maximo: number) {
   return Math.floor(Math.random() * maximo);
 }
@@ -250,10 +237,11 @@ function numeroAleatorio(maximo: number) {
             @mouseenter="mostrarEtiquetaLugar(punto.id)"
             @mouseleave="ocultarEtiquetaLugar"
             class="ilustracion"
+            :class="slugificar(punto.ilustraciones[0])"
             v-if="punto.ilustraciones"
             :src="`${base}/imagenes/lugares/${punto.ilustraciones}.png`"
             :alt="`${punto.ilustraciones}`"
-            :style="`left:${punto.ilustraciones[0] === 'Seminario Conciliar' || punto.ilustraciones[0] === 'Centro de abastos Codabas' ? (punto.ubicacionX || 0) - 14 : (punto.ubicacionX || 0) - 3}vw`"
+            :style="`left:${punto.ilustraciones[0] ? punto.ubicacionX : 0}vw`"
           />
 
           <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
@@ -275,16 +263,6 @@ function numeroAleatorio(maximo: number) {
             :style="`left:${(punto.ubicacionX || 0) - 2}vw`"
           />
 
-          <!--íconos de podcast y perfil-->
-          <!-- <img
-            @click="abrirFicha(punto.slug)"
-            class="icono iconoPodcast botonAbrir"
-            v-if="punto.podcast"
-            src="/imagenes/icono_podcast.png"
-            alt="ícono abrir podcast"
-            :style="`left:${punto.ubicacionX}vw`"
-          /> -->
-
           <img
             @click="abrirFicha(punto.slug)"
             class="icono iconoPerfil botonAbrir"
@@ -303,14 +281,6 @@ function numeroAleatorio(maximo: number) {
             alt="ícono abrir perfil"
             :style="`left:${(punto.ubicacionX || 0) - 3}vw; bottom:${alturaPajaros[i]}px`"
           />
-
-          <p
-            class="nombreCalle"
-            :id="punto.slug"
-            :style="`width: ${punto.slug === 'diagonal-40a' || punto.slug === 'plaza-de-bolivar' ? '55' : '40'}px; left:${punto.ubicacionX && punto.slug !== 'plaza-de-bolivar' ? punto.ubicacionX - 1 : 1}vw; padding:${punto.slug === 'plaza-de-bolivar' || punto.slug === 'avenida-jimenez' ? '0.4em 0.6em 0.4em 0.4em' : '0.4em 0em'}`"
-          >
-            {{ punto.nombre }}
-          </p>
         </div>
         <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
 
@@ -326,7 +296,7 @@ function numeroAleatorio(maximo: number) {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import 'scss/constantes';
 @import 'scss/general';
 
@@ -352,7 +322,7 @@ function numeroAleatorio(maximo: number) {
 
 #aplicacion {
   display: flex;
-  width: 804vw;
+  width: 807vw;
 }
 
 #cra7 {
@@ -361,15 +331,15 @@ function numeroAleatorio(maximo: number) {
   background-size: contain;
   position: relative;
   top: 0;
-  height: 60vh;
-  width: 804vw;
+  height: 65vh;
+  width: 807vw;
 
   #fondoCalle {
     background-image: url(/imagenes/fondos/calle_septimazo.png);
     height: 400px;
     position: absolute;
     width: 100%;
-    bottom: -4vw;
+    bottom: 0vw;
     background-position: bottom;
     background-size: contain;
     background-repeat: repeat-x;
@@ -378,15 +348,39 @@ function numeroAleatorio(maximo: number) {
   #contenedorElementos {
     padding: 0 0 0 3vw;
     width: 594vw;
-    height: 70vh;
+    height: 65vh;
     position: absolute;
     left: 3vw;
     top: 14px;
   }
+
+  @keyframes cambioColor {
+    0% {
+      background-color: var(--amarillo);
+      height: 30px;
+    }
+    50% {
+      background-color: var(--rosa);
+      height: 40px;
+    }
+    100% {
+      background-color: var(--amarillo);
+      height: 30px;
+    }
+  }
+
+  .iconoPerfil {
+    bottom: 180px;
+    border-radius: 50%;
+    padding: 0.3em;
+    animation-name: cambioColor;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+  }
 }
 
 .ilustracion {
-  bottom: 10vh;
+  bottom: 53px;
   position: absolute;
   height: auto;
   width: 35vw;
@@ -394,12 +388,72 @@ function numeroAleatorio(maximo: number) {
   &:hover {
     opacity: 1;
   }
+  &.plaza-de-bolivar {
+    transform: translate(0px, 26px) rotate(1deg);
+  }
+
+  &.planetario-de-bogota {
+    transform: translate(0px, -33px);
+  }
+
+  &.parque-nacional {
+    transform: translate(0px, -21px);
+  }
+  &.universidad-javeriana {
+    transform: translate(0px, -21px);
+  }
+
+  &.parque-de-los-hippies {
+    transform: translate(-81px, -29px);
+  }
+  &.edificio-caracol {
+    transform: translate(-22px, -24px);
+  }
+  &.edificio-los-venados {
+    transform: translate(40px, -24px);
+  }
+  &.escuela-de-caballeria {
+    transform: translateY(-14px);
+  }
+
+  &.subida-a-patios {
+    transform: translateY(27px);
+  }
+
+  &.museo-del-chico {
+    transform: translate(-32px, -19px);
+  }
+
+  &.seminario-conciliar {
+    width: 27vw;
+    transform: translate(-73px, -8px) rotate(2deg);
+  }
+
+  &.hacienda-santa-barbara {
+    transform: translate(15px, -10px);
+  }
+
+  &.centro-de-abastos-codabas {
+    transform: translateX(-150px);
+  }
+  &.barrio-el-codito {
+    transform: translate(120px, 9px) rotate(-1deg);
+  }
+  &.centro-comercial-palatino {
+    transform: translateY(20px);
+  }
+  &.hospital-simon-bolivar {
+    transform: translateY(-16px);
+  }
+  &.finca-la-suiza {
+    transform: translateY(20px) rotate(1deg);
+  }
 }
 .arbol {
   position: absolute;
-  height: 90px;
-  bottom: 90px;
-  z-index: 9;
+  height: 100px;
+  bottom: 15px;
+  z-index: 8;
 }
 
 // Etiqueta del lugar ilustrado
@@ -416,6 +470,7 @@ function numeroAleatorio(maximo: number) {
 
 .etiquetaIlustracion {
   bottom: 5vh;
+  height: auto;
   display: none;
 }
 
@@ -459,14 +514,6 @@ function numeroAleatorio(maximo: number) {
   }
 }
 
-.iconoPerfil {
-  height: 35px;
-  bottom: 180px;
-  background: var(--amarillo);
-  border-radius: 50%;
-  padding: 0.3em;
-}
-
 .iconoPajaro {
   height: 35px;
   border-radius: 50%;
@@ -475,23 +522,5 @@ function numeroAleatorio(maximo: number) {
   &.texto {
     cursor: pointer;
   }
-}
-
-.nombreCalle {
-  position: absolute;
-  bottom: -3vh;
-  font-size: 0.7em;
-  text-align: center;
-  background-color: #f5d68ed7;
-  border-radius: 5px;
-}
-
-.infoPunto {
-  display: none;
-  position: absolute;
-  font-size: 0.8em;
-  text-align: center;
-  text-transform: lowercase;
-  bottom: -1.2em;
 }
 </style>

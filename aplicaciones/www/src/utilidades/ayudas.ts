@@ -24,4 +24,17 @@ export const distanciaEntreCoordenadas = (lat1: number, lon1: number, lat2: numb
   return radio * c;
 };
 
+export function convertirEscala(
+  valor: number,
+  escalaBaseMin: number,
+  escalaBaseMax: number,
+  escalaDestinoMin: number,
+  escalaDestinoMax: number
+): number {
+  return (
+    ((valor - escalaBaseMin) * (escalaDestinoMax - escalaDestinoMin)) / (escalaBaseMax - escalaBaseMin) +
+    escalaDestinoMin
+  );
+}
+
 export const base = import.meta.env.BASE_URL;
