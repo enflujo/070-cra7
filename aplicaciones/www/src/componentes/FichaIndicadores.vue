@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from 'vue';
-import type { ElementoPaisaje } from '../tipos';
+import { onMounted } from 'vue';
 import { usarCerebro } from '../utilidades/cerebro';
-import { base } from '@/utilidades/ayudas';
 
-defineProps<{ id: string; cerrar: () => void }>();
+defineProps<{ cerrar: () => void }>();
 
 const cerebro = usarCerebro();
 
@@ -16,7 +14,7 @@ onMounted(() => {});
 </script>
 
 <template>
-  <div v-if="cerebro.indicadoresVisible" id="fichaIndicadores" class="ficha">
+  <div v-if="cerebro.indicadoresVisible" class="ficha fichaIndicadores">
     <span id="cerrar" @click="cerrar">X</span>
 
     <div id="etiquetas">

@@ -88,6 +88,7 @@ function cerrarFicha() {
   idPodcast.value = null;
   idLugar.value = null;
   cerebro.fichaVisible = false;
+  cerebro.indicadoresVisible = false;
 }
 
 // Función para abrir información sobre el proyecto
@@ -139,14 +140,17 @@ function clicFuera(evento: MouseEvent) {
 
   const elemento = evento.target as HTMLElement;
   const botonAbrir = elemento.classList.contains('botonAbrir');
+  const botonIndicador = elemento.classList.contains('etiquetaDatos');
   const fichaLugar = elemento.classList.contains('fichaLugar');
   const fichaPodcast = elemento.classList.contains('fichaPodcast');
   const infoProyecto = elemento.classList.contains('infoProyecto');
+  const infoIndicadores = elemento.classList.contains('infoProyecto');
 
-  if (botonAbrir || fichaLugar || infoProyecto || fichaPodcast) return;
+  if (botonAbrir || fichaLugar || infoProyecto || fichaPodcast || infoIndicadores || botonIndicador) return;
   cerebro.infoVisible = false;
   cerebro.fichaVisible = false;
   cerebro.podcastVisible = false;
+  cerebro.indicadoresVisible = false;
 }
 
 async function cargarDatos() {
@@ -294,7 +298,7 @@ function numeroAleatorio(maximo: number) {
       :cerrar="cerrarFicha"
     />
     <VisualizacionIndices :multiplicadorAncho="8.01" />
-    <FichaIndicadores />
+    <FichaIndicadores :cerrar="cerrarFicha" />
   </div>
 </template>
 

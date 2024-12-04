@@ -9,7 +9,7 @@ export const usarCerebro = defineStore('cerebro', {
       fichaVisible: false,
       infoVisible: true,
       podcastVisible: false,
-      indicadoresVisible: true,
+      indicadoresVisible: false,
     };
   },
 
