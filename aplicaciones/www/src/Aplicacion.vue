@@ -333,7 +333,7 @@ function numeroAleatorio(maximo: number) {
   background-size: contain;
   position: relative;
   top: 0;
-  height: 65vh;
+  height: 60vh;
   width: 1213vw;
 
   #fondoCalle {
@@ -350,7 +350,7 @@ function numeroAleatorio(maximo: number) {
   #contenedorElementos {
     padding: 0 0 0 3vw;
     width: 594vw;
-    height: 65vh;
+    height: 60vh;
     position: absolute;
     left: 3vw;
     top: 14px;

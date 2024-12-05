@@ -22,7 +22,7 @@ const props = defineProps<{ multiplicadorAncho: number }>();
 const cerebro = usarCerebro();
 const infoPuntoA: Ref<HTMLElement | null> = ref(null);
 const calles: Ref<HTMLElement | null> = ref(null);
-const alturaContenedor: number = 250; // Debe ser la misma que en #contenedorTrazos
+const alturaContenedor: number = 200; // Debe ser la misma que en #contenedorTrazos
 
 let puntoElegido: Ref<Punto | null> = ref(null);
 
@@ -408,15 +408,13 @@ onMounted(async () => {
 @import '../scss/general';
 
 #contenedorVis {
-  display: flex;
-  flex-direction: column;
   // border: 1px black solid;
-  margin: 1em;
-  height: 300px;
+  padding: 1em;
+  height: 28vh;
 }
 
 #contenedorTrazos {
-  height: 270px;
+  height: 200px;
   left: 3vw;
   width: 1200vw;
 }
@@ -452,7 +450,7 @@ onMounted(async () => {
 #contenedorEtiquetas {
   padding: 0em 1em;
   position: absolute;
-  top: 104vh;
+  top: 88vh;
 
   #titulo {
     margin: 0 3em 0.5em 0;
@@ -606,7 +604,7 @@ onMounted(async () => {
 
 .calles {
   position: absolute;
-  bottom: 36vh;
+  bottom: 42vh;
   display: flex;
   align-items: flex-start;
 }
@@ -633,6 +631,7 @@ onMounted(async () => {
   }
   #contenedorEtiquetas {
     position: unset;
+    top: 104vh;
   }
   #etiquetas {
     flex-direction: row;
@@ -640,6 +639,9 @@ onMounted(async () => {
 
   .infoPunto {
     top: 72vh;
+  }
+  .calles {
+    bottom: 36vh;
   }
 }
 </style>
