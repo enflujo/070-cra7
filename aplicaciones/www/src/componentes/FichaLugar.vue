@@ -50,7 +50,7 @@ const perfiles: ElementoPaisaje[] = [
   },
 ];
 
-const textosPajaros: ElementoPaisaje[] = [
+/* const textosPajaros: ElementoPaisaje[] = [
   {
     id: 'calle-32',
     nombre: 'tp1',
@@ -69,7 +69,7 @@ const textosPajaros: ElementoPaisaje[] = [
     descripcion:
       'En el tramo 3 (entre la calle 100 y la calle 160) se registran 698 individuos y 50 especies. Las especies más comunes son las ya mencionadas, aunque la población de Columba livia (paloma bravía) disminuye drásticamente el número de individuos observados. La biomasa en este tramo varía ligeramente, siendo las aves más abundantes Turdus fuscater (mirla patinaranja) y Colibri coruscans (colibrí rutilante), que representan el 31,5% de las aves observadas (17,2% y 14,3% respectivamente). Se identificaron 11 especies de aves migratorias, que constituyen el 10% del total, destacando una mayor abundancia de Setophaga fusca (reinita gorjinaranja) y Piranga rubra (tángara roja migratoria). Por otro lado, Columba livia tuvo una abundancia del 5,2%. <br> <br> Algunas especies encontradas fuera de la sabana, como Grallaria ruficapilla (tororoí compadre) y Myiothlypis fulvicauda (arañero ribereño), son más comunes en el bosque del cerro. Sin embargo, al estudiar las zonas limítrofes a áreas urbanas, se observó una baja abundancia de estas especies. <br> <br> Dado que esta zona de estudio se encuentra más cerca de los cerros orientales, es posible encontrar especies que prefieren nichos específicos del bosque alto andino. Se observa una relación débil entre los asentamientos humanos (como conjuntos y barrios) y estas especies, que tienden a alejarse de las zonas urbanas. A pesar de ello, la preservación del cerro y la proximidad a áreas verdes en la ciudad favorece una conectividad y un flujo de biodiversidad más robustos. Por ello, se han encontrado especies que indican una buena salud ecosistémica, como Grallaria ruficapilla y Myiothlypis fulvicauda, aunque estas fueron localizadas en el punto conocido como "Finca la Suiza", que se caracteriza por ser una extensa área natural dedicada a la ganadería y ubicada en el cerro oriental. <br> <br> Esta situación evidencia la importancia de la conectividad ecológica y la conservación de ecosistemas estratégicos, con el fin de fomentar un uso sostenible de estos recursos. Esto contribuye a una dinámica hidrológica óptima, a una mejora en la calidad del aire y a la promoción del cuidado de la biodiversidad distrital. A pesar de las amenazas, Colombia se mantiene como el país número uno en diversidad de aves, albergando una riqueza notable en especies endémicas, residentes, exóticas y migratorias.',
   },
-];
+]; */
 
 function cerrar() {
   cerebro.fichaVisible = false;
