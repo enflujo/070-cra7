@@ -277,7 +277,6 @@ function numeroAleatorio(maximo: number) {
           <img
             @click="punto.slug === 'calle-32' ? abrirFicha(punto.slug) : ''"
             class="icono iconoPajaro"
-            :class="punto.slug === 'calle-32' ? 'texto' : ''"
             v-if="punto.txtPajaros"
             :src="`${base}/imagenes/icono_pajaro.png`"
             alt="ícono abrir perfil"
@@ -294,7 +293,7 @@ function numeroAleatorio(maximo: number) {
       :podcast="podcastElegido ? podcastElegido : undefined"
       :cerrar="cerrarFicha"
     />
-    <VisualizacionIndices :multiplicadorAncho="multiplicadorAncho + 0.1" />
+    <VisualizacionIndices :multiplicadorAncho="multiplicadorAncho" />
     <FichaIndicadores :cerrar="cerrarFicha" />
   </div>
 </template>
@@ -530,7 +529,7 @@ function numeroAleatorio(maximo: number) {
 @media screen and (min-width: $minTablet) {
   #aplicacion {
     display: flex;
-    width: 807vw;
+    width: 830vw;
   }
 
   #cra7 {
@@ -540,7 +539,7 @@ function numeroAleatorio(maximo: number) {
     position: relative;
     top: 0;
     height: 65vh;
-    width: 807vw;
+    width: 830vw;
   }
   .arbol {
     height: 200px;

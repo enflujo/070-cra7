@@ -629,7 +629,7 @@ onMounted(async () => {
 
 @media screen and (min-width: $minTablet) {
   #contenedorTrazos {
-    width: 800vw;
+    width: 820vw;
   }
   #contenedorEtiquetas {
     position: unset;
