@@ -218,7 +218,7 @@ onMounted(async () => {
       distanciaTotal += distanciaParcial;
 
       // Calcular la posición en x de cada punto
-      const x = convertirEscala(distanciaTotal, 0, 25, 20, window.innerWidth * props.multiplicadorAncho);
+      const x = convertirEscala(distanciaTotal, 0, 25, 20, screen.width * props.multiplicadorAncho);
 
       // Definir posición en y de cada punto por indicador
       const yInfraestructura = alturaContenedor - puntoB.infraestructura * alturaContenedor;
@@ -412,13 +412,13 @@ onMounted(async () => {
   flex-direction: column;
   // border: 1px black solid;
   margin: 1em;
-  height: 285px;
+  height: 300px;
 }
 
 #contenedorTrazos {
   height: 270px;
   left: 3vw;
-  width: 800vw;
+  width: 1200vw;
 }
 
 #trazoHabitabilidad {
@@ -451,6 +451,8 @@ onMounted(async () => {
 
 #contenedorEtiquetas {
   padding: 0em 1em;
+  position: absolute;
+  top: 104vh;
 
   #titulo {
     margin: 0 3em 0.5em 0;
@@ -459,6 +461,7 @@ onMounted(async () => {
 
 #etiquetas {
   display: flex;
+  flex-direction: column;
   z-index: 2;
   position: relative;
 }
@@ -553,7 +556,7 @@ onMounted(async () => {
   position: absolute;
   min-width: fit-content;
   width: 160px;
-  top: 70vh;
+  top: 75vh;
   border: 2px black solid;
   background-color: var(--piel);
   padding: 0.5em 1em;
@@ -622,5 +625,21 @@ onMounted(async () => {
 
 .lineasCalle {
   stroke: rgba(255, 24, 24, 0.3);
+}
+
+@media screen and (min-width: $minTablet) {
+  #contenedorTrazos {
+    width: 800vw;
+  }
+  #contenedorEtiquetas {
+    position: unset;
+  }
+  #etiquetas {
+    flex-direction: row;
+  }
+
+  .infoPunto {
+    top: 72vh;
+  }
 }
 </style>

@@ -10,19 +10,19 @@ onMounted(async () => {
 
   const texto = new Blotter.Text('SIETE', {
     family: 'Rubik Bubbles',
-    size: 210,
+    size: screen.width > 767 ? screen.width * 0.12 : screen.width * 0.27,
     fill: '#F3D78E',
   });
 
   const punto = new Blotter.Text('.', {
     family: 'Rubik Bubbles',
-    size: 160,
+    size: screen.width * 0.1,
     fill: '#F3D78E',
   });
 
   const globo = new Blotter.Text('°', {
     family: 'Rubik Bubbles',
-    size: 170,
+    size: screen.width * 0.1,
     fill: '#F3D78E',
   });
 
@@ -56,28 +56,33 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
+@import '../scss/constantes';
+
+body {
+  background-color: #7acf9c;
+}
+
 #contenedorTitulo {
   display: block;
-  margin-left: 25vw;
+  margin-left: 1vw;
   position: absolute;
   text-align: center;
   top: 0;
   z-index: 9;
-}
-body {
-  background-color: #7acf9c;
+  width: 100vw;
 }
 
 .texto {
   font-family: 'Rubik Bubbles', system-ui;
   font-weight: 370;
   font-style: normal;
-  font-size: 110px;
+  font-size: 11vw;
   display: block;
   text-align: center;
   color: #f3d78e;
   line-height: 0em;
-  margin-top: 0.8em;
+  margin-top: 1.5em;
+  text-shadow: 2px 2px 4px #111111;
 }
 
 .enflujito {
@@ -87,5 +92,15 @@ body {
 
 canvas {
   margin: 0 auto;
+}
+
+@media screen and (min-width: $minTablet) {
+  #contenedorTitulo {
+    margin-left: 0vw;
+  }
+  .texto {
+    font-size: 110px;
+    margin-top: 0.8em;
+  }
 }
 </style>

@@ -21,15 +21,20 @@ body {
 // Estilo fichas
 .ficha {
   border: 1px solid black;
-  height: 65vh;
-  width: 35vw;
+  height: 75vh;
   overflow: auto;
   background-color: var(--lila);
   position: fixed;
   top: 5vh;
-  left: 5vw;
+  left: 6vw;
+  padding: 3em 3em;
+  width: 62vw;
   z-index: 10;
-  padding: 5em 6em;
+
+  h2 {
+    font-size: 1.2em;
+    letter-spacing: -0.02em;
+  }
 }
 
 .botonAbrir {
@@ -49,5 +54,18 @@ body {
 
   &:hover {
     font-weight: 600;
+  }
+}
+
+@media screen and (min-width: $minTablet) {
+  .ficha {
+    width: 35vw;
+    height: 65vh;
+    padding: 5em 6em;
+
+    h2 {
+      font-size: 1.8em;
+      letter-spacing: 0em;
+    }
   }
 }

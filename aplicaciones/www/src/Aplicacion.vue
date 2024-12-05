@@ -29,7 +29,7 @@ const botonInformacion: Ref<HTMLDivElement | null> = ref(null);
 
 const cerebro = usarCerebro();
 
-const multiplicadorAncho = 8; // valor para multiplicar 100vw
+const multiplicadorAncho = screen.width > 767 ? 8 : 12; // valor para multiplicar 100vw
 let distanciaTotal = 0;
 
 let ratonSobreLugar: string = '';
@@ -294,7 +294,7 @@ function numeroAleatorio(maximo: number) {
       :podcast="podcastElegido ? podcastElegido : undefined"
       :cerrar="cerrarFicha"
     />
-    <VisualizacionIndices :multiplicadorAncho="8.01" />
+    <VisualizacionIndices :multiplicadorAncho="multiplicadorAncho + 0.1" />
     <FichaIndicadores :cerrar="cerrarFicha" />
   </div>
 </template>
@@ -325,7 +325,7 @@ function numeroAleatorio(maximo: number) {
 
 #aplicacion {
   display: flex;
-  width: 807vw;
+  width: 1213vw;
 }
 
 #cra7 {
@@ -335,7 +335,7 @@ function numeroAleatorio(maximo: number) {
   position: relative;
   top: 0;
   height: 65vh;
-  width: 807vw;
+  width: 1213vw;
 
   #fondoCalle {
     background-image: url(/imagenes/fondos/calle_septimazo.png);
@@ -384,10 +384,10 @@ function numeroAleatorio(maximo: number) {
 }
 
 .ilustracion {
-  bottom: 53px;
   position: absolute;
   height: auto;
-  width: 35vw;
+  bottom: 87px;
+  width: 75vw;
 
   &:hover {
     opacity: 1;
@@ -459,7 +459,7 @@ function numeroAleatorio(maximo: number) {
 .arbol {
   position: absolute;
   bottom: 0px;
-  height: 200px;
+  height: 15vh;
   z-index: 8;
 }
 
@@ -524,6 +524,31 @@ function numeroAleatorio(maximo: number) {
 
   &.texto {
     cursor: pointer;
+  }
+}
+
+@media screen and (min-width: $minTablet) {
+  #aplicacion {
+    display: flex;
+    width: 807vw;
+  }
+
+  #cra7 {
+    background-image: url(/imagenes/fondos/montanias_septimazo.png);
+    background-position: top;
+    background-size: contain;
+    position: relative;
+    top: 0;
+    height: 65vh;
+    width: 807vw;
+  }
+  .arbol {
+    height: 200px;
+  }
+
+  .ilustracion {
+    bottom: 53px;
+    width: 35vw;
   }
 }
 </style>

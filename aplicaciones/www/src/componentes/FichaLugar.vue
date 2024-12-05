@@ -112,7 +112,7 @@ onMounted(() => {
       </div>
 
       <p>{{ descripcionPerfil }}</p>
-      <video :src="ruta" controls="true"></video>
+      <video class="video" :src="ruta" controls="true"></video>
     </div>
   </div>
 </template>
@@ -141,5 +141,9 @@ onMounted(() => {
 
 .contenedorTexto {
   margin-top: 2em;
+}
+
+.video {
+  width: 100%;
 }
 </style>
