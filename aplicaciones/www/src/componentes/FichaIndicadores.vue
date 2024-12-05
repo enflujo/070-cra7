@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
 import { usarCerebro } from '../utilidades/cerebro';
 
 defineProps<{ cerrar: () => void }>();
@@ -9,8 +8,6 @@ const cerebro = usarCerebro();
 function cerrar() {
   cerebro.indicadoresVisible = false;
 }
-
-onMounted(() => {});
 </script>
 
 <template>

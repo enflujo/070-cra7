@@ -6,9 +6,6 @@ defineProps<ElementoPaisaje>();
 <template>
   <div class="contenedorImg">
     <img :src="ruta" />
-
-    <!--  <h2>{{ nombre }}</h2>
-    <p>{{ descripcion }}</p> -->
   </div>
 </template>
 

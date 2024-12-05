@@ -16,14 +16,13 @@ import { usarCerebro } from '@/utilidades/cerebro';
 
 cargarDatos().catch(console.error); */
 
+// multiplicadorAncho es el valor por el cual se multiplica el vw para agrandar el ancho de la ventana
 const props = defineProps<{ multiplicadorAncho: number }>();
 
 const cerebro = usarCerebro();
 const infoPuntoA: Ref<HTMLElement | null> = ref(null);
 const calles: Ref<HTMLElement | null> = ref(null);
-
-//const multiplicadorAncho: number = 8.01; //0.96; // medida en vw
-const alturaContenedor: number = 250; // Debe ser la misma que #contenedorTrazos
+const alturaContenedor: number = 250; // Debe ser la misma que en #contenedorTrazos
 
 let puntoElegido: Ref<Punto | null> = ref(null);
 
@@ -87,6 +86,8 @@ onMounted(async () => {
   for (let i = 0; i < puntos.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
+      const calle = document.createElement('p');
+      const zona = document.createElement('a');
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloInfraestructura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -160,7 +161,7 @@ onMounted(async () => {
 
       circulosCaminabilidad.append(circuloCaminabilidad);
 
-      const calle = document.createElement('p');
+      // Agregar nombre de primer punto
       calle.innerText = puntos[0].nombre;
       calle.classList.add('nombreCalle');
       calle.style.left = `${0}px`;
@@ -168,8 +169,7 @@ onMounted(async () => {
         calles.value.appendChild(calle);
       }
 
-      const zona = document.createElement('a');
-
+      // Agregar zonas que no se ven pero son la región de hover que muestra la información de los indicadores en cada punto
       zona.classList.add('zona');
       zona.style.width = `${ancho}px`;
       zona.href = `#${puntos[0].slug}`;
@@ -205,6 +205,7 @@ onMounted(async () => {
 
       const zona = document.createElement('a');
 
+      // Crear los círculos de cada indicador
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloInfraestructura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -214,8 +215,9 @@ onMounted(async () => {
       const circuloCaminabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
       distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
-
       distanciaTotal += distanciaParcial;
+
+      // Calcular la posición en x de cada punto
       const x = convertirEscala(distanciaTotal, 0, 25, 20, window.innerWidth * props.multiplicadorAncho);
 
       // Definir posición en y de cada punto por indicador
@@ -280,12 +282,12 @@ onMounted(async () => {
         calles.value.appendChild(calle);
       }
 
+      // Agregar zonas que no se ven pero son la región de hover que muestra la información de los indicadores en cada punto
       zona.classList.add('zona');
       zona.style.width = `${ancho}px`;
       zona.href = `#${puntoA.slug}`;
       zona.style.left = `${x - ancho / 4}px`;
 
-      // Agregar cada punto a la línea de la 7
       contenedorZonas.appendChild(zona);
 
       zona.addEventListener('mouseenter', () => {

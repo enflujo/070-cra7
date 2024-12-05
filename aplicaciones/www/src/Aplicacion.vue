@@ -17,7 +17,6 @@ import FichaIndicadores from './componentes/FichaIndicadores.vue';
 const puntos: Ref<Punto[]> = ref([]);
 const puntosUbicados: Ref<Punto[]> = ref([]);
 const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
-//const podcasts: Ref<{ id: string; x: number; titulo: string }[]> = ref([]);
 const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
 const arbolesElegidos: Ref<string[]> = ref([]);
 const alturaPajaros: Ref<number[]> = ref([]);
@@ -30,7 +29,7 @@ const botonInformacion: Ref<HTMLDivElement | null> = ref(null);
 
 const cerebro = usarCerebro();
 
-const multiplicadorAncho = 8; // valor para multiplicar 100vw por
+const multiplicadorAncho = 8; // valor para multiplicar 100vw
 let distanciaTotal = 0;
 
 let ratonSobreLugar: string = '';
@@ -96,7 +95,7 @@ function abrirInfo() {
   cerebro.infoVisible = true;
 }
 
-// Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
+// Mostrar los nombres de los podcasts cuando el ratón está encima
 function mostrarTituloPodcast(titulo: string, evento: MouseEvent) {
   if (!tituloPodcast.value) return;
   tituloPodcast.value.innerText = titulo;
@@ -115,7 +114,7 @@ function elegirPodcast(podcast: ElementoPaisaje) {
   cerebro.podcastVisible = true;
 }
 
-// Mostrar los nombres de los podcasts cuando el ratón está encima
+// Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
 function mostrarEtiquetaLugar(id: string) {
   const punto = puntosUbicados.value.find((punto) => punto.id === id);
 
@@ -246,12 +245,11 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.ilustraciones"
             :src="`${base}/imagenes/lugares/${punto.ilustraciones}.png`"
             :alt="`${punto.ilustraciones}`"
-            :style="`left:${punto.ilustraciones[0] ? punto.ubicacionX : 0}vw`"
+            :style="`left:${punto.ubicacionX}vw`"
           />
 
           <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
           <img
-            @click="abrirFicha(punto.slug)"
             class="arbol"
             v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
             :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
@@ -260,7 +258,6 @@ function numeroAleatorio(maximo: number) {
           />
 
           <img
-            @click="abrirFicha(punto.slug)"
             class="arbol"
             v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
             :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
@@ -396,11 +393,14 @@ function numeroAleatorio(maximo: number) {
     opacity: 1;
   }
   &.plaza-de-bolivar {
-    transform: translate(0px, 26px) rotate(1deg);
+    transform: translate(-50px, 26px) rotate(1deg);
+  }
+  &.iglesia-san-francisco {
+    transform: translate(-50px, -15px) rotate(1deg);
   }
 
   &.planetario-de-bogota {
-    transform: translate(0px, -33px);
+    transform: translate(-9vw, -43px);
   }
 
   &.parque-nacional {
@@ -458,8 +458,8 @@ function numeroAleatorio(maximo: number) {
 }
 .arbol {
   position: absolute;
-  height: 100px;
-  bottom: 15px;
+  bottom: 0px;
+  height: 200px;
   z-index: 8;
 }
 

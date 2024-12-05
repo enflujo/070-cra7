@@ -23,44 +23,38 @@ const cerebro = usarCerebro();
 
 const perfiles: ElementoPaisaje[] = [
   {
-    id: 'calle-32',
-    nombre: 'Perfil 1 Habitabilidad',
-    descripcion: 'descripción pe1',
+    id: 'calle-189',
+    nombre: 'Persona que se mueve en transporte público ',
+    descripcion:
+      'Luisa González vive en el Codito, a pocas cuadras de la carrera Séptima, en el extremo nororiental de Bogotá. Aunque tomar el bus por esta avenida es la ruta más directa para ir a su trabajo, ella prefiere evitarla.',
   },
   {
-    id: 'calle-175',
-    nombre: 'Perfil 2 Habitabilidad',
-    descripcion: 'descripción pe2',
+    id: 'calle-53',
+    nombre: 'Persona que tiene mascota',
+    descripcion:
+      'Camilo Paez vive en el sector de Chapinero, cerca a la carrera Séptima y todos los días saca a pasear a su perro Rolo. Ambos tratan de evitar caminar por la Séptima, no solo por el ruido sino porque a Rolo le gusta la basura que allí abunda.',
   },
   {
     id: 'calle-151',
-    nombre: 'Perfil 3 Pájaros',
-    descripcion: 'descripción pe3',
+    nombre: 'Persona que trabaja en la séptima',
+    descripcion:
+      'Don Carlos Mariño se gana la vida conduciendo su taxi por las calles de Bogotá. Sólo toma la carrera Séptima cuando un pasajero se lo pide, de resto, hace lo imposible por sacarle el cuerpo.',
   },
   {
-    id: 'calle-60',
-    nombre: 'Perfil 4 Calidad aire',
-    descripcion: 'descripción pe4',
+    id: 'calle-106',
+    nombre: 'Persona que monta en bici',
+    descripcion:
+      'Juan Kai Mejía ha visto la evolución de la movilidad para las bicicletas en Bogotá y es un feliz usuario del bicicarril de la carrera Séptima, no solo porque le permite ir más rápido sino porque le ayuda a cuidar su salud mental.',
   },
   {
     id: 'calle-175',
-    nombre: 'Perfil 5 Peor caminabilidad',
+    nombre: 'Persona con movilidad reducida ',
     descripcion: 'descripción pe5',
   },
   {
     id: 'calle-19',
-    nombre: 'Perfil 6 Mayor flujo personas',
+    nombre: 'Persona enferma por contaminación',
     descripcion: 'descripción pe6',
-  },
-  {
-    id: 'calle-100',
-    nombre: 'Perfil 7 Mayor delito peatones',
-    descripcion: 'descripción pe7',
-  },
-  {
-    id: 'calle-180',
-    nombre: 'Perfil 8 salud mental',
-    descripcion: 'descripción pe8',
   },
 ];
 
@@ -108,10 +102,10 @@ onMounted(() => {
     hayPerfil.value = true;
   }
 
-  if (textoPajaro) {
+  /*  if (textoPajaro) {
     if (textoPajaro.descripcion) descripcionTextoPajaro.value = textoPajaro.descripcion;
     hayTextoPajaro.value = true;
-  }
+  } */
 });
 </script>
 
@@ -127,14 +121,6 @@ onMounted(() => {
 
       <p>{{ descripcionPerfil }}</p>
       <video :src="ruta" controls="true"></video>
-    </div>
-
-    <div v-if="hayTextoPajaro" class="contenedorTexto">
-      <div class="tituloContenido">
-        <img class="iconoFicha iconoPajaro" :src="`${base}/imagenes/icono_pajaro.png`" />
-        <h3>Pájaros</h3>
-      </div>
-      <p v-html="descripcionTextoPajaro"></p>
     </div>
   </div>
 </template>

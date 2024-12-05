@@ -4,6 +4,9 @@ import { distanciaEntreCoordenadas } from '../utilidades/ayudas';
 import { usarCerebro } from '@/utilidades/cerebro';
 //import VisualizacionIndices from './VisualizacionIndices.vue';
 
+/**  Este archivo lo dejé por si queríamos volver a poner la gráfica de los indicadores completa en la ficha de info de
+ * los indicadores, pero no funciona bien. Habría que arreglarlo.*/
+
 const cerebro = usarCerebro();
 
 const infoPuntoA: Ref<HTMLElement | null> = ref(null);
