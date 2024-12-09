@@ -1,6 +1,6 @@
 {
   "name": "070-cra7",
-  "packageManager": "yarn@4.4.1",
+  "packageManager": "yarn@4.5.3",
   "private": true,
   "version": "0.0.1",
   "workspaces": [
@@ -16,11 +16,9 @@
     "lint:fix": "prettier --write --list-different ."
   },
   "devDependencies": {
-    "prettier": "^3.3.3"
+    "prettier": "^3.4.2"
   },
   "dependencies": {
-    "pinia": "^2.2.3",
-    "workspace": "^0.0.1-preview.1",
-    "www": "workspace:^"
+    "pinia": "^2.3.0"
   }
 }
