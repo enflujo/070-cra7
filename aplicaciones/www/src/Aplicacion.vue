@@ -218,6 +218,7 @@ function numeroAleatorio(maximo: number) {
 <template>
   <div id="contenedorGeneral" @click="clicFuera($event)">
     <span ref="botonInformacion" id="botonInformacion" @click="abrirInfo" class="botonAbrir">?</span>
+
     <SobreProyecto v-if="cerebro.infoVisible" />
     <div id="contenedorIconos">
       <img
@@ -229,7 +230,7 @@ function numeroAleatorio(maximo: number) {
         :src="`${base}/imagenes/icono_podcast.png`"
         alt="ícono abrir podcast"
       />
-      <p ref="tituloPodcast" class="tituloPodcast"></p>
+      <p ref="tituloPodcast" class="tituloPodcast sinEventos"></p>
     </div>
 
     <div id="cra7">
@@ -250,7 +251,7 @@ function numeroAleatorio(maximo: number) {
 
           <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
           <img
-            class="arbol"
+            class="arbol sinEventos"
             v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
             :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
@@ -258,7 +259,7 @@ function numeroAleatorio(maximo: number) {
           />
 
           <img
-            class="arbol"
+            class="arbol sinEventos"
             v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
             :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
@@ -276,16 +277,15 @@ function numeroAleatorio(maximo: number) {
 
           <img
             @click="punto.slug === 'calle-32' ? abrirFicha(punto.slug) : ''"
-            class="icono iconoPajaro"
+            class="icono iconoPajaro sinEventos"
             v-if="punto.txtPajaros"
             :src="`${base}/imagenes/icono_pajaro.png`"
             alt="ícono abrir perfil"
             :style="`left:${(punto.ubicacionX || 0) - 3}vw; bottom:${alturaPajaros[i]}px`"
           />
         </div>
-        <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
 
-        <div ref="etiquetaIlustracion" class="etiqueta etiquetaIlustracion"></div>
+        <div ref="etiquetaIlustracion" class="etiqueta etiquetaIlustracion sinEventos"></div>
       </div>
     </div>
     <Podcast
@@ -295,12 +295,13 @@ function numeroAleatorio(maximo: number) {
     />
     <VisualizacionIndices :multiplicadorAncho="multiplicadorAncho" />
     <FichaIndicadores :cerrar="cerrarFicha" />
+    <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import 'scss/constantes';
-@import 'scss/general';
+@use 'scss/constantes' as *;
+@use 'scss/general' as *;
 
 #botonInformacion {
   display: block;

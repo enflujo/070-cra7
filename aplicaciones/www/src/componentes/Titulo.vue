@@ -50,13 +50,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div id="contenedorTitulo" ref="contenedorTitulo">
+  <div id="contenedorTitulo" class="sinEventos" ref="contenedorTitulo">
     <span class="texto">VEINTICUATRO</span>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import '../scss/constantes';
+@use '../scss/constantes' as *;
 
 body {
   background-color: #7acf9c;
@@ -88,6 +88,7 @@ body {
 .enflujito {
   height: 200px;
   position: fixed;
+  pointer-events: none;
 }
 
 canvas {

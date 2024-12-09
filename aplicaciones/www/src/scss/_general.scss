@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use './constantes' as *;
 
 h2,
 h3,
@@ -55,6 +56,10 @@ body {
   &:hover {
     font-weight: 600;
   }
+}
+
+.sinEventos {
+  pointer-events: none;
 }
 
 @media screen and (min-width: $minTablet) {
