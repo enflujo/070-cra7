@@ -410,8 +410,8 @@ function cerrar() {
 </template>
 
 <style lang="scss" scoped>
-@import '../scss/constantes';
-@import '../scss/general';
+@use '../scss/constantes' as *;
+@use '../scss/general' as *;
 
 #contenedorInfoIndicadores {
   background: #fff0f5;
@@ -588,25 +588,25 @@ function cerrar() {
       background-color: black;
     }
 
-    #circuloAmbiente {
+    #circuloambiente {
       background-color: var(--colorAmbiente);
     }
-    #circuloCaminabilidad {
+    #circulocaminabilidad {
       background-color: var(--colorCaminabilidad);
     }
-    #circuloHabitabilidad {
+    #circulohabitabilidad {
       background-color: var(--colorHabitabilidad);
     }
-    #circuloInfraestructura {
+    #circuloinfraestructura {
       background-color: var(--colorInfraestructura);
     }
-    #circuloMovilidad {
+    #circulomovilidad {
       background-color: var(--colorMovilidad);
     }
-    #circuloProximidad {
+    #circuloproximidad {
       background-color: var(--colorProximidad);
     }
-    #circuloSeguridad {
+    #circuloseguridad {
       background-color: var(--colorSeguridad);
     }
   }

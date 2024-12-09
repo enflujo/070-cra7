@@ -3,6 +3,19 @@ import { getXlsxStream } from 'xlstream';
 import type { DatosRuido, Ruido } from '@/tipos/compartidos';
 import { estructuras } from './aplicacion';
 
+type Fila = [
+  id: number,
+  hora: string,
+  leq1: number,
+  lmax1: number,
+  punto: number,
+  nombre: string,
+  jornada: string,
+  fecha: string,
+  longitud: number,
+  latitud: number,
+];
+
 export default async function procesarRuido(): Promise<DatosRuido> {
   const { ruido } = estructuras;
   const ruta = `./datos/${ruido.archivo}.xlsx`;
@@ -26,11 +39,19 @@ export default async function procesarRuido(): Promise<DatosRuido> {
         primeraFilaProcesada = true;
       }
 
-      const [id, hora, leq1, lmax1, punto, nombre, jornada, lon, lat] = obj.formatted.arr;
+      const [id, hora, leq1, lmax1, punto, nombre, jornada, lon, lat] = obj.formatted.arr as Fila;
       const filaProcesada: Ruido = [null, null, null];
 
-      if (esNumero(punto)) {
-        if (!ruidoProcesados[punto]) ruidoProcesados[punto] = { promedio: [0, 0, 0], mediciones: [] };
+      if (nombre) {
+        if (!ruidoProcesados[nombre]) {
+          ruidoProcesados[nombre] = { promedio: [0, 0, 0], mediciones: [], paradero: 0 };
+        }
+
+        if (esNumero(punto)) {
+          ruidoProcesados[nombre].paradero = punto;
+        } else {
+          errataRuido.push({ fila: numeroFila, error: `Punto muestreado no es número, su valor es: ${punto}` });
+        }
 
         if (esFecha(hora)) {
           filaProcesada[0] = hora;
@@ -50,9 +71,9 @@ export default async function procesarRuido(): Promise<DatosRuido> {
           errataRuido.push({ fila: numeroFila, error: `Lmax-1 no es número, su valor es: ${lmax1}` });
         }
 
-        ruidoProcesados[punto].mediciones.push(filaProcesada);
+        ruidoProcesados[nombre].mediciones.push(filaProcesada);
       } else {
-        errataRuido.push({ fila: numeroFila, error: `Punto muestreado no es número, su valor es: ${leq1}` });
+        errataRuido.push({ fila: numeroFila, error: `No hay nombre del lugar: ${nombre}` });
       }
 
       numeroFila++;
@@ -61,15 +82,15 @@ export default async function procesarRuido(): Promise<DatosRuido> {
     flujo.on('close', () => {
       if (errataRuido.length) guardarJSON(errataRuido, 'errataRuido');
 
-      for (const idPunto in ruidoProcesados) {
-        ruidoProcesados[idPunto].promedio[2] = ruidoProcesados[idPunto].mediciones.length;
+      for (const nombrePunto in ruidoProcesados) {
+        ruidoProcesados[nombrePunto].promedio[2] = ruidoProcesados[nombrePunto].mediciones.length;
 
-        const suma = ruidoProcesados[idPunto].mediciones.reduce((acumulado, actual) => {
+        const suma = ruidoProcesados[nombrePunto].mediciones.reduce((acumulado, actual) => {
           return actual[1] ? acumulado + actual[1] : acumulado;
         }, 0);
 
-        ruidoProcesados[idPunto].promedio[1] = redondearDecimal(suma);
-        ruidoProcesados[idPunto].promedio[0] = redondearDecimal(suma / ruidoProcesados[idPunto].promedio[2]);
+        ruidoProcesados[nombrePunto].promedio[1] = redondearDecimal(suma);
+        ruidoProcesados[nombrePunto].promedio[0] = redondearDecimal(suma / ruidoProcesados[nombrePunto].promedio[2]);
       }
 
       mensajes.exito(`Datos de Ruido procesados`);

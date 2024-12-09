@@ -2,7 +2,7 @@ export type Medicion = number | null;
 
 export type Ruido = [
   /** fecha y hora de la medición de niveles de ruido. */
-  hora: Medicion,
+  hora: string | null,
   /** Leq-1: contiene los niveles intermedios de ruido en esos 10 segundos de medición. Con este dato la experta menciona se puede comparar con la normativa de un máximo de 80db. En promedio se observó que los niveles de ruido son cercanos a 80db pero no superaron la normativa nacional.  */
   leq1: Medicion,
   /** Lmax: contiene los niveles máximos de ruido captados en esos 10 segundos de medición. */
@@ -12,7 +12,7 @@ export type Ruido = [
 export interface DatosRuido {
   [
     /** indica el número de paradero en el cual se tomó la información. */
-    punto: number
+    punto: string
   ]: {
     promedio: [
       /** Promedio calculado: suma de todas las mediciones en Leq1 / total de mediciones en este punto */
@@ -23,6 +23,7 @@ export interface DatosRuido {
       mediciones: number,
     ];
     mediciones: Ruido[];
+    paradero: number;
   };
 }
 
@@ -46,6 +47,7 @@ export interface Punto {
   podcast?: string;
   perfil?: string;
   ubicacionX?: number;
+  indices?: { indicador: string; valor: number }[];
 }
 
 export type LlavesDatosPunto =

@@ -1,3 +1,15 @@
+export const base = import.meta.env.BASE_URL;
+
+export async function pedirDatos<Esquema>(ruta: string) {
+  const peticion = await fetch(`${base}${ruta}`).then((res) => res.json());
+
+  if (peticion.errors) {
+    throw new Error(JSON.stringify(peticion.errors, null, 2));
+  }
+
+  return peticion as Esquema;
+}
+
 export const gradosARadianes = (grados: number) => grados * (Math.PI / 180);
 
 /**
@@ -36,5 +48,3 @@ export function convertirEscala(
     escalaDestinoMin
   );
 }
-
-export const base = import.meta.env.BASE_URL;

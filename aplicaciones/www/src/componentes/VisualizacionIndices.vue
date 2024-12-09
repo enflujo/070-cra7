@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref, Ref, defineProps } from 'vue';
-import { convertirEscala, distanciaEntreCoordenadas } from '../utilidades/ayudas';
-import { Punto } from '@/tipos/compartidos';
+import { onMounted, ref, Ref } from 'vue';
+import { convertirEscala, distanciaEntreCoordenadas, pedirDatos } from '../utilidades/ayudas';
+import { DatosRuido, Punto } from '@/tipos/compartidos';
 import { usarCerebro } from '@/utilidades/cerebro';
 
 /* async function cargarDatos() {
@@ -46,7 +46,9 @@ onMounted(async () => {
   const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
 
   // Cargar datos
-  const puntos = await fetch(`${import.meta.env.BASE_URL}/datos/puntos.json`).then((res) => res.json());
+  const puntos = await pedirDatos<Punto[]>(`/datos/puntos.json`);
+  const ruido = await pedirDatos<DatosRuido>('/datos/ruido.json');
+  console.log(ruido);
 
   // Habitabilidad
   const trazoHabitabilidad: SVGPathElement = document.getElementById('trazoHabitabilidad') as HTMLElement &
@@ -84,6 +86,31 @@ onMounted(async () => {
 
   // Calcular lugar de cada punto y pintarlos
   for (let i = 0; i < puntos.length; i++) {
+    /**
+     * Organizar Índices
+     */
+    const punto = puntos[i];
+    const indices = [
+      { indicador: 'ambiente', valor: punto.ambiente || -1 },
+      { indicador: 'caminabilidad', valor: punto.caminabilidad || -1 },
+      { indicador: 'habitabilidad', valor: punto.habitabilidad || -1 },
+      { indicador: 'infraestructura', valor: punto.infraestructura || -1 },
+      { indicador: 'movilidad', valor: punto.movilidad || -1 },
+      { indicador: 'proximidad', valor: punto.proximidad || -1 },
+      { indicador: 'seguridad', valor: punto.seguridad || -1 },
+    ];
+
+    indices.sort((a, b) => b.valor - a.valor);
+    punto.indices = indices;
+
+    const habitabilidad = punto.habitabilidad || 0;
+    const ambiente = punto.ambiente || 0;
+    const infraestructura = punto.infraestructura || 0;
+    const movilidad = punto.movilidad || 0;
+    const seguridad = punto.seguridad || 0;
+    const proximidad = punto.proximidad || 0;
+    const caminabilidad = punto.caminabilidad || 0;
+
     // Dibujar el primer punto
     if (i === 0) {
       const calle = document.createElement('p');
@@ -97,72 +124,72 @@ onMounted(async () => {
       const circuloCaminabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
       // línea
-      lineaHabitabilidad += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].habitabilidad * alturaContenedor} `;
-      lineaAmbiente += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].ambiente * alturaContenedor} `;
-      lineaInfraestructura += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].infraestructura * alturaContenedor} `;
-      lineaMovilidad += `M ${inicioGrafica} ${alturaContenedor - puntos[0].movilidad * alturaContenedor} `;
-      lineaSeguridad += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].seguridad * alturaContenedor} `;
-      lineaProximidad += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].proximidad * alturaContenedor} `;
-      lineaCaminabilidad += ` M ${inicioGrafica} ${alturaContenedor - puntos[0].caminabilidad * alturaContenedor} `;
+      lineaHabitabilidad += ` M ${inicioGrafica} ${alturaContenedor - habitabilidad * alturaContenedor} `;
+      lineaAmbiente += ` M ${inicioGrafica} ${alturaContenedor - ambiente * alturaContenedor} `;
+      lineaInfraestructura += ` M ${inicioGrafica} ${alturaContenedor - infraestructura * alturaContenedor} `;
+      lineaMovilidad += `M ${inicioGrafica} ${alturaContenedor - movilidad * alturaContenedor} `;
+      lineaSeguridad += ` M ${inicioGrafica} ${alturaContenedor - seguridad * alturaContenedor} `;
+      lineaProximidad += ` M ${inicioGrafica} ${alturaContenedor - proximidad * alturaContenedor} `;
+      lineaCaminabilidad += ` M ${inicioGrafica} ${alturaContenedor - caminabilidad * alturaContenedor} `;
 
       // puntos Habitabilidad
       circuloHabitabilidad.setAttribute('class', 'puntoIndicador habitabilidad');
       circuloHabitabilidad.setAttribute('cx', `${inicioGrafica}`);
-      circuloHabitabilidad.setAttribute('cy', `${alturaContenedor - puntos[0].habitabilidad * alturaContenedor}`);
-      circuloHabitabilidad.setAttribute('r', `${puntos[0].habitabilidad * multiplicadorRadio}`);
+      circuloHabitabilidad.setAttribute('cy', `${alturaContenedor - habitabilidad * alturaContenedor}`);
+      circuloHabitabilidad.setAttribute('r', `${habitabilidad * multiplicadorRadio}`);
 
       circulosHabitabilidad.append(circuloHabitabilidad);
 
       // puntos Ambiente
       circuloAmbiente.setAttribute('class', 'puntoIndicador ambiente');
       circuloAmbiente.setAttribute('cx', `${inicioGrafica}`);
-      circuloAmbiente.setAttribute('cy', `${alturaContenedor - puntos[0].ambiente * alturaContenedor}`);
-      circuloAmbiente.setAttribute('r', `${puntos[0].ambiente * multiplicadorRadio}`);
+      circuloAmbiente.setAttribute('cy', `${alturaContenedor - ambiente * alturaContenedor}`);
+      circuloAmbiente.setAttribute('r', `${ambiente * multiplicadorRadio}`);
 
       circulosAmbiente.append(circuloAmbiente);
 
       // Puntos Infraestructura
       circuloInfraestructura.setAttribute('class', 'puntoIndicador infraestructura');
       circuloInfraestructura.setAttribute('cx', `${inicioGrafica}`);
-      circuloInfraestructura.setAttribute('cy', `${alturaContenedor - puntos[0].infraestructura * alturaContenedor}`);
-      circuloInfraestructura.setAttribute('r', `${puntos[0].infraestructura * multiplicadorRadio}`);
+      circuloInfraestructura.setAttribute('cy', `${alturaContenedor - infraestructura * alturaContenedor}`);
+      circuloInfraestructura.setAttribute('r', `${infraestructura * multiplicadorRadio}`);
 
       circulosInfraestructura.append(circuloInfraestructura);
 
       // Puntos Movilidad
       circuloMovilidad.setAttribute('class', 'puntoIndicador movilidad');
       circuloMovilidad.setAttribute('cx', `${inicioGrafica}`);
-      circuloMovilidad.setAttribute('cy', `${alturaContenedor - puntos[0].movilidad * alturaContenedor}`);
-      circuloMovilidad.setAttribute('r', `${puntos[0].movilidad * multiplicadorRadio}`);
+      circuloMovilidad.setAttribute('cy', `${alturaContenedor - movilidad * alturaContenedor}`);
+      circuloMovilidad.setAttribute('r', `${movilidad * multiplicadorRadio}`);
 
       circulosMovilidad.append(circuloMovilidad);
 
       // Puntos Seguridad
       circuloSeguridad.setAttribute('class', 'puntoIndicador seguridad');
       circuloSeguridad.setAttribute('cx', `${inicioGrafica}`);
-      circuloSeguridad.setAttribute('cy', `${alturaContenedor - puntos[0].seguridad * alturaContenedor}`);
-      circuloSeguridad.setAttribute('r', `${puntos[0].seguridad * multiplicadorRadio}`);
+      circuloSeguridad.setAttribute('cy', `${alturaContenedor - seguridad * alturaContenedor}`);
+      circuloSeguridad.setAttribute('r', `${seguridad * multiplicadorRadio}`);
 
       circulosSeguridad.append(circuloSeguridad);
 
       // Puntos Proximidad
       circuloProximidad.setAttribute('class', 'puntoIndicador proximidad');
       circuloProximidad.setAttribute('cx', `${inicioGrafica}`);
-      circuloProximidad.setAttribute('cy', `${alturaContenedor - puntos[0].proximidad * alturaContenedor}`);
-      circuloProximidad.setAttribute('r', `${puntos[0].proximidad * multiplicadorRadio}`);
+      circuloProximidad.setAttribute('cy', `${alturaContenedor - proximidad * alturaContenedor}`);
+      circuloProximidad.setAttribute('r', `${proximidad * multiplicadorRadio}`);
 
       circulosProximidad.append(circuloProximidad);
 
       // Puntos Caminabilidad
       circuloCaminabilidad.setAttribute('class', 'puntoIndicador caminabilidad');
       circuloCaminabilidad.setAttribute('cx', `${inicioGrafica}`);
-      circuloCaminabilidad.setAttribute('cy', `${alturaContenedor - puntos[0].caminabilidad * alturaContenedor}`);
-      circuloCaminabilidad.setAttribute('r', `${puntos[0].caminabilidad * multiplicadorRadio}`);
+      circuloCaminabilidad.setAttribute('cy', `${alturaContenedor - caminabilidad * alturaContenedor}`);
+      circuloCaminabilidad.setAttribute('r', `${caminabilidad * multiplicadorRadio}`);
 
       circulosCaminabilidad.append(circuloCaminabilidad);
 
       // Agregar nombre de primer punto
-      calle.innerText = puntos[0].nombre;
+      calle.innerText = punto.nombre;
       calle.classList.add('nombreCalle');
       calle.style.left = `${0}px`;
       if (calles.value) {
@@ -180,14 +207,13 @@ onMounted(async () => {
 
       zona.addEventListener('mouseenter', () => {
         const puntoA = puntos[0];
+
         infoPuntoA.innerHTML = `<h4>${puntoA.nombre}</h4>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloAmbiente"></span> ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloCaminabilidad"></span> caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloHabitabilidad"></span>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloInfraestructura"></span>infraestructura: ${puntoA.infraestructura ? puntoA.infraestructura : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloMovilidad"></span>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloProximidad"></span>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloSeguridad"></span>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>`;
+        ${indices
+          .map((indice: { indicador: string; valor: number }) => {
+            return `<p class="elementoEtiqueta"><span class="circuloEtiqueta ${indice.indicador}"></span> ${indice.indicador}: ${indice.valor >= 0 ? indice.valor : 'sin información'}</p>`;
+          })
+          .join('')}`;
         infoPuntoA.style.left = `50px`;
         infoPuntoA.style.display = 'block';
       });
@@ -201,8 +227,6 @@ onMounted(async () => {
       // Dibujar el resto de puntos
     } else {
       const puntoA = puntos[i - 1];
-      const puntoB = puntos[i];
-
       const zona = document.createElement('a');
 
       // Crear los círculos de cada indicador
@@ -214,68 +238,70 @@ onMounted(async () => {
       const circuloProximidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloCaminabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
-      distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
-      distanciaTotal += distanciaParcial;
+      if (puntoA.lat && puntoA.lon && punto.lat && punto.lon) {
+        distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, punto.lat, punto.lon);
+        distanciaTotal += distanciaParcial;
+      }
 
       // Calcular la posición en x de cada punto
       const x = convertirEscala(distanciaTotal, 0, 25, 20, screen.width * props.multiplicadorAncho);
 
       // Definir posición en y de cada punto por indicador
-      const yInfraestructura = alturaContenedor - puntoB.infraestructura * alturaContenedor;
-      const yHabitabilidad = alturaContenedor - puntoB.habitabilidad * alturaContenedor;
-      const yAmbiente = alturaContenedor - puntoB.ambiente * alturaContenedor;
-      const yMovilidad = alturaContenedor - puntoB.movilidad * alturaContenedor;
-      const ySeguridad = alturaContenedor - puntoB.seguridad * alturaContenedor;
-      const yProximidad = alturaContenedor - puntoB.proximidad * alturaContenedor;
-      const yCaminabilidad = alturaContenedor - puntoB.caminabilidad * alturaContenedor;
+      const yInfraestructura = alturaContenedor - infraestructura * alturaContenedor;
+      const yHabitabilidad = alturaContenedor - habitabilidad * alturaContenedor;
+      const yAmbiente = alturaContenedor - ambiente * alturaContenedor;
+      const yMovilidad = alturaContenedor - movilidad * alturaContenedor;
+      const ySeguridad = alturaContenedor - seguridad * alturaContenedor;
+      const yProximidad = alturaContenedor - proximidad * alturaContenedor;
+      const yCaminabilidad = alturaContenedor - caminabilidad * alturaContenedor;
 
       // Puntos Habitabilidad
       circuloHabitabilidad.setAttribute('class', 'puntoIndicador habitabilidad');
       circuloHabitabilidad.setAttribute('cx', `${x}`);
       circuloHabitabilidad.setAttribute('cy', `${yHabitabilidad}`);
-      circuloHabitabilidad.setAttribute('r', `${puntoB.habitabilidad * multiplicadorRadio}`);
+      circuloHabitabilidad.setAttribute('r', `${habitabilidad * multiplicadorRadio}`);
 
       // Puntos Ambiente
       circuloAmbiente.setAttribute('class', 'puntoIndicador ambiente');
       circuloAmbiente.setAttribute('cx', `${x}`);
       circuloAmbiente.setAttribute('cy', `${yAmbiente}`);
-      circuloAmbiente.setAttribute('r', `${puntoB.ambiente * multiplicadorRadio}`);
+      circuloAmbiente.setAttribute('r', `${ambiente * multiplicadorRadio}`);
 
       // Puntos Infraestructura
       circuloInfraestructura.setAttribute('class', 'puntoIndicador infraestructura');
       circuloInfraestructura.setAttribute('cx', `${x}`);
       circuloInfraestructura.setAttribute('cy', `${yInfraestructura}`);
-      circuloInfraestructura.setAttribute('r', `${puntoB.infraestructura * multiplicadorRadio}`);
+      circuloInfraestructura.setAttribute('r', `${infraestructura * multiplicadorRadio}`);
 
       // Puntos Movilidad
       circuloMovilidad.setAttribute('class', 'puntoIndicador movilidad');
       circuloMovilidad.setAttribute('cx', `${x}`);
       circuloMovilidad.setAttribute('cy', `${yMovilidad}`);
-      circuloMovilidad.setAttribute('r', `${puntoB.movilidad * multiplicadorRadio}`);
+      circuloMovilidad.setAttribute('r', `${movilidad * multiplicadorRadio}`);
 
       // Puntos Seguridad
       circuloSeguridad.setAttribute('class', 'puntoIndicador seguridad');
       circuloSeguridad.setAttribute('cx', `${x}`);
       circuloSeguridad.setAttribute('cy', `${ySeguridad}`);
-      circuloSeguridad.setAttribute('r', `${puntoB.seguridad * multiplicadorRadio}`);
+      circuloSeguridad.setAttribute('r', `${seguridad * multiplicadorRadio}`);
 
       // Puntos Proximidad
       circuloProximidad.setAttribute('class', 'puntoIndicador proximidad');
       circuloProximidad.setAttribute('cx', `${x}`);
       circuloProximidad.setAttribute('cy', `${yProximidad}`);
-      circuloProximidad.setAttribute('r', `${puntoB.proximidad * multiplicadorRadio}`);
+      circuloProximidad.setAttribute('r', `${proximidad * multiplicadorRadio}`);
 
       // Puntos Caminabilidad
       circuloCaminabilidad.setAttribute('class', 'puntoIndicador caminabilidad');
       circuloCaminabilidad.setAttribute('cx', `${x}`);
       if (yCaminabilidad) {
         circuloCaminabilidad.setAttribute('cy', `${yCaminabilidad}`);
-        circuloCaminabilidad.setAttribute('r', `${puntoB.caminabilidad * multiplicadorRadio}`);
+        circuloCaminabilidad.setAttribute('r', `${caminabilidad * multiplicadorRadio}`);
       }
 
       // Agregar nombre de calles
       const calle = document.createElement('p');
-      calle.innerText = puntoB.nombre;
+      calle.innerText = punto.nombre;
       calle.classList.add('nombreCalle');
       calle.style.left = `${x - 25}px`;
       if (calles.value) {
@@ -291,15 +317,14 @@ onMounted(async () => {
       contenedorZonas.appendChild(zona);
 
       zona.addEventListener('mouseenter', () => {
-        infoPuntoA.innerHTML = `<h4>${puntoB.nombre}</h4>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloAmbiente"></span> ambiente: ${puntoA.ambiente ? puntoA.ambiente : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloCaminabilidad"></span> caminabilidad: ${puntoA.caminabilidad ? puntoA.caminabilidad : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloHabitabilidad"></span>habitabilidad: ${puntoA.habitabilidad ? puntoA.habitabilidad : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloInfraestructura"></span>infraestructura: ${puntoA.infraestructura ? puntoA.infraestructura : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloMovilidad"></span>movilidad: ${puntoA.movilidad ? puntoA.movilidad : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloProximidad"></span>proximidad: ${puntoA.proximidad ? puntoA.proximidad : 'sin información'}</p>
-        <p class="elementoEtiqueta"><span class="circuloEtiqueta" id="circuloSeguridad"></span>seguridad: ${puntoA.seguridad ? puntoA.seguridad : 'sin información'}</p>`;
+        infoPuntoA.innerHTML = `<h4>${punto.nombre}</h4>
+        ${indices
+          .map((indice: { indicador: string; valor: number }) => {
+            return `<p class="elementoEtiqueta"><span class="circuloEtiqueta ${indice.indicador}"></span> ${indice.indicador}: ${indice.valor >= 0 ? indice.valor : 'sin información'}</p>`;
+          })
+          .join('')}`;
         infoPuntoA.style.left = `${x + 30}px`;
+
         infoPuntoA.style.display = 'block';
       });
 
@@ -386,14 +411,14 @@ onMounted(async () => {
         Índices medidos a lo largo de la carrera Séptima durante la investigación. Los valores van de 0 a 1 y muestran,
         en cada punto, los datos de cada indicador:
       </p>
-      <div id="etiquetas">
-        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
-        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
-        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
-        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
-        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
-        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
-        <p @click="cerebro.indicadoresVisible = true" class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
+      <div id="etiquetas" @click="(cerebro.indicadoresVisible = true)">
+        <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
+        <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
+        <p class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
+        <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
+        <p class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
+        <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
+        <p class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
       </div>
     </div>
 
@@ -404,8 +429,8 @@ onMounted(async () => {
 </template>
 
 <style lang="scss">
-@import '../scss/constantes';
-@import '../scss/general';
+@use '../scss/constantes' as *;
+@use '../scss/general' as *;
 
 #contenedorVis {
   // border: 1px black solid;
@@ -448,9 +473,10 @@ onMounted(async () => {
 }
 
 #contenedorEtiquetas {
+  bottom: 0;
+  width: 100vw;
   padding: 0em 1em;
-  position: absolute;
-  top: 88vh;
+  position: fixed;
 
   #titulo {
     margin: 0 3em 0.5em 0;
@@ -577,28 +603,34 @@ onMounted(async () => {
     border-radius: 50%;
     display: block;
     background-color: black;
-  }
 
-  #circuloAmbiente {
-    background-color: var(--colorAmbiente);
-  }
-  #circuloCaminabilidad {
-    background-color: var(--colorCaminabilidad);
-  }
-  #circuloHabitabilidad {
-    background-color: var(--colorHabitabilidad);
-  }
-  #circuloInfraestructura {
-    background-color: var(--colorInfraestructura);
-  }
-  #circuloMovilidad {
-    background-color: var(--colorMovilidad);
-  }
-  #circuloProximidad {
-    background-color: var(--colorProximidad);
-  }
-  #circuloSeguridad {
-    background-color: var(--colorSeguridad);
+    &.ambiente {
+      background-color: var(--colorAmbiente);
+    }
+
+    &.caminabilidad {
+      background-color: var(--colorCaminabilidad);
+    }
+
+    &.habitabilidad {
+      background-color: var(--colorHabitabilidad);
+    }
+
+    &.infraestructura {
+      background-color: var(--colorInfraestructura);
+    }
+
+    &.movilidad {
+      background-color: var(--colorMovilidad);
+    }
+
+    &.proximidad {
+      background-color: var(--colorProximidad);
+    }
+
+    &.seguridad {
+      background-color: var(--colorSeguridad);
+    }
   }
 }
 
@@ -629,10 +661,7 @@ onMounted(async () => {
   #contenedorTrazos {
     width: 820vw;
   }
-  #contenedorEtiquetas {
-    position: unset;
-    top: 104vh;
-  }
+
   #etiquetas {
     flex-direction: row;
   }
