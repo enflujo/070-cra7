@@ -7,24 +7,19 @@ onMounted(async () => {
   if (!contenedorTitulo.value) return;
 
   await document.fonts.ready;
+  const configuracion = {
+    family: 'Rubik Bubbles',
+    size: screen.width * 0.1,
+    fill: '#F3D78E',
+  };
 
   const texto = new Blotter.Text('SIETE', {
-    family: 'Rubik Bubbles',
+    ...configuracion,
     size: screen.width > 767 ? screen.width * 0.12 : screen.width * 0.27,
-    fill: '#F3D78E',
   });
 
-  const punto = new Blotter.Text('.', {
-    family: 'Rubik Bubbles',
-    size: screen.width * 0.1,
-    fill: '#F3D78E',
-  });
-
-  const globo = new Blotter.Text('°', {
-    family: 'Rubik Bubbles',
-    size: screen.width * 0.1,
-    fill: '#F3D78E',
-  });
+  const punto = new Blotter.Text('.', configuracion);
+  const globo = new Blotter.Text('°', configuracion);
 
   const material = new Blotter.LiquidDistortMaterial();
   material.uniforms.uSpeed.value = 0.5;
@@ -50,7 +45,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div id="contenedorTitulo" class="sinEventos" ref="contenedorTitulo">
+  <div ref="contenedorTitulo" id="contenedorTitulo" class="sinEventos">
     <span class="texto">VEINTICUATRO</span>
   </div>
 </template>
@@ -58,13 +53,8 @@ onMounted(async () => {
 <style lang="scss" scoped>
 @use '../scss/constantes' as *;
 
-body {
-  background-color: #7acf9c;
-}
-
 #contenedorTitulo {
   display: block;
-  margin-left: 1vw;
   position: absolute;
   text-align: center;
   top: 0;
@@ -88,17 +78,13 @@ body {
 .enflujito {
   height: 200px;
   position: fixed;
-  pointer-events: none;
-}
-
-canvas {
-  margin: 0 auto;
 }
 
 @media screen and (min-width: $minTablet) {
   #contenedorTitulo {
     margin-left: 0vw;
   }
+
   .texto {
     font-size: 110px;
     margin-top: 0.8em;

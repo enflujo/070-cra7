@@ -1,6 +1,6 @@
 {
   "name": "070-cra7",
-  "packageManager": "yarn@4.5.3",
+  "packageManager": "yarn@4.6.0",
   "private": true,
   "version": "0.0.1",
   "workspaces": [
@@ -19,6 +19,6 @@
     "prettier": "^3.4.2"
   },
   "dependencies": {
-    "pinia": "^2.3.0"
+    "pinia": "^2.3.1"
   }
 }

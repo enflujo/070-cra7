@@ -9,13 +9,27 @@ h6,
 p,
 a {
   font-family: var(--fuentePrincipal);
+  letter-spacing: 1px;
+  line-height: 1.2;
 }
 h1 {
   font-family: var(--fuenteTitulo);
 }
 
+a,
+a:link,
+a:visited {
+  color: var(--verde);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--verdeFondo);
+  }
+}
+
 body {
-  background-color: var(--verdeFondo);
+  background-color: #fde8a7;
   margin: 0;
 }
 

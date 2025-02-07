@@ -9,7 +9,6 @@ import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 import { usarCerebro } from './utilidades/cerebro';
 import Titulo from './componentes/Titulo.vue';
 import SobreProyecto from './componentes/SobreProyecto.vue';
-import { ElementoPaisaje } from './tipos';
 import Podcast from './componentes/Podcast.vue';
 import type { Punto } from '@/tipos/compartidos';
 import FichaIndicadores from './componentes/FichaIndicadores.vue';
@@ -23,9 +22,6 @@ const alturaPajaros: Ref<number[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
-const tituloPodcast: Ref<HTMLElement | null> = ref(null);
-const podcastElegido: Ref<ElementoPaisaje | null> = ref(null);
-const botonInformacion: Ref<HTMLDivElement | null> = ref(null);
 
 const cerebro = usarCerebro();
 
@@ -45,36 +41,6 @@ const arboles: string[] = [
   'yarumoverde',
 ];
 
-const podcasts: ElementoPaisaje[] = [
-  {
-    id: '1',
-    ruta: 'https://open.spotify.com/embed/episode/4LjdcPIIOWgX6hw58sTZ4h?utm_source=generator',
-    nombre: 'Una ciudad habitable: ¿es chévere vivir en Bogotá?',
-    descripcion:
-      '¿Qué significa que una ciudad sea habitable? ¿Qué factores inciden en que consideremos que una ciudad es más o menos agradable para vivir? ¿Pueden los trancones y la contaminación de una ciudad afectar la salud física y mental de quienes vivimos allí? <br> <br> En este episodio de Veiticuatro Siete, la profesora y médica Olga Lucía Sarmiento nos explicará el concepto de habitabilidad urbana, y usará como ejemplo la carrera Séptima, una de las avenidas más importantes y representativas de Bogotá.',
-  },
-  {
-    id: '2',
-    ruta: 'https://open.spotify.com/embed/episode/6SOndW9Jo3nPKpzBp9IEul?utm_source=generator',
-    nombre: 'Una ciudad para moverse, una ciudad para quedarse',
-    descripcion:
-      '¿Cómo construir soluciones de movilidad para que las personas no solo piensen en moverse, en llegar de un punto a otro en una ciudad, sino que se quieran quedar a vivir allí? ¿Se puede pensar en soluciones para transportarse mejor pero también para vivir mejor? <br> <br> En este segundo episodio de Veinticuatro Siete, el profesor e ingeniero Carlos Moncada nos explica cómo pensar una movilidad sostenible para hacer ciudades más habitables.',
-  },
-  {
-    id: '3',
-    ruta: 'https://open.spotify.com/embed/episode/4KLNWodM68BNvhxlmKY7fu?utm_source=generator',
-    nombre: '¿Qué nos dicen las aves sobre la calidad del aire y el ruido de Bogotá?',
-    descripcion:
-      'En este episodio quisimos hacer algo diferente: entender los efectos que tiene vivir en una ciudad como Bogotá, no para los humanos sino para otros seres, como las aves, que habitan con nosotros desde otra altura. <br> <br> ¿Qué nos dicen las palomas, torcazas, mirlas, colibríes, reinitas y demás aves sobre el ruido y la contaminación en la capital? <br> <br> En este episodio de Veinticuatro Siete, la médica veterinaria Arlen Patricia Gómez y el profesor Ricardo Morales nos explican cómo estos factores medioambientales pueden hacer que Bogotá sea más o menos habitable para los humanos y otros seres con los que convivimos.',
-  },
-  {
-    id: '4',
-    ruta: '',
-    nombre: 'Movilidad / Congestión',
-    descripcion: 'descripción pd3',
-  },
-];
-
 // Funciones para abrir y cerrar ficha de cada lugar
 function abrirFicha(id: string) {
   cerebro.lugarElegido = id;
@@ -88,30 +54,6 @@ function cerrarFicha() {
   idLugar.value = null;
   cerebro.fichaVisible = false;
   cerebro.indicadoresVisible = false;
-}
-
-// Función para abrir información sobre el proyecto
-function abrirInfo() {
-  cerebro.infoVisible = true;
-}
-
-// Mostrar los nombres de los podcasts cuando el ratón está encima
-function mostrarTituloPodcast(titulo: string, evento: MouseEvent) {
-  if (!tituloPodcast.value) return;
-  tituloPodcast.value.innerText = titulo;
-  tituloPodcast.value.style.display = 'block';
-  tituloPodcast.value.style.top = `${evento.clientY - 200}px`;
-}
-
-function ocultarEtiquetaPodcast() {
-  if (!tituloPodcast.value) return;
-  tituloPodcast.value.innerText = '';
-  tituloPodcast.value.style.display = 'none';
-}
-
-function elegirPodcast(podcast: ElementoPaisaje) {
-  podcastElegido.value = podcast;
-  cerebro.podcastVisible = true;
 }
 
 // Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
@@ -217,25 +159,13 @@ function numeroAleatorio(maximo: number) {
 
 <template>
   <div id="contenedorGeneral" @click="clicFuera($event)">
-    <span ref="botonInformacion" id="botonInformacion" @click="abrirInfo" class="botonAbrir">?</span>
-
-    <SobreProyecto v-if="cerebro.infoVisible" />
-    <div id="contenedorIconos">
-      <img
-        v-for="podcast in podcasts"
-        @click="elegirPodcast(podcast)"
-        @mouseenter="mostrarTituloPodcast(podcast.nombre, $event)"
-        @mouseleave="ocultarEtiquetaPodcast"
-        class="iconoPodcast botonAbrir"
-        :src="`${base}/imagenes/icono_podcast.png`"
-        alt="ícono abrir podcast"
-      />
-      <p ref="tituloPodcast" class="tituloPodcast sinEventos"></p>
-    </div>
+    <SobreProyecto />
+    <Podcast :cerrar="cerrarFicha" />
 
     <div id="cra7">
       <Titulo />
       <div id="fondoCalle"></div>
+
       <div id="contenedorElementos">
         <div class="elementosPunto" v-for="(punto, i) in puntosUbicados" :key="punto.slug">
           <img
@@ -288,11 +218,7 @@ function numeroAleatorio(maximo: number) {
         <div ref="etiquetaIlustracion" class="etiqueta etiquetaIlustracion sinEventos"></div>
       </div>
     </div>
-    <Podcast
-      v-if="cerebro.podcastVisible"
-      :podcast="podcastElegido ? podcastElegido : undefined"
-      :cerrar="cerrarFicha"
-    />
+
     <VisualizacionIndices :multiplicadorAncho="multiplicadorAncho" />
     <FichaIndicadores :cerrar="cerrarFicha" />
     <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
@@ -303,26 +229,6 @@ function numeroAleatorio(maximo: number) {
 @use 'scss/constantes' as *;
 @use 'scss/general' as *;
 
-#botonInformacion {
-  display: block;
-  padding: 0.5em;
-  border-radius: 50%;
-  background-color: var(--lila);
-  position: fixed;
-  text-align: center;
-  height: 1em;
-  width: 1em;
-  right: 10px;
-  top: 10px;
-  opacity: 0.7;
-  cursor: pointer;
-  z-index: 10;
-
-  &:hover {
-    opacity: 1;
-  }
-}
-
 #aplicacion {
   display: flex;
   width: 1213vw;
@@ -330,12 +236,26 @@ function numeroAleatorio(maximo: number) {
 
 #cra7 {
   background-image: url(/imagenes/fondos/montanias_septimazo.png);
-  background-position: top;
-  background-size: contain;
+  background-position: 0;
+  background-size: 24%;
   position: relative;
   top: 0;
-  height: 60vh;
-  width: 1213vw;
+  height: 65vh;
+  background-repeat: repeat-x;
+  // width: 1213vw;
+
+  &::after {
+    content: '';
+    background-image: url(/imagenes/fondos/calle-piso.webp);
+    background-repeat: repeat-x;
+    background-position: center bottom;
+    background-size: 50%;
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 148px;
+    z-index: -1;
+  }
 
   #fondoCalle {
     background-image: url(/imagenes/fondos/calle_septimazo.png);
@@ -486,37 +406,6 @@ function numeroAleatorio(maximo: number) {
   z-index: 9;
 }
 
-#contenedorIconos {
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  right: 40px;
-  top: 22vh;
-  z-index: 11;
-  border-radius: 15px;
-  padding: 0.4em;
-
-  .iconoPodcast {
-    width: 35px;
-    border-radius: 50%;
-    padding: 0.3em;
-    margin: 0.3em;
-    background: #ffffffde;
-  }
-
-  .tituloPodcast {
-    position: absolute;
-    display: none;
-    width: 200px;
-    background-color: #ffffffde;
-    right: 70px;
-    padding: 0.7em;
-    text-align: right;
-    font-size: 0.9em;
-    border-radius: 5px;
-  }
-}
-
 .iconoPajaro {
   height: 35px;
   border-radius: 50%;
@@ -534,14 +423,15 @@ function numeroAleatorio(maximo: number) {
   }
 
   #cra7 {
-    background-image: url(/imagenes/fondos/montanias_septimazo.png);
-    background-position: top;
-    background-size: contain;
-    position: relative;
-    top: 0;
-    height: 65vh;
-    width: 830vw;
+    // background-image: url(/imagenes/fondos/montanias_septimazo.png);
+    // background-position: top;
+    // background-size: contain;
+    // position: relative;
+    // top: 0;
+    // height: 65vh;
+    // width: 830vw;
   }
+
   .arbol {
     height: 200px;
   }

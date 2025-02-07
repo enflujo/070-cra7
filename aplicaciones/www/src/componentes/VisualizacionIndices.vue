@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, Ref } from 'vue';
 import { convertirEscala, distanciaEntreCoordenadas, pedirDatos } from '../utilidades/ayudas';
-import { DatosRuido, Punto } from '@/tipos/compartidos';
+import { Punto } from '@/tipos/compartidos';
 import { usarCerebro } from '@/utilidades/cerebro';
 
 /* async function cargarDatos() {
@@ -47,8 +47,6 @@ onMounted(async () => {
 
   // Cargar datos
   const puntos = await pedirDatos<Punto[]>(`/datos/puntos.json`);
-  const ruido = await pedirDatos<DatosRuido>('/datos/ruido.json');
-  console.log(ruido);
 
   // Habitabilidad
   const trazoHabitabilidad: SVGPathElement = document.getElementById('trazoHabitabilidad') as HTMLElement &
@@ -411,7 +409,7 @@ onMounted(async () => {
         Índices medidos a lo largo de la carrera Séptima durante la investigación. Los valores van de 0 a 1 y muestran,
         en cada punto, los datos de cada indicador:
       </p>
-      <div id="etiquetas" @click="(cerebro.indicadoresVisible = true)">
+      <div id="etiquetas" @click="cerebro.indicadoresVisible = true">
         <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
         <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
         <p class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
@@ -434,8 +432,15 @@ onMounted(async () => {
 
 #contenedorVis {
   // border: 1px black solid;
-  padding: 1em;
-  height: 28vh;
+  padding: 0;
+  height: 35vh;
+  background: rgb(255, 214, 251);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 214, 251, 1) 0%,
+    rgba(255, 229, 226, 1) 76%,
+    rgba(255, 250, 193, 1) 100%
+  );
 }
 
 #contenedorTrazos {
@@ -473,7 +478,7 @@ onMounted(async () => {
 }
 
 #contenedorEtiquetas {
-  bottom: 0;
+  bottom: 20px;
   width: 100vw;
   padding: 0em 1em;
   position: fixed;
