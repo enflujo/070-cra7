@@ -44,7 +44,8 @@ const podcasts: ElementoPaisaje[] = [
     id: '4',
     ruta: 'https://open.spotify.com/embed/episode/0Wy6oN44v3MiBdHlwaWgnV?si=6786b72e435b4389',
     nombre: 'Movilidad y proximidad en la carrera Séptima: 25 años de promesas incumplidas',
-    descripcion: 'descripción pd3',
+    descripcion: `<p>Durante más de 25 años, la Carrera Séptima ha sido el escenario de una historia repetitiva de promesas incumplidas, licitaciones suspendidas y planes sin ejecutar. Cada alcalde llega con una nueva visión, pero el resultado es siempre el mismo: una vía que sigue sin transformarse en un espacio realmente habitable para la gente. En el último episodio de Veinticuatro/Siete, exploramos cómo la falta de continuidad política y la resistencia de ciertos sectores han frenado, una y otra vez, las soluciones de movilidad propuestas para una de las avenidas más emblemáticas de Bogotá.</p>
+    <p>Junto a Luis Ángel Guzmán, profesor del Departamento de Ingeniería Civil y Ambiental de la Universidad de los Andes y uno de los investigadores de este proyecto, analizamos por qué la movilidad en la Carrera Séptima sigue atrapada en el mismo trancón de hace décadas. ¿Cómo esta aparálisis afecta la calidad de vida en la ciudad? ¿Qué papel juegan el poder, los intereses privados y la desigualdad en esta historia? Y, lo más importante, ¿qué se necesita para que, de una vez por todas, la Séptima sea una vía diseñada para la gente?</p>'`,
   },
 ];
 </script>
@@ -118,7 +119,7 @@ const podcasts: ElementoPaisaje[] = [
   flex-direction: column;
   position: fixed;
   right: 40px;
-  top: 22vh;
+  top: 3em;
   z-index: 11;
   border-radius: 15px;
   padding: 0.4em;
