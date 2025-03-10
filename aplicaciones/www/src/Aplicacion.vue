@@ -167,7 +167,12 @@ function numeroAleatorio(maximo: number) {
       <div id="fondoCalle"></div>
 
       <div id="contenedorElementos">
-        <div class="elementosPunto" v-for="(punto, i) in puntosUbicados" :key="punto.slug">
+        <div
+          class="elementosPunto"
+          v-for="(punto, i) in puntosUbicados"
+          :key="punto.slug"
+          :style="`transform:translateX(${punto.ubicacionX}vw)`"
+        >
           <img
             @mouseenter="mostrarEtiquetaLugar(punto.id)"
             @mouseleave="ocultarEtiquetaLugar"
@@ -176,7 +181,6 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.ilustraciones"
             :src="`${base}/imagenes/lugares/${punto.ilustraciones}.png`"
             :alt="`${punto.ilustraciones}`"
-            :style="`left:${punto.ubicacionX}vw`"
           />
 
           <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
@@ -185,7 +189,6 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
             :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
-            :style="`left:${(punto.ubicacionX || 0) - 5}vw`"
           />
 
           <img
@@ -193,7 +196,6 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
             :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
-            :style="`left:${(punto.ubicacionX || 0) - 2}vw`"
           />
 
           <img
@@ -202,7 +204,6 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.perfil"
             :src="`${base}/imagenes/icono_perfil.png`"
             alt="ícono abrir perfil"
-            :style="`left:${(punto.ubicacionX || 0) - 3}vw`"
           />
 
           <img
@@ -211,7 +212,7 @@ function numeroAleatorio(maximo: number) {
             v-if="punto.txtPajaros"
             :src="`${base}/imagenes/icono_pajaro.png`"
             alt="ícono abrir perfil"
-            :style="`left:${(punto.ubicacionX || 0) - 3}vw; bottom:${alturaPajaros[i]}px`"
+            :style="`bottom:${alturaPajaros[i]}px`"
           />
         </div>
 
@@ -270,11 +271,14 @@ function numeroAleatorio(maximo: number) {
 
   #contenedorElementos {
     padding: 0 0 0 3vw;
-    width: 594vw;
     height: 60vh;
-    position: absolute;
+    position: relative;
     left: 3vw;
     top: 14px;
+
+    .elementosPunto {
+      position: absolute;
+    }
   }
 
   @keyframes cambioColor {
@@ -304,7 +308,6 @@ function numeroAleatorio(maximo: number) {
 }
 
 .ilustracion {
-  position: absolute;
   height: auto;
   bottom: 87px;
   width: 75vw;
@@ -312,9 +315,11 @@ function numeroAleatorio(maximo: number) {
   &:hover {
     opacity: 1;
   }
+
   &.plaza-de-bolivar {
     transform: translate(-50px, 26px) rotate(1deg);
   }
+
   &.iglesia-san-francisco {
     transform: translate(-50px, -15px) rotate(1deg);
   }
