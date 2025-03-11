@@ -114,7 +114,7 @@ onMounted(async () => {
   for (let i = 0; i < puntos.value.length; i++) {
     // Dibujar el primer punto
     if (i === 0) {
-      puntosUbicados.value[i].ubicacionX = -5;
+      puntosUbicados.value[i].ubicacionX = 0;
       // Dibujar el resto de puntos
     } else {
       const puntoA = puntos.value[i - 1];
@@ -127,7 +127,7 @@ onMounted(async () => {
 
         distanciaTotal += distanciaParcial;
 
-        const x = convertirEscala(distanciaTotal, 0, 25, 0, 100 * multiplicadorAncho);
+        const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
 
         puntosUbicados.value[i].ubicacionX = x;
 
@@ -171,7 +171,7 @@ function numeroAleatorio(maximo: number) {
           class="elementosPunto"
           v-for="(punto, i) in puntosUbicados"
           :key="punto.slug"
-          :style="`transform:translateX(${punto.ubicacionX}vw)`"
+          :style="`left:${punto.ubicacionX}%`"
         >
           <img
             @mouseenter="mostrarEtiquetaLugar(punto.id)"
@@ -179,7 +179,7 @@ function numeroAleatorio(maximo: number) {
             class="ilustracion"
             :class="slugificar(punto.ilustraciones[0])"
             v-if="punto.ilustraciones"
-            :src="`${base}/imagenes/lugares/${punto.ilustraciones}.png`"
+            :src="`${base}/imagenes/lugares/${punto.ilustraciones}.webp`"
             :alt="`${punto.ilustraciones}`"
           />
 
@@ -238,25 +238,12 @@ function numeroAleatorio(maximo: number) {
 #cra7 {
   background-image: url(/imagenes/fondos/montanias_septimazo.png);
   background-position: 0;
-  background-size: 24%;
+  background-size: 1%;
   position: relative;
   top: 0;
   height: 65vh;
   background-repeat: repeat-x;
-  // width: 1213vw;
-
-  &::after {
-    content: '';
-    background-image: url(/imagenes/fondos/calle-piso.webp);
-    background-repeat: repeat-x;
-    background-position: center bottom;
-    background-size: 50%;
-    width: 100%;
-    height: 50px;
-    position: absolute;
-    bottom: 148px;
-    z-index: -1;
-  }
+  width: 1213vw;
 
   #fondoCalle {
     background-image: url(/imagenes/fondos/calle_septimazo.png);
@@ -270,11 +257,10 @@ function numeroAleatorio(maximo: number) {
   }
 
   #contenedorElementos {
-    padding: 0 0 0 3vw;
-    height: 60vh;
+    height: 50vh;
     position: relative;
-    left: 3vw;
-    top: 14px;
+    bottom: 14px;
+    width: 100%;
 
     .elementosPunto {
       position: absolute;
@@ -310,7 +296,7 @@ function numeroAleatorio(maximo: number) {
 .ilustracion {
   height: auto;
   bottom: 87px;
-  width: 75vw;
+  width: 500px;
 
   &:hover {
     opacity: 1;
@@ -439,11 +425,6 @@ function numeroAleatorio(maximo: number) {
 
   .arbol {
     height: 200px;
-  }
-
-  .ilustracion {
-    bottom: 53px;
-    width: 35vw;
   }
 }
 </style>
