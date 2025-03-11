@@ -48,3 +48,7 @@ export function convertirEscala(
     escalaDestinoMin
   );
 }
+
+export function numeroAleatorio(maximo: number) {
+  return Math.floor(Math.random() * maximo);
+}

@@ -1,27 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref, Ref } from 'vue';
-import { convertirEscala, distanciaEntreCoordenadas, pedirDatos } from '../utilidades/ayudas';
+import { convertirEscala, distanciaEntreCoordenadas } from '../utilidades/ayudas';
 import { Punto } from '@/tipos/compartidos';
 import { usarCerebro } from '@/utilidades/cerebro';
 
-/* async function cargarDatos() {
-  try {
-    const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
-
-    // console.log(ruido);
-  } catch (error) {
-    console.error('Error descargando datos del ruido', error);
-  }
-}
-
-cargarDatos().catch(console.error); */
-
 // multiplicadorAncho es el valor por el cual se multiplica el vw para agrandar el ancho de la ventana
-const props = defineProps<{ multiplicadorAncho: number }>();
+const props = defineProps<{ puntos: Punto[]; multiplicadorAncho: number }>();
 
 const cerebro = usarCerebro();
 const infoPuntoA: Ref<HTMLElement | null> = ref(null);
-const calles: Ref<HTMLElement | null> = ref(null);
 const alturaContenedor: number = 200; // Debe ser la misma que en #contenedorTrazos
 
 let puntoElegido: Ref<Punto | null> = ref(null);
@@ -44,9 +31,6 @@ let lineaCaminabilidad: string = '';
 onMounted(async () => {
   const contenedorZonas: HTMLElement = document.getElementById('contenedorZonas') as HTMLElement;
   const infoPuntoA: HTMLElement = document.getElementById('infoPuntoA') as HTMLElement;
-
-  // Cargar datos
-  const puntos = await pedirDatos<Punto[]>(`/datos/puntos.json`);
 
   // Habitabilidad
   const trazoHabitabilidad: SVGPathElement = document.getElementById('trazoHabitabilidad') as HTMLElement &
@@ -83,11 +67,11 @@ onMounted(async () => {
     SVGElement;
 
   // Calcular lugar de cada punto y pintarlos
-  for (let i = 0; i < puntos.length; i++) {
+  for (let i = 0; i < props.puntos.length; i++) {
     /**
      * Organizar Índices
      */
-    const punto = puntos[i];
+    const punto = props.puntos[i];
     const indices = [
       { indicador: 'ambiente', valor: punto.ambiente || -1 },
       { indicador: 'caminabilidad', valor: punto.caminabilidad || -1 },
@@ -111,7 +95,6 @@ onMounted(async () => {
 
     // Dibujar el primer punto
     if (i === 0) {
-      const calle = document.createElement('p');
       const zona = document.createElement('a');
       const circuloHabitabilidad = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       const circuloAmbiente = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -186,25 +169,17 @@ onMounted(async () => {
 
       circulosCaminabilidad.append(circuloCaminabilidad);
 
-      // Agregar nombre de primer punto
-      calle.innerText = punto.nombre;
-      calle.classList.add('nombreCalle');
-      calle.style.left = `${0}px`;
-      if (calles.value) {
-        calles.value.appendChild(calle);
-      }
-
       // Agregar zonas que no se ven pero son la región de hover que muestra la información de los indicadores en cada punto
       zona.classList.add('zona');
       zona.style.width = `${ancho}px`;
-      zona.href = `#${puntos[0].slug}`;
+      zona.href = `#${props.puntos[0].slug}`;
       zona.style.left = `0px`;
 
       // Agregar cada punto a la línea de la 7
       contenedorZonas.appendChild(zona);
 
       zona.addEventListener('mouseenter', () => {
-        const puntoA = puntos[0];
+        const puntoA = props.puntos[0];
 
         infoPuntoA.innerHTML = `<h4>${puntoA.nombre}</h4>
         ${indices
@@ -224,7 +199,7 @@ onMounted(async () => {
 
       // Dibujar el resto de puntos
     } else {
-      const puntoA = puntos[i - 1];
+      const puntoA = props.puntos[i - 1];
       const zona = document.createElement('a');
 
       // Crear los círculos de cada indicador
@@ -297,15 +272,6 @@ onMounted(async () => {
         circuloCaminabilidad.setAttribute('r', `${caminabilidad * multiplicadorRadio}`);
       }
 
-      // Agregar nombre de calles
-      const calle = document.createElement('p');
-      calle.innerText = punto.nombre;
-      calle.classList.add('nombreCalle');
-      calle.style.left = `${x - 25}px`;
-      if (calles.value) {
-        calles.value.appendChild(calle);
-      }
-
       // Agregar zonas que no se ven pero son la región de hover que muestra la información de los indicadores en cada punto
       zona.classList.add('zona');
       zona.style.width = `${ancho}px`;
@@ -332,7 +298,7 @@ onMounted(async () => {
         infoPuntoA.style.display = 'none';
       });
 
-      if (i < puntos.length - 1) {
+      if (i < props.puntos.length - 1) {
         lineaHabitabilidad += `L ${x} ${yHabitabilidad} `;
         lineaAmbiente += `L ${x} ${yAmbiente} `;
         lineaInfraestructura += `L ${x} ${yInfraestructura} `;
@@ -379,7 +345,11 @@ onMounted(async () => {
 
 <template>
   <div id="contenedorVis">
-    <div class="calles" ref="calles"></div>
+    <div class="calles">
+      <span class="nombreCalle" v-for="punto in puntos" :ref="punto.slug" :style="`left:${punto.ubicacionX}%`">
+        {{ punto.nombre }}
+      </span>
+    </div>
 
     <svg id="contenedorTrazos" xmlns="http://www.w3.org/2000/svg">
       <path id="trazoHabitabilidad" class="trazo" />
@@ -431,7 +401,6 @@ onMounted(async () => {
 @use '../scss/general' as *;
 
 #contenedorVis {
-  // border: 1px black solid;
   padding: 0;
   height: 35vh;
   background: rgb(255, 214, 251);
@@ -441,6 +410,7 @@ onMounted(async () => {
     rgba(255, 229, 226, 1) 76%,
     rgba(255, 250, 193, 1) 100%
   );
+  position: relative;
 }
 
 #contenedorTrazos {
@@ -640,22 +610,18 @@ onMounted(async () => {
 }
 
 .calles {
-  position: absolute;
-  bottom: 42vh;
-  display: flex;
-  align-items: flex-start;
-}
-
-.nombreCalle {
-  background-color: hsla(42, 84%, 76%, 1);
-  border-radius: 5px;
-  font-size: 0.7em;
-  position: absolute;
-  text-align: center;
-  padding: 0.5em;
-  z-index: 8;
-  min-width: 35px;
-  border: 1px black solid;
+  .nombreCalle {
+    font-family: var(--fuentePrincipal);
+    background-color: hsla(42, 84%, 76%, 1);
+    border-radius: 5px;
+    font-size: 0.7em;
+    position: absolute;
+    text-align: center;
+    padding: 0.5em;
+    z-index: 8;
+    min-width: 35px;
+    border: 1px black solid;
+  }
 }
 
 .lineasCalle {
@@ -673,9 +639,6 @@ onMounted(async () => {
 
   .infoPunto {
     top: 72vh;
-  }
-  .calles {
-    bottom: 36vh;
   }
 }
 </style>

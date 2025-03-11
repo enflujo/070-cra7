@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
-import { distanciaEntreCoordenadas, base, convertirEscala } from './utilidades/ayudas';
+import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos, numeroAleatorio } from './utilidades/ayudas';
 import slugificar from 'slug';
 import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
@@ -14,14 +14,16 @@ import type { Punto } from '@/tipos/compartidos';
 import FichaIndicadores from './componentes/FichaIndicadores.vue';
 
 const puntos: Ref<Punto[]> = ref([]);
+/** Lugares que tienen ilustración */
+const lugares: Ref<Punto[]> = ref([]);
 const puntosUbicados: Ref<Punto[]> = ref([]);
-const ilustraciones: Ref<{ nombre: string; x: number }[]> = ref([]);
-const perfiles: Ref<{ id: string; x: number }[]> = ref([]);
+const perfiles: Ref<Punto[]> = ref([]);
 const arbolesElegidos: Ref<string[]> = ref([]);
 const alturaPajaros: Ref<number[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
+const anchoContenedor = ref(0);
 
 const cerebro = usarCerebro();
 
@@ -106,41 +108,41 @@ async function cargarDatos() {
 cargarDatos().catch(console.error);
 
 onMounted(async () => {
-  // Punto por lugar
-  puntos.value = (await fetch(`${import.meta.env.BASE_URL}/datos/puntos.json`).then((res) => res.json())) as Punto[];
-  puntosUbicados.value = puntos.value;
-
-  // Calcular lugar de cada punto por lugar y pintarlos
-  for (let i = 0; i < puntos.value.length; i++) {
-    // Dibujar el primer punto
-    if (i === 0) {
-      puntosUbicados.value[i].ubicacionX = 0;
-      // Dibujar el resto de puntos
-    } else {
-      const puntoA = puntos.value[i - 1];
-      const puntoB = puntos.value[i];
-
-      if (puntoA.lat && puntoA.lon && puntoB.lat && puntoB.lon) {
-        const distanciaParcial = distanciaEntreCoordenadas(puntoA.lat, puntoA.lon, puntoB.lat, puntoB.lon);
-        // ir calculando la distancia total sumando las parciales
-        // distancia total = 24.7921;
-
-        distanciaTotal += distanciaParcial;
-
-        const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
-
-        puntosUbicados.value[i].ubicacionX = x;
-
-        if (puntoB.ilustraciones) {
-          ilustraciones.value.push({ nombre: 'iglesia_san_francisco', x });
-        }
-
-        if (puntoB.perfil) {
-          perfiles.value.push({ id: puntoB.perfil, x });
+  try {
+    const datosPuntos = await pedirDatos<Punto[]>('/datos/puntos.json');
+    console.log(datosPuntos.length, datosPuntos);
+    if (!datosPuntos) return;
+    // Calcular lugar de cada punto por lugar
+    datosPuntos.forEach((punto, i) => {
+      if (i === 0) {
+        punto.ubicacionX = 0;
+        return;
+      } else {
+        const puntoAnterior = datosPuntos[i - 1];
+        if (puntoAnterior.lat && puntoAnterior.lon && punto.lat && punto.lon) {
+          const distanciaParcial = distanciaEntreCoordenadas(
+            puntoAnterior.lat,
+            puntoAnterior.lon,
+            punto.lat,
+            punto.lon
+          );
+          distanciaTotal += distanciaParcial;
+          const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
+          punto.ubicacionX = x;
         }
       }
-    }
+    });
+
+    console.log(distanciaTotal);
+    puntos.value = datosPuntos;
+    anchoContenedor.value = datosPuntos.length * 45;
+    // lugares.value = datosPuntos.filter((punto) => punto.ilustraciones && punto.ilustraciones.length);
+    // perfiles.value = datosPuntos.filter((punto) => !!punto.perfil);
+  } catch (error) {
+    console.error('Error descargando datos de los puntos', error);
   }
+  //puntos.value =  //(await fetch(`${import.meta.env.BASE_URL}/datos/puntos.json`).then((res) => res.json())) as Punto[];
+  puntosUbicados.value = puntos.value;
 
   // Generar índices para árboles que van a pintarse y alturas para los pájaros
   puntosUbicados.value.forEach((punto) => {
@@ -151,10 +153,6 @@ onMounted(async () => {
     alturaPajaros.value.push(altura);
   });
 });
-
-function numeroAleatorio(maximo: number) {
-  return Math.floor(Math.random() * maximo);
-}
 </script>
 
 <template>
@@ -162,9 +160,9 @@ function numeroAleatorio(maximo: number) {
     <SobreProyecto />
     <Podcast :cerrar="cerrarFicha" />
 
-    <div id="cra7">
+    <div id="cra7" :style="`width:${anchoContenedor}%`">
       <Titulo />
-      <div id="fondoCalle"></div>
+      <div id="fondoCalle" :style="`width:${anchoContenedor}%`"></div>
 
       <div id="contenedorElementos">
         <div
@@ -174,53 +172,54 @@ function numeroAleatorio(maximo: number) {
           :style="`left:${punto.ubicacionX}%`"
         >
           <img
+            v-if="punto.ilustraciones && punto.ilustraciones.length"
             @mouseenter="mostrarEtiquetaLugar(punto.id)"
             @mouseleave="ocultarEtiquetaLugar"
             class="ilustracion"
             :class="slugificar(punto.ilustraciones[0])"
-            v-if="punto.ilustraciones"
             :src="`${base}/imagenes/lugares/${punto.ilustraciones}.webp`"
             :alt="`${punto.ilustraciones}`"
           />
 
-          <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
-          <img
-            class="arbol sinEventos"
-            v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
-            :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
-            alt="árbol"
-          />
-
-          <img
-            class="arbol sinEventos"
-            v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
-            :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
-            alt="árbol"
-          />
-
-          <img
+          <!-- <img
+            v-if="punto.perfil"
             @click="abrirFicha(punto.slug)"
             class="icono iconoPerfil botonAbrir"
-            v-if="punto.perfil"
             :src="`${base}/imagenes/icono_perfil.png`"
             alt="ícono abrir perfil"
-          />
+          /> -->
 
-          <img
+          <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
+          <!-- <img
+            v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
+            class="arbol sinEventos"
+            :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
+            alt="árbol"
+          /> -->
+
+          <!-- <img
+            v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
+            class="arbol sinEventos"
+            :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
+            alt="árbol"
+          /> -->
+
+          <!-- <img
+            v-if="punto.txtPajaros"
             @click="punto.slug === 'calle-32' ? abrirFicha(punto.slug) : ''"
             class="icono iconoPajaro sinEventos"
-            v-if="punto.txtPajaros"
             :src="`${base}/imagenes/icono_pajaro.png`"
             alt="ícono abrir perfil"
             :style="`bottom:${alturaPajaros[i]}px`"
-          />
+          /> -->
         </div>
 
         <div ref="etiquetaIlustracion" class="etiqueta etiquetaIlustracion sinEventos"></div>
       </div>
+
+      <VisualizacionIndices :puntos="puntos" :multiplicadorAncho="multiplicadorAncho" />
     </div>
 
-    <VisualizacionIndices :multiplicadorAncho="multiplicadorAncho" />
     <FichaIndicadores :cerrar="cerrarFicha" />
     <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
   </div>
@@ -232,28 +231,33 @@ function numeroAleatorio(maximo: number) {
 
 #aplicacion {
   display: flex;
-  width: 1213vw;
 }
 
 #cra7 {
   background-image: url(/imagenes/fondos/montanias_septimazo.png);
-  background-position: 0;
-  background-size: 1%;
-  position: relative;
-  top: 0;
-  height: 65vh;
+  background-position-y: 100px;
+  background-size: 600px;
+  height: 100vh;
   background-repeat: repeat-x;
-  width: 1213vw;
 
   #fondoCalle {
-    background-image: url(/imagenes/fondos/calle_septimazo.png);
-    height: 400px;
-    position: absolute;
-    width: 100%;
-    bottom: 0vw;
-    background-position: bottom;
+    background-image: url(/imagenes/fondos/calle-piso.webp);
     background-size: contain;
-    background-repeat: repeat-x;
+    position: absolute;
+    top: 435px;
+    width: 100%;
+    height: 12px;
+
+    &::after {
+      content: '';
+      background-image: url(/imagenes/fondos/calle-piso.webp);
+      background-size: contain;
+      position: absolute;
+      top: 100px;
+      width: 100%;
+      height: 12px;
+      rotate: 180deg;
+    }
   }
 
   #contenedorElementos {
@@ -296,14 +300,15 @@ function numeroAleatorio(maximo: number) {
 .ilustracion {
   height: auto;
   bottom: 87px;
-  width: 500px;
 
   &:hover {
     opacity: 1;
   }
 
   &.plaza-de-bolivar {
-    transform: translate(-50px, 26px) rotate(1deg);
+    top: 200px;
+    transform: translate(50px, 110px) rotate(1deg);
+    height: 400px;
   }
 
   &.iglesia-san-francisco {

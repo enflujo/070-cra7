@@ -6,7 +6,7 @@ const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
 </script>
 
 <template>
-  <span ref="botonInformacion" id="botonInformacion" @click="controlInfo" class="botonAbrir">?</span>
+  <span ref="botonInformacion" id="botonInformacion" class="botonAbrir" @click="controlInfo">Sobre el proyecto</span>
 
   <div class="ficha infoProyecto" :class="{ visible: cerebro.infoVisible }">
     <div id="cerrar" :onclick="controlInfo">X</div>
@@ -91,18 +91,16 @@ const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
 
 #botonInformacion {
   display: block;
-  padding: 0.5em;
-  border-radius: 50%;
+  padding: 0.8em;
   background-color: var(--lila);
   position: fixed;
   text-align: center;
-  height: 1em;
-  width: 1em;
-  right: 10px;
-  top: 10px;
+  right: 0px;
+  top: 0px;
   opacity: 0.7;
   cursor: pointer;
   z-index: 10;
+  font-family: var(--fuentePrincipal);
 
   &:hover {
     opacity: 1;
