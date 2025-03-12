@@ -16,7 +16,7 @@ const cerebro = usarCerebro();
 const perfiles: ElementoPaisaje[] = [
   {
     id: 'calle-189',
-    nombre: 'Persona que se mueve en transporte público ',
+    nombre: 'Persona que se mueve en transporte público',
     descripcion:
       'Luisa González vive en el Codito, a pocas cuadras de la carrera Séptima, en el extremo nororiental de Bogotá. Aunque tomar el bus por esta avenida es la ruta más directa para ir a su trabajo, ella prefiere evitarla.',
   },

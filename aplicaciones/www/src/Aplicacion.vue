@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos, numeroAleatorio } from './utilidades/ayudas';
 import slugificar from 'slug';
@@ -24,13 +24,19 @@ const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
 const anchoContenedor = ref(0);
+const pasoX = 900;
+const alto = ref(0);
+const dims = computed(() => ({ fondo: alto.value * 0.5, calle: alto.value * 0.11, vis: alto.value * 0.368 }));
+const tituloVisible = ref(true);
 
 const cerebro = usarCerebro();
-
-const multiplicadorAncho = screen.width > 767 ? 8 : 12; // valor para multiplicar 100vw
 let distanciaTotal = 0;
 
 let ratonSobreLugar: string = '';
+
+function escalar() {
+  alto.value = window.innerHeight;
+}
 
 const arboles: string[] = [
   'arbol1',
@@ -108,15 +114,21 @@ async function cargarDatos() {
 cargarDatos().catch(console.error);
 
 onMounted(async () => {
+  window.addEventListener('scroll', () => {
+    if (window.scrollX > 100) {
+      tituloVisible.value = false;
+    } else {
+      tituloVisible.value = true;
+    }
+  });
   try {
     const datosPuntos = await pedirDatos<Punto[]>('/datos/puntos.json');
-    console.log(datosPuntos.length, datosPuntos);
+
     if (!datosPuntos) return;
     // Calcular lugar de cada punto por lugar
     datosPuntos.forEach((punto, i) => {
       if (i === 0) {
         punto.ubicacionX = 0;
-        return;
       } else {
         const puntoAnterior = datosPuntos[i - 1];
         if (puntoAnterior.lat && puntoAnterior.lon && punto.lat && punto.lon) {
@@ -129,82 +141,92 @@ onMounted(async () => {
           distanciaTotal += distanciaParcial;
           const x = convertirEscala(distanciaTotal, 0, 25, 0, 100);
           punto.ubicacionX = x;
+          datosPuntos[i - 1].ancho = x - (datosPuntos[i - 1].ubicacionX || 0);
+
+          if (i === datosPuntos.length - 1) {
+            punto.ancho = 100 - x;
+          }
         }
       }
     });
 
-    console.log(distanciaTotal);
     puntos.value = datosPuntos;
-    anchoContenedor.value = datosPuntos.length * 45;
+    anchoContenedor.value = datosPuntos.length * pasoX;
     // lugares.value = datosPuntos.filter((punto) => punto.ilustraciones && punto.ilustraciones.length);
     // perfiles.value = datosPuntos.filter((punto) => !!punto.perfil);
   } catch (error) {
     console.error('Error descargando datos de los puntos', error);
   }
-  //puntos.value =  //(await fetch(`${import.meta.env.BASE_URL}/datos/puntos.json`).then((res) => res.json())) as Punto[];
   puntosUbicados.value = puntos.value;
 
   // Generar índices para árboles que van a pintarse y alturas para los pájaros
-  puntosUbicados.value.forEach((punto) => {
-    if (!punto.ambiente) return;
-    let arbol = arboles[numeroAleatorio(arboles.length)];
-    let altura = 210 + numeroAleatorio(60);
-    arbolesElegidos.value.push(arbol);
-    alturaPajaros.value.push(altura);
-  });
+  // puntosUbicados.value.forEach((punto) => {
+  //   if (!punto.ambiente) return;
+  //   let arbol = arboles[numeroAleatorio(arboles.length)];
+  //   let altura = 210 + numeroAleatorio(60);
+  //   arbolesElegidos.value.push(arbol);
+  //   alturaPajaros.value.push(altura);
+  // });
+
+  escalar();
+  window.addEventListener('resize', escalar);
 });
 </script>
 
 <template>
-  <div id="contenedorGeneral" @click="clicFuera($event)">
+  <main id="contenedorGeneral" @click="clicFuera($event)" :style="{ width: `${anchoContenedor + 300}px` }">
+    <Titulo :class="{ visible: tituloVisible }" />
     <SobreProyecto />
     <Podcast :cerrar="cerrarFicha" />
 
-    <div id="cra7" :style="`width:${anchoContenedor}%`">
-      <Titulo />
-      <div id="fondoCalle" :style="`width:${anchoContenedor}%`"></div>
+    <div
+      id="paisaje"
+      :style="{
+        width: `${anchoContenedor}px`,
+        height: `${dims.fondo}px`,
+        backgroundSize: `${dims.fondo * 1.8}px`,
+      }"
+    >
+      <div
+        class="elementosPunto"
+        v-for="punto in puntosUbicados"
+        :key="punto.slug"
+        :style="{ left: `${punto.ubicacionX}%` }"
+      >
+        <img
+          v-if="punto.ilustraciones && punto.ilustraciones.length"
+          @mouseenter="mostrarEtiquetaLugar(punto.id)"
+          @mouseleave="ocultarEtiquetaLugar"
+          class="ilustracion"
+          :class="slugificar(punto.ilustraciones[0])"
+          :src="`${base}/imagenes/lugares/${punto.ilustraciones}.webp`"
+          :alt="`${punto.ilustraciones}`"
+        />
 
-      <div id="contenedorElementos">
-        <div
-          class="elementosPunto"
-          v-for="(punto, i) in puntosUbicados"
-          :key="punto.slug"
-          :style="`left:${punto.ubicacionX}%`"
-        >
-          <img
-            v-if="punto.ilustraciones && punto.ilustraciones.length"
-            @mouseenter="mostrarEtiquetaLugar(punto.id)"
-            @mouseleave="ocultarEtiquetaLugar"
-            class="ilustracion"
-            :class="slugificar(punto.ilustraciones[0])"
-            :src="`${base}/imagenes/lugares/${punto.ilustraciones}.webp`"
-            :alt="`${punto.ilustraciones}`"
-          />
+        <img
+          v-if="punto.perfil"
+          @click="abrirFicha(punto.slug)"
+          class="icono iconoPerfil botonAbrir"
+          :src="`${base}/imagenes/icono_perfil.png`"
+          alt="ícono abrir perfil"
+        />
 
-          <!-- <img
-            v-if="punto.perfil"
-            @click="abrirFicha(punto.slug)"
-            class="icono iconoPerfil botonAbrir"
-            :src="`${base}/imagenes/icono_perfil.png`"
-            alt="ícono abrir perfil"
-          /> -->
-
-          <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
-          <!-- <img
+        <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
+        <!-- <img
             v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
             class="arbol sinEventos"
             :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
           /> -->
 
-          <!-- <img
+        <!-- <img
             v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
             class="arbol sinEventos"
             :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
             alt="árbol"
           /> -->
 
-          <!-- <img
+        <!-- <img
             v-if="punto.txtPajaros"
             @click="punto.slug === 'calle-32' ? abrirFicha(punto.slug) : ''"
             class="icono iconoPajaro sinEventos"
@@ -212,63 +234,63 @@ onMounted(async () => {
             alt="ícono abrir perfil"
             :style="`bottom:${alturaPajaros[i]}px`"
           /> -->
-        </div>
-
-        <div ref="etiquetaIlustracion" class="etiqueta etiquetaIlustracion sinEventos"></div>
       </div>
 
-      <VisualizacionIndices :puntos="puntos" :multiplicadorAncho="multiplicadorAncho" />
+      <div ref="etiquetaIlustracion" class="etiqueta etiquetaIlustracion sinEventos"></div>
     </div>
+
+    <div id="fondoCalle" :style="{ width: `${anchoContenedor}px`, height: `${dims.calle}px` }"></div>
+
+    <VisualizacionIndices :puntos="puntos" :ancho="anchoContenedor" :alto="dims.vis" :pasoX="pasoX" />
 
     <FichaIndicadores :cerrar="cerrarFicha" />
     <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
-  </div>
+  </main>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @use 'scss/constantes' as *;
 @use 'scss/general' as *;
 
-#aplicacion {
+#contenedorGeneral {
   display: flex;
+  flex-direction: column;
 }
 
-#cra7 {
-  background-image: url(/imagenes/fondos/montanias_septimazo.png);
-  background-position-y: 100px;
-  background-size: 600px;
-  height: 100vh;
-  background-repeat: repeat-x;
+#fondoCalle {
+  position: relative;
+  z-index: 1;
 
-  #fondoCalle {
+  &::before,
+  &::after {
+    content: '';
     background-image: url(/imagenes/fondos/calle-piso.webp);
     background-size: contain;
-    position: absolute;
-    top: 435px;
     width: 100%;
-    height: 12px;
-
-    &::after {
-      content: '';
-      background-image: url(/imagenes/fondos/calle-piso.webp);
-      background-size: contain;
-      position: absolute;
-      top: 100px;
-      width: 100%;
-      height: 12px;
-      rotate: 180deg;
-    }
+    height: 11px;
+    display: block;
+    position: absolute;
   }
 
-  #contenedorElementos {
-    height: 50vh;
-    position: relative;
-    bottom: 14px;
-    width: 100%;
+  &::before {
+    top: 0;
+  }
 
-    .elementosPunto {
-      position: absolute;
-    }
+  &::after {
+    bottom: 0;
+    rotate: 180deg;
+  }
+}
+
+#paisaje {
+  background-image: url(/imagenes/fondos/montanias_septimazo.png);
+  background-repeat: repeat-x;
+  z-index: 2;
+  position: relative;
+
+  .elementosPunto {
+    position: absolute;
+    height: 100%;
   }
 
   @keyframes cambioColor {
@@ -298,78 +320,96 @@ onMounted(async () => {
 }
 
 .ilustracion {
-  height: auto;
-  bottom: 87px;
+  width: auto;
+  z-index: 5;
+  position: absolute;
+  bottom: 0;
+  height: 100%;
 
   &:hover {
     opacity: 1;
   }
 
   &.plaza-de-bolivar {
-    top: 200px;
-    transform: translate(50px, 110px) rotate(1deg);
-    height: 400px;
+    transform: translate(10%, 15%) rotate(1deg);
   }
 
   &.iglesia-san-francisco {
-    transform: translate(-50px, -15px) rotate(1deg);
+    transform: translate(0, 10%) rotate(-0.7deg);
+    height: 110%;
   }
 
   &.planetario-de-bogota {
-    transform: translate(-9vw, -43px);
+    transform: translate(0, 10%);
+    height: 90%;
   }
 
   &.parque-nacional {
-    transform: translate(0px, -21px);
+    transform: translate(0, 1%);
   }
   &.universidad-javeriana {
-    transform: translate(0px, -21px);
+    transform: translate(0px, 1%);
   }
 
   &.parque-de-los-hippies {
-    transform: translate(-81px, -29px);
+    transform: translate(-30%, 5%);
   }
+
   &.edificio-caracol {
-    transform: translate(-22px, -24px);
+    transform: translate(-20%, 1%);
   }
+
   &.edificio-los-venados {
-    transform: translate(40px, -24px);
-  }
-  &.escuela-de-caballeria {
-    transform: translateY(-14px);
+    transform: translate(-50%, 2%);
   }
 
   &.subida-a-patios {
-    transform: translateY(27px);
+    transform: translate(-50%, 15%);
   }
 
   &.museo-del-chico {
-    transform: translate(-32px, -19px);
+    transform: translate(-50%, 3%);
   }
 
   &.seminario-conciliar {
-    width: 27vw;
-    transform: translate(-73px, -8px) rotate(2deg);
+    transform: translate(-50%, 4%) rotate(1deg);
+  }
+
+  &.escuela-de-caballeria {
+    transform: translate(-30%, 1%);
   }
 
   &.hacienda-santa-barbara {
-    transform: translate(15px, -10px);
+    transform: translate(-50%, 1%);
+  }
+
+  &.centro-comercial-palatino {
+    transform: translate(-50%, 4%) rotate(-2deg);
+    height: 80%;
+  }
+
+  &.hospital-simon-bolivar {
+    transform: translate(-50%, 1%);
+    height: 70%;
+    filter: hue-rotate(30deg);
   }
 
   &.centro-de-abastos-codabas {
-    transform: translateX(-150px);
+    transform: translate(-50%, 1%);
+    height: 60%;
   }
+
   &.barrio-el-codito {
-    transform: translate(120px, 9px) rotate(-1deg);
+    transform: translate(-20%, 2%) rotate(-1deg);
   }
-  &.centro-comercial-palatino {
-    transform: translateY(20px);
-  }
-  &.hospital-simon-bolivar {
-    transform: translateY(-16px);
-  }
+
   &.finca-la-suiza {
-    transform: translateY(20px) rotate(1deg);
+    transform: translate(-20%, 3%) rotate(2deg);
+    height: 70%;
+  }
+
+  &.subestacion-torca {
+    transform: translate(0, 1%) rotate(-1deg);
   }
 }
 .arbol {
@@ -413,21 +453,6 @@ onMounted(async () => {
 }
 
 @media screen and (min-width: $minTablet) {
-  #aplicacion {
-    display: flex;
-    width: 830vw;
-  }
-
-  #cra7 {
-    // background-image: url(/imagenes/fondos/montanias_septimazo.png);
-    // background-position: top;
-    // background-size: contain;
-    // position: relative;
-    // top: 0;
-    // height: 65vh;
-    // width: 830vw;
-  }
-
   .arbol {
     height: 200px;
   }

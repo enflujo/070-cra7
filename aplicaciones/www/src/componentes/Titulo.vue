@@ -60,6 +60,12 @@ onMounted(async () => {
   top: 0;
   z-index: 9;
   width: 100vw;
+  transition: all 0.5s;
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
 }
 
 .texto {

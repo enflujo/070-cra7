@@ -20,7 +20,7 @@
     "cli-color": "^2.0.4",
     "cli-progress": "^3.12.0",
     "node-emoji": "^2.2.0",
-    "slug": "^10.0.0",
+    "slug": "^9.1.0",
     "xlstream": "^2.5.5"
   },
   "nodemonConfig": {

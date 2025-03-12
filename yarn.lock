@@ -58,6 +58,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@enflujo/alquimia@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@enflujo/alquimia@npm:2.0.0"
+  checksum: 10c0/bd0ff76e1e7295644f1576279383511b4b8503a5c50d2e3fad3e550dac5b83e65f5357089c8e42964a7a1bed72a3f87577887b0e2ec414f7d69e02058422bd91
+  languageName: node
+  linkType: hard
+
 "@esbuild/aix-ppc64@npm:0.25.1":
   version: 0.25.1
   resolution: "@esbuild/aix-ppc64@npm:0.25.1"
@@ -2984,7 +2991,7 @@ __metadata:
     node-emoji: "npm:^2.2.0"
     nodemon: "npm:^3.1.9"
     rimraf: "npm:^6.0.1"
-    slug: "npm:^10.0.0"
+    slug: "npm:^9.1.0"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.8.2"
     xlstream: "npm:^2.5.5"
@@ -3220,12 +3227,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slug@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "slug@npm:10.0.0"
+"slug@npm:^9.1.0":
+  version: 9.1.0
+  resolution: "slug@npm:9.1.0"
   bin:
     slug: cli.js
-  checksum: 10c0/330f7657dd44e526412417cb3225faf88fe5190ebbf1d9345b572d8e84358efa7b25412447aa445f84102e763d9ce1bbe79331aa0e2162ddf0324ae02cb6d3e4
+  checksum: 10c0/edc3e957de63e2d78d3809e0bf217da34ccb6ca313a83e2c1598ede2bd001644978d15eb69650a7b238c84adacbbab7318c4601c082aa433a3a2fd5e39523c2d
   languageName: node
   linkType: hard
 
@@ -3724,6 +3731,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "www@workspace:aplicaciones/www"
   dependencies:
+    "@enflujo/alquimia": "npm:^2.0.0"
     "@vitejs/plugin-vue": "npm:^5.2.1"
     autoprefixer: "npm:^10.4.21"
     cssnano: "npm:^7.0.6"
