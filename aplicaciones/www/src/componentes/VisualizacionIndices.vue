@@ -115,7 +115,6 @@ function construirLineas() {
       <div id="etiquetas" @click="cerebro.indicadoresVisible = true">
         <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
         <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
-        <p class="etiquetaDatos" id="etiqHabitabilidad">Habitabilidad</p>
         <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
         <p class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
         <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>

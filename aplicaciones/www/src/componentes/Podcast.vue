@@ -52,7 +52,7 @@ const podcasts: ElementoPaisaje[] = [
 
 <template>
   <div id="contenedorIconos">
-    <h2>Podcasts</h2>
+    <h2 class="tituloBoton">Podcasts</h2>
     <p ref="infoPodcast" class="tituloPodcast sinEventos" :class="{ visible: infoVisible }">{{ tituloPodcast }}</p>
 
     <div v-for="podcast in podcasts" @click="elegirPodcast(podcast, $event)" class="enlacePodcast">
@@ -84,6 +84,15 @@ const podcasts: ElementoPaisaje[] = [
 </template>
 
 <style lang="scss" scoped>
+.tituloBoton {
+  background-color: var(--lila);
+  padding: 0.5em 0.8em;
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: normal;
+  cursor: pointer;
+}
+
 .tituloContenido {
   display: inline-flex;
   align-items: center;
@@ -98,8 +107,8 @@ const podcasts: ElementoPaisaje[] = [
   cursor: pointer;
   display: flex;
   align-items: center;
-  max-width: 200px;
-  margin-bottom: 2em;
+  max-width: 173px;
+  margin-bottom: 0.2em;
   font-size: 0.85em;
   font-family: var(--fuentePrincipal);
   background-color: #ffffffde;
@@ -118,11 +127,10 @@ const podcasts: ElementoPaisaje[] = [
   display: flex;
   flex-direction: column;
   position: fixed;
-  right: 40px;
+  right: 0;
   top: 3em;
   z-index: 11;
   border-radius: 15px;
-  padding: 0.4em;
 
   .iconoPodcast {
     width: 35px;

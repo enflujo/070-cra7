@@ -24,7 +24,7 @@ const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
 const anchoContenedor = ref(0);
-const pasoX = 900;
+const pasoX = 1500;
 const alto = ref(0);
 const dims = computed(() => ({ fondo: alto.value * 0.5, calle: alto.value * 0.11, vis: alto.value * 0.368 }));
 const tituloVisible = ref(true);
