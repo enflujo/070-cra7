@@ -1,7 +1,7 @@
 import { getXlsxStream } from 'xlstream';
 import { estructuras } from './aplicacion';
 import { guardarJSON, mensajes, redondearDecimal, redondearDecimal2 } from './utilidades/ayudas';
-import type { LlavesZats, Punto } from '@/tipos/compartidos';
+import type { LlavesIndices, LlavesZats, Punto } from '@/tipos/compartidos';
 import type { Zats } from './tipos';
 
 export default async (puntos: Punto[]): Promise<Punto[]> => {
@@ -93,7 +93,11 @@ export default async (puntos: Punto[]): Promise<Punto[]> => {
           const i = puntos.findIndex((punto) => punto.nombre === nombrePunto);
 
           if (i >= 0) {
-            puntos[i][categoria as LlavesZats] = redondearDecimal(promedioZats);
+            if (categoria === 'habitabilidad') {
+              puntos[i].habitabilidad = redondearDecimal(promedioZats);
+            } else {
+              puntos[i].indices.push({ indicador: categoria as LlavesIndices, valor: redondearDecimal(promedioZats) });
+            }
 
             if (redondearDecimal(promedioZats) !== redondearDecimal2(promedioZats, 2)) {
               console.log(promedioZats, redondearDecimal(promedioZats), redondearDecimal2(promedioZats, 2));
@@ -103,6 +107,10 @@ export default async (puntos: Punto[]): Promise<Punto[]> => {
           }
         }
       }
+
+      puntos.forEach((punto) => {
+        punto.indices.sort((a, b) => b.valor - a.valor);
+      });
 
       mensajes.exito('Datos de ZAT procesados');
       resolver(puntos);

@@ -1,23 +1,15 @@
 <script setup lang="ts">
-import { type Ref, ref, onMounted } from 'vue';
-import { usarCerebro } from '../utilidades/cerebro';
-
-const cerrar: Ref<HTMLDivElement | undefined> = ref();
-const contenedorInfo: Ref<HTMLDivElement | undefined> = ref();
+import { usarCerebro } from '@/utilidades/cerebro';
 
 const cerebro = usarCerebro();
-
-function cerrarInfo() {
-  if (!contenedorInfo.value) return;
-  cerebro.infoVisible = false;
-}
-
-onMounted(async () => {});
+const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
 </script>
 
 <template>
-  <div ref="contenedorInfo" class="ficha infoProyecto visible">
-    <div id="cerrar" ref="cerrar" :onclick="cerrarInfo">X</div>
+  <span ref="botonInformacion" id="botonInformacion" class="botonAbrir" @click="controlInfo">Sobre el proyecto</span>
+
+  <div class="ficha infoProyecto" :class="{ visible: cerebro.infoVisible }">
+    <div id="cerrar" :onclick="controlInfo">X</div>
     <h2>VEINTICUATRO / SIETE</h2>
     <p>
       Han pasado más de 25 años y Bogotá todavía no se pone de acuerdo en cómo transformar la carrera Séptima, la
@@ -77,7 +69,7 @@ onMounted(async () => {});
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #cerrar {
   background-color: var(--menta);
   border-radius: 50%;
@@ -94,6 +86,32 @@ onMounted(async () => {});
 
   &:hover {
     opacity: 1;
+  }
+}
+
+#botonInformacion {
+  display: block;
+  padding: 0.8em;
+  background-color: var(--lila);
+  position: fixed;
+  text-align: center;
+  right: 0px;
+  top: 0px;
+  opacity: 0.7;
+  cursor: pointer;
+  z-index: 10;
+  font-family: var(--fuentePrincipal);
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.infoProyecto {
+  display: none;
+
+  &.visible {
+    display: block;
   }
 }
 </style>

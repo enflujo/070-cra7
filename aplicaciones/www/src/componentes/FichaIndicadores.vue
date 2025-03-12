@@ -17,47 +17,58 @@ function cerrar() {
     <div id="etiquetas">
       <h2>Índices</h2>
       <p>
-        Esta gráfica muestra siete índices medidos durante la investigación a lo largo de la Carrera Séptima. Los
-        valores van de 0 a 1.
+        Nuestro indicador de <span class="resaltar subrayar">habitabilidad</span> tiene valores entre 0 y 1. Está
+        compuesto por seis dominios, los cuales hacen que una ciudad sea
+        <span class="resaltar">chévere para vivir</span>. Estos van desde qué tan fácil es moverse, hasta la facilidad
+        de acceso a infraestructura o empleo. Cada dominio también tiene valores entre 0 y 1, y pueden ser estudiados de
+        forma independiente.
       </p>
+
       <p class="infoIndicador">
-        <span id="etiqAmbiente" class="etiquetaDatos">Ambiente:</span> Son las condiciones del entorno natural que puede
-        ser afectado por las intervenciones urbanas de la ciudad. Para este proyecto, las condiciones de ambiente se
-        miden a partir de la calidad del ruido y el aire, el arbolado urbano y la avifauna.
+        <span id="etiqHabitabilidad" class="etiquetaDatos">Habitabilidad:</span> Un barrio o zona habitable debería ser
+        seguro, sin contaminación, con un transporte sostenible y eficiente cerca, donde se pueda caminar y andar en
+        bicicleta sin peligros. Además debería estar cerca de servicios básicos como salud, educación, cultura y
+        recreación.
       </p>
+
+      <p class="infoIndicador">
+        <span id="etiqAmbiente" class="etiquetaDatos">Ambiente:</span> Un barrio habitable debería tener poca o ninguna
+        contaminación del aire y zonas verdes con muchos árboles.
+      </p>
+
       <p class="infoIndicador">
         <span id="etiqCaminabilidad" class="etiquetaDatos">Caminabilidad:</span> Se refiere a la capacidad que tienen
         las personas de moverse caminando por la infraestructura pública.
       </p>
+
       <p class="infoIndicador">
-        <span id="etiqHabitabilidad" class="etiquetaDatos">Habitabilidad:</span> La habitabilidad hace referencia a un
-        barrio seguro, con un ambiente sin contaminación, hogar cerca al transporte, donde se puede caminar y andar en
-        bicicleta y está cerca de servicios de salud, educación, cultura y recreación (Badland, 2014). En pocas
-        palabras, ¿qué tan chévere es vivir en esta ciudad?
+        <span id="etiqMovilidad" class="etiquetaDatos">Movilidad:</span> Un barrio habitable debería permitir e incluso
+        incentivar a que las personas se muevan en él de forma segura y eficiente. Si hay movilidad sostenible, y si se
+        invierte en ella, disminuyen los siniestros viales, la congestión, y los tiempos para movilizarse. También
+        debería aumentar la asequibilidad y la oferta de movilidad activa y transporte público. Esto mejora el acceso a
+        oportunidades y servicios básicos que ofrece la ciudad: empleo, educación, recreación, entre otras oportunidades
+        que promueven la equidad social.
       </p>
+
       <p class="infoIndicador">
-        <span id="etiqInfraestructura" class="etiquetaDatos">Infraestructura:</span> Se refiere a la provisión de
-        infraestructura pública y social para que las personas accedan a servicios esenciales y tengan espacios de
-        encuentro. Se mide a través de espacio público efectivo que tiene un carácter permanente, como zonas verdes,
-        parques, plazas y plazoletas. También a través de indicadores como la caminabilidad, la proximidad a estos
-        servicios esenciales, la seguridad y la comodidad para desplazarse en las vías.
+        <span id="etiqInfraestructura" class="etiquetaDatos">Infraestructura pública y social:</span> Por último, un
+        barrio habitable debería tener infraestructura pública y social de calidad, que promueva el acceso a
+        oportunidades y servicios básicos, y que disponga de espacios de encuentro para la comunidad. Un barrio con este
+        tipo de infraestructura debería tener espacios públicos permanentes y de calidad, zonas verdes, parques, plazas
+        y plazoletas. También debería incentivar la caminata, el uso de la bicicleta y ser un barrio de proximidad: un
+        barrio que tenga cerca las soluciones a las necesidades básicas de sus habitantes.
       </p>
-      <p class="infoIndicador">
-        <span id="etiqMovilidad" class="etiquetaDatos">Movilidad:</span> La movilidad se refiere a la capacidad de las
-        personas para ocupar, usar y desplazarse en el espacio público para acceder a bienes y servicios de la ciudad,
-        oportunidades de trabajo, educación, recreación y otros espacios de convivencia. La inversión en infraestructura
-        de transporte no solo facilita la movilidad, sino que también promueve la equidad social al proporcionar acceso
-        a oportunidades a todos los estratos poblacionales.
-      </p>
+
       <p class="infoIndicador">
         <span id="etiqProximidad" class="etiquetaDatos">Proximidad:</span> Se refiere a la capacidad que tiene una
         persona en un determinado lugar a acceder caminando a sus necesidades básicas y a trabajo, salud, educación y
         parques, cerca a su vivienda y sin tener que moverse en carro o en moto.
       </p>
       <p class="infoIndicador">
-        <span id="etiqSeguridad" class="etiquetaDatos">Seguridad:</span>La seguridad se refiere a la capacidad que
-        tienen las personas de usar el espacio público con tranquilidad, a diferentes horas del día y sin importar su
-        edad, género, raza y condición social.
+        <span id="etiqSeguridad" class="etiquetaDatos">Seguridad:</span>Un barrio habitable debería permitir que las
+        personas usen el espacio público con tranquilidad, sin miedo, a diferentes horas del día y sin importar su edad,
+        género, raza y condición social. Un barrio seguro, por ende habitable, debería minimizar el número de delitos,
+        tener CAIs, cámaras y una buena iluminación.
       </p>
     </div>
   </div>
@@ -80,5 +91,15 @@ function cerrar() {
 
 .etiquetaDatos {
   margin: 0;
+  font-weight: bold;
+}
+
+.resaltar {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.subrayar {
+  text-decoration: underline;
 }
 </style>

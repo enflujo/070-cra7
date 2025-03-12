@@ -1,6 +1,28 @@
 @use 'sass:color';
 @use './constantes' as *;
 
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background-color: #30cac073;
+  color: #130808;
+}
+
 h2,
 h3,
 h4,
@@ -9,13 +31,27 @@ h6,
 p,
 a {
   font-family: var(--fuentePrincipal);
+  letter-spacing: 1px;
+  line-height: 1.2;
 }
 h1 {
   font-family: var(--fuenteTitulo);
 }
 
+a,
+a:link,
+a:visited {
+  color: var(--verde);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--verdeFondo);
+  }
+}
+
 body {
-  background-color: var(--verdeFondo);
+  background-color: #fde8a7;
   margin: 0;
 }
 
@@ -40,11 +76,6 @@ body {
 
 .botonAbrir {
   cursor: pointer;
-  border-radius: 50%;
-  display: block;
-  padding: 0.5em;
-  text-align: center;
-  z-index: 10;
 }
 
 #cerrar {

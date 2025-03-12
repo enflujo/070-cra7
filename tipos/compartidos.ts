@@ -33,13 +33,7 @@ export interface Punto {
   slug: string;
   lat?: number;
   lon?: number;
-  habitabilidad?: number;
-  ambiente?: number;
-  infraestructura?: number;
-  movilidad?: number;
-  seguridad?: number;
-  proximidad?: number;
-  caminabilidad?: number;
+  ancho?: number;
   idRuido?: string;
   idAire?: string;
   txtPajaros?: string;
@@ -47,17 +41,11 @@ export interface Punto {
   podcast?: string;
   perfil?: string;
   ubicacionX?: number;
-  indices?: { indicador: string; valor: number }[];
+  indices: { indicador: LlavesIndices; valor: number }[];
+  habitabilidad: number;
 }
 
-export type LlavesDatosPunto =
-  | 'habitabilidad'
-  | 'ambiente'
-  | 'infraestructura'
-  | 'movilidad'
-  | 'seguridad'
-  | 'proximidad'
-  | 'caminabilidad';
+export type LlavesIndices = 'ambiente' | 'infraestructura' | 'movilidad' | 'seguridad' | 'proximidad' | 'caminabilidad';
 
 export type LlavesZats = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad' | 'proximidad';
 
