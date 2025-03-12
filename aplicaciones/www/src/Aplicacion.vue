@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
-import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos, numeroAleatorio } from './utilidades/ayudas';
+import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos } from './utilidades/ayudas';
 import slugificar from 'slug';
 import FichaLugar from './componentes/FichaLugar.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
@@ -15,11 +15,7 @@ import FichaIndicadores from './componentes/FichaIndicadores.vue';
 
 const puntos: Ref<Punto[]> = ref([]);
 /** Lugares que tienen ilustración */
-const lugares: Ref<Punto[]> = ref([]);
 const puntosUbicados: Ref<Punto[]> = ref([]);
-const perfiles: Ref<Punto[]> = ref([]);
-const arbolesElegidos: Ref<string[]> = ref([]);
-const alturaPajaros: Ref<number[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
@@ -38,16 +34,16 @@ function escalar() {
   alto.value = window.innerHeight;
 }
 
-const arboles: string[] = [
-  'arbol1',
-  'arbol2',
-  'arbol3',
-  'borrachero',
-  'palmera',
-  'yarumoamarillo',
-  'yarumorosa',
-  'yarumoverde',
-];
+// const arboles: string[] = [
+//   'arbol1',
+//   'arbol2',
+//   'arbol3',
+//   'borrachero',
+//   'palmera',
+//   'yarumoamarillo',
+//   'yarumorosa',
+//   'yarumoverde',
+// ];
 
 // Funciones para abrir y cerrar ficha de cada lugar
 function abrirFicha(id: string) {
