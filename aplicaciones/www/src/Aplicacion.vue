@@ -12,6 +12,7 @@ import SobreProyecto from './componentes/SobreProyecto.vue';
 import Podcast from './componentes/Podcast.vue';
 import type { Punto } from '@/tipos/compartidos';
 import FichaIndicadores from './componentes/FichaIndicadores.vue';
+import Animacion from './componentes/Animacion.vue';
 
 const puntos: Ref<Punto[]> = ref([]);
 /** Lugares que tienen ilustración */
@@ -175,6 +176,30 @@ onMounted(async () => {
     <SobreProyecto />
     <Podcast :cerrar="cerrarFicha" />
 
+    <div id="animacionesCalle" :style="{ top: `${dims.fondo}px` }">
+      <Animacion
+        ruta="septimazo-bici2.webp"
+        :puntoA="0"
+        :puntoB="anchoContenedor"
+        :y="-20"
+        :alto="50"
+        sentido="izquierda"
+        :invertir="true"
+        :velocidad="1500"
+      />
+
+      <Animacion
+        ruta="septimazo-bici.webp"
+        :puntoA="0"
+        :puntoB="anchoContenedor"
+        :y="dims.calle - 90"
+        :alto="70"
+        sentido="derecha"
+        :invertir="false"
+        :velocidad="1000"
+      />
+    </div>
+
     <div
       id="paisaje"
       :style="{
@@ -247,6 +272,12 @@ onMounted(async () => {
 <style lang="scss">
 @use 'scss/constantes' as *;
 @use 'scss/general' as *;
+
+#animacionesCalle {
+  position: absolute;
+  z-index: 9;
+  pointer-events: none;
+}
 
 #contenedorGeneral {
   display: flex;

@@ -137,6 +137,7 @@ function construirLineas() {
 
 #contenedorVis {
   position: relative;
+  z-index: 10;
 }
 
 #graficaIndices {
