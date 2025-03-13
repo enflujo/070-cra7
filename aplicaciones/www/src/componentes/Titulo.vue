@@ -84,6 +84,7 @@ onUnmounted(() => {
   width: 100vw;
   transition: all 0.5s;
   opacity: 0;
+  pointer-events: none;
 
   &.visible {
     opacity: 1;
