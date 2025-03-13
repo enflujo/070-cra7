@@ -1,51 +1,73 @@
 <script setup lang="ts">
-import { onMounted, type Ref, ref } from 'vue';
+import { onMounted, onUnmounted, type Ref, ref } from 'vue';
 
 const contenedorTitulo: Ref<HTMLDivElement | undefined> = ref();
+const tituloVisible = ref(true);
+const animaciones: any[] = []; // Blotter no tiene tipos.
+let reproduciendo = true;
+
+const eventoPosicionX = () => {
+  if (window.scrollX > 100) {
+    tituloVisible.value = false;
+    animaciones.forEach((animacion) => animacion.stop());
+    reproduciendo = false;
+  } else {
+    if (reproduciendo) return;
+    tituloVisible.value = true;
+    animaciones.forEach((animacion) => animacion.start());
+  }
+};
 
 onMounted(async () => {
   if (!contenedorTitulo.value) return;
 
   await document.fonts.ready;
+
   const configuracion = {
     family: 'Rubik Bubbles',
     size: screen.width * 0.1,
     fill: '#F3D78E',
   };
 
-  const texto = new Blotter.Text('SIETE', {
-    ...configuracion,
-    size: screen.width > 767 ? screen.width * 0.12 : screen.width * 0.27,
-  });
-
-  const punto = new Blotter.Text('.', configuracion);
-  const globo = new Blotter.Text('°', configuracion);
-
   const material = new Blotter.LiquidDistortMaterial();
   material.uniforms.uSpeed.value = 0.5;
   material.uniforms.uVolatility.value = 0.03;
 
-  const textico = new Blotter(material, { texts: texto });
-  const objeto = textico.forText(texto);
+  const sieteTexto = new Blotter.Text('SIETE', {
+    ...configuracion,
+    size: screen.width > 767 ? screen.width * 0.12 : screen.width * 0.27,
+  });
+  const siete = new Blotter(material, { texts: sieteTexto });
+  const sieteObj = siete.forText(sieteTexto);
 
-  const texticoP = new Blotter(material, { texts: punto });
-  const objetoP = texticoP.forText(punto);
+  const puntoTexto = new Blotter.Text('.', configuracion);
+  const punto = new Blotter(material, { texts: puntoTexto });
+  const puntoObj = punto.forText(puntoTexto);
 
-  const texticoG = new Blotter(material, { texts: globo });
-  const objetoG = texticoG.forText(globo);
+  const burbujaTexto = new Blotter.Text('°', configuracion);
+  const burbuja = new Blotter(material, { texts: burbujaTexto });
+  const burbujaObj = burbuja.forText(burbujaTexto);
 
-  objeto.domElement.className = 'enflujito';
-  objetoP.domElement.className = 'enflujito';
-  objetoG.domElement.className = 'enflujito';
+  sieteObj.domElement.className = 'enflujito';
+  puntoObj.domElement.className = 'enflujito';
+  burbujaObj.domElement.className = 'enflujito';
 
-  objeto.appendTo(contenedorTitulo.value);
-  objetoP.appendTo(contenedorTitulo.value);
-  objetoG.appendTo(contenedorTitulo.value);
+  sieteObj.appendTo(contenedorTitulo.value);
+  puntoObj.appendTo(contenedorTitulo.value);
+  burbujaObj.appendTo(contenedorTitulo.value);
+
+  animaciones.push(siete, punto, burbuja);
+
+  window.addEventListener('scroll', eventoPosicionX);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', eventoPosicionX);
 });
 </script>
 
 <template>
-  <div ref="contenedorTitulo" id="contenedorTitulo" class="sinEventos">
+  <div ref="contenedorTitulo" id="contenedorTitulo" :class="{ visible: tituloVisible, sinEvento: true }">
     <span class="texto">VEINTICUATRO</span>
   </div>
 </template>

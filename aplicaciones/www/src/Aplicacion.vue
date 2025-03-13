@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos } from './utilidades/ayudas';
 import slugificar from 'slug';
@@ -16,7 +16,6 @@ import Animacion from './componentes/Animacion.vue';
 
 const puntos: Ref<Punto[]> = ref([]);
 /** Lugares que tienen ilustración */
-const puntosUbicados: Ref<Punto[]> = ref([]);
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
@@ -24,50 +23,49 @@ const anchoContenedor = ref(0);
 const pasoX = 1500;
 const alto = ref(0);
 const dims = computed(() => ({ fondo: alto.value * 0.5, calle: alto.value * 0.11, vis: alto.value * 0.368 }));
-const tituloVisible = ref(true);
 
 const cerebro = usarCerebro();
-let distanciaTotal = 0;
 
-function escalar() {
+/** Eventos de la página general */
+const escalar = () => {
   alto.value = window.innerHeight;
-}
+};
 
-function abrirFicha(id: string) {
+const abrirFicha = (id: string) => {
   cerebro.lugarElegido = id;
   idPodcast.value = id;
   idLugar.value = id;
   cerebro.fichaVisible = true;
-}
+};
 
-function cerrarFicha() {
+const cerrarFicha = () => {
   idPodcast.value = null;
   idLugar.value = null;
   cerebro.fichaVisible = false;
   cerebro.indicadoresVisible = false;
-}
+};
 
 // Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
-function mostrarEtiquetaLugar(nombre: string) {
+const mostrarEtiquetaLugar = (nombre: string) => {
   if (!etiquetaIlustracion.value) return;
   etiquetaIlustracion.value.innerText = nombre;
   etiquetaIlustracion.value.classList.add('visible');
-}
+};
 
-function ocultarEtiquetaLugar() {
+const ocultarEtiquetaLugar = () => {
   if (!etiquetaIlustracion.value) return;
   etiquetaIlustracion.value.innerText = '';
   etiquetaIlustracion.value.classList.remove('visible');
-}
+};
 
-function actualizarPosicionEtiqueta(evento: MouseEvent) {
+const actualizarPosicionEtiqueta = (evento: MouseEvent) => {
   if (!etiquetaIlustracion.value) return;
   etiquetaIlustracion.value.style.left = `${evento.clientX + window.scrollX}px`;
   etiquetaIlustracion.value.style.top = `${evento.clientY}px`;
-}
+};
 
 // Cerrar ficha o info de proyecto al hacer clic afuera
-function clicFuera(evento: MouseEvent) {
+const clicFuera = (evento: MouseEvent) => {
   evento.stopPropagation();
 
   const elemento = evento.target as HTMLElement;
@@ -83,32 +81,17 @@ function clicFuera(evento: MouseEvent) {
   cerebro.fichaVisible = false;
   cerebro.podcastVisible = false;
   cerebro.indicadoresVisible = false;
-}
-
-async function cargarDatos() {
-  try {
-    //const ruido = await fetch('/datos/ruido.json').then((res) => res.json());
-    // console.log(ruido);
-  } catch (error) {
-    console.error('Error descargando datos del ruido', error);
-  }
-}
-
-cargarDatos().catch(console.error);
+};
 
 onMounted(async () => {
-  window.addEventListener('scroll', () => {
-    if (window.scrollX > 100) {
-      tituloVisible.value = false;
-    } else {
-      tituloVisible.value = true;
-    }
-  });
   try {
     const datosPuntos = await pedirDatos<Punto[]>('/datos/puntos.json');
 
     if (!datosPuntos) return;
+
     // Calcular lugar de cada punto por lugar
+    let distanciaTotal = 0;
+
     datosPuntos.forEach((punto, i) => {
       if (i === 0) {
         punto.ubicacionX = 0;
@@ -140,7 +123,6 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error descargando datos de los puntos', error);
   }
-  puntosUbicados.value = puntos.value;
 
   // Generar índices para árboles que van a pintarse y alturas para los pájaros
   // puntosUbicados.value.forEach((punto) => {
@@ -152,13 +134,18 @@ onMounted(async () => {
   // });
 
   escalar();
+
   window.addEventListener('resize', escalar);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', escalar);
 });
 </script>
 
 <template>
   <main id="contenedorGeneral" @click="clicFuera($event)" :style="{ width: `${anchoContenedor + 300}px` }">
-    <Titulo :class="{ visible: tituloVisible }" />
+    <Titulo />
     <SobreProyecto />
     <Podcast :cerrar="cerrarFicha" />
 
@@ -194,12 +181,7 @@ onMounted(async () => {
         backgroundSize: `${dims.fondo * 1.8}px`,
       }"
     >
-      <div
-        class="elementosPunto"
-        v-for="punto in puntosUbicados"
-        :key="punto.slug"
-        :style="{ left: `${punto.ubicacionX}%` }"
-      >
+      <div class="elementosPunto" v-for="punto in puntos" :key="punto.slug" :style="{ left: `${punto.ubicacionX}%` }">
         <img
           v-if="punto.ilustraciones && punto.ilustraciones.length"
           @mouseenter="mostrarEtiquetaLugar(punto.ilustraciones[0])"
