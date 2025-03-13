@@ -74,14 +74,20 @@ const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
   background-color: var(--menta);
   border-radius: 50%;
   cursor: pointer;
-  height: 1em;
+  height: 1.5em;
+  width: 1.5em;
   margin: 0;
-  padding: 0.5em;
-  position: absolute;
+  line-height: 1.5em;
+
   right: 1em;
-  text-align: center;
   top: 1em;
-  width: 1em;
+
+  position: absolute;
+
+  display: flex;
+  text-align: center;
+  justify-content: center;
+
   opacity: 0.7;
 
   &:hover {
@@ -112,6 +118,7 @@ const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
 
   &.visible {
     display: block;
+    height: 86vh;
   }
 }
 </style>
