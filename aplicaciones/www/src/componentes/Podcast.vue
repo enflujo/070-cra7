@@ -92,12 +92,9 @@ const podcasts: ElementoPaisaje[] = [
   width: 1.5em;
   margin: 0;
   line-height: 1.5em;
-
   right: 1em;
   top: 1em;
-
   position: absolute;
-
   display: flex;
   text-align: center;
   justify-content: center;
