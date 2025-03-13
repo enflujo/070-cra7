@@ -29,24 +29,10 @@ const tituloVisible = ref(true);
 const cerebro = usarCerebro();
 let distanciaTotal = 0;
 
-let ratonSobreLugar: string = '';
-
 function escalar() {
   alto.value = window.innerHeight;
 }
 
-// const arboles: string[] = [
-//   'arbol1',
-//   'arbol2',
-//   'arbol3',
-//   'borrachero',
-//   'palmera',
-//   'yarumoamarillo',
-//   'yarumorosa',
-//   'yarumoverde',
-// ];
-
-// Funciones para abrir y cerrar ficha de cada lugar
 function abrirFicha(id: string) {
   cerebro.lugarElegido = id;
   idPodcast.value = id;
@@ -62,22 +48,22 @@ function cerrarFicha() {
 }
 
 // Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
-function mostrarEtiquetaLugar(id: string) {
-  const punto = puntosUbicados.value.find((punto) => punto.id === id);
-
-  if (!punto?.ilustraciones || !etiquetaIlustracion.value) return;
-  ratonSobreLugar = punto?.ilustraciones[0];
-
-  etiquetaIlustracion.value.innerText = ratonSobreLugar.split('_').join(' ');
-  etiquetaIlustracion.value.style.left = `${punto.ubicacionX ? punto.ubicacionX + 10 : 0}vw`;
-  etiquetaIlustracion.value.style.bottom = `250px`;
-  etiquetaIlustracion.value.style.display = 'block';
+function mostrarEtiquetaLugar(nombre: string) {
+  if (!etiquetaIlustracion.value) return;
+  etiquetaIlustracion.value.innerText = nombre;
+  etiquetaIlustracion.value.classList.add('visible');
 }
 
 function ocultarEtiquetaLugar() {
   if (!etiquetaIlustracion.value) return;
   etiquetaIlustracion.value.innerText = '';
-  etiquetaIlustracion.value.style.display = 'none';
+  etiquetaIlustracion.value.classList.remove('visible');
+}
+
+function actualizarPosicionEtiqueta(evento: MouseEvent) {
+  if (!etiquetaIlustracion.value) return;
+  etiquetaIlustracion.value.style.left = `${evento.clientX + window.scrollX}px`;
+  etiquetaIlustracion.value.style.top = `${evento.clientY}px`;
 }
 
 // Cerrar ficha o info de proyecto al hacer clic afuera
@@ -216,12 +202,13 @@ onMounted(async () => {
       >
         <img
           v-if="punto.ilustraciones && punto.ilustraciones.length"
-          @mouseenter="mostrarEtiquetaLugar(punto.id)"
+          @mouseenter="mostrarEtiquetaLugar(punto.ilustraciones[0])"
           @mouseleave="ocultarEtiquetaLugar"
+          @mousemove="actualizarPosicionEtiqueta"
           class="ilustracion"
           :class="slugificar(punto.ilustraciones[0])"
           :src="`${base}/imagenes/lugares/${punto.ilustraciones}.webp`"
-          :alt="`${punto.ilustraciones}`"
+          :alt="`Ilustración de ${punto.ilustraciones}`"
         />
 
         <img
@@ -325,6 +312,7 @@ onMounted(async () => {
       background-color: var(--amarillo);
       height: 30px;
     }
+
     50% {
       background-color: var(--rosa);
       height: 40px;
@@ -450,18 +438,19 @@ onMounted(async () => {
 .etiqueta {
   font-family: var(--fuentePrincipal);
   position: absolute;
-  height: 1em;
   font-size: 1em;
   text-align: center;
-  background-color: #f5d68ed7;
+  background-color: #f58ef5d7;
   border-radius: 5px;
   padding: 0.5em;
-}
-
-.etiquetaIlustracion {
-  bottom: 5vh;
-  height: auto;
+  z-index: 99;
+  transform: translate(-50%, -150%);
+  pointer-events: none;
   display: none;
+
+  &.visible {
+    display: block;
+  }
 }
 
 .icono {
