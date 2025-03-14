@@ -2,6 +2,7 @@ import procesarAire from './procesarAire';
 import procesarDatosA from './procesarDatosA';
 import procesarElementosLinea from './procesarElementosLinea';
 import procesarRuido from './procesarRuido';
+import procesarViviendaEmpleo from './procesarViviendaEmpleo';
 import procesarZat from './procesarZat';
 import { guardarJSON } from './utilidades/ayudas';
 interface BaseEstructura {
@@ -14,6 +15,7 @@ interface Estructuras {
   linea: BaseEstructura;
   aire: BaseEstructura;
   ruido: BaseEstructura & { llaves: string[] };
+  viviendaEmpleo: BaseEstructura;
 }
 export const estructuras: Estructuras = {
   /** Esta tabla nos define:
@@ -105,6 +107,10 @@ export const estructuras: Estructuras = {
       'Latitud_Y',
     ],
   },
+  viviendaEmpleo: {
+    archivo: 'Vivienda y Empleo 070',
+    nombreHoja: 'Hoja1',
+  },
 };
 
 async function inicio(): Promise<void> {
@@ -119,6 +125,7 @@ async function inicio(): Promise<void> {
   const puntos = await procesarDatosA();
   await procesarZat(puntos);
   await procesarElementosLinea(puntos, datosAire);
+  await procesarViviendaEmpleo(puntos);
   guardarJSON(puntos, 'puntos');
 }
 

@@ -45,7 +45,14 @@ export interface Punto {
   habitabilidad: number;
 }
 
-export type LlavesIndices = 'ambiente' | 'infraestructura' | 'movilidad' | 'seguridad' | 'proximidad' | 'caminabilidad';
+export type LlavesIndices =
+  | 'ambiente'
+  | 'infraestructura'
+  | 'movilidad'
+  | 'seguridad'
+  | 'proximidad'
+  | 'caminabilidad'
+  | 'viviendaEmpleo';
 
 export type LlavesZats = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad' | 'proximidad';
 

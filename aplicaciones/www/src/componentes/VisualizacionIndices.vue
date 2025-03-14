@@ -13,6 +13,7 @@ const nombresIndices = {
   seguridad: 'Seguridad',
   proximidad: 'Proximidad',
   caminabilidad: 'Caminabilidad',
+  viviendaEmpleo: 'Vivienda y empleo',
 };
 const infoPunto: Ref<Punto | null> = ref(null);
 const posInfo = ref({ x: 0, y: 0 });
@@ -24,6 +25,7 @@ const indices: Ref<{ indicador: LlavesIndices; linea: string }[]> = ref([
   { indicador: 'seguridad', linea: '' },
   { indicador: 'proximidad', linea: '' },
   { indicador: 'caminabilidad', linea: '' },
+  { indicador: 'viviendaEmpleo', linea: '' },
 ]);
 
 const coloresHabitabilidad = { positivo: '#00FF00', negativo: '#FF0000' };
@@ -114,11 +116,12 @@ function construirLineas() {
     <div id="contenedorEtiquetas">
       <div id="etiquetas" @click="cerebro.indicadoresVisible = true">
         <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
-        <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
-        <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
         <p class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
-        <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
+        <p class="etiquetaDatos" id="etiqViviendaEmpleo">Vivienda y Empleo</p>
         <p class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
+        <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
+        <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
+        <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
       </div>
     </div>
   </div>
@@ -175,13 +178,18 @@ function construirLineas() {
   &.caminabilidad {
     stroke: var(--colorCaminabilidad);
   }
+
+  &.viviendaEmpleo {
+    stroke: var(--colorViviendaEmpleo);
+  }
 }
 
 #contenedorEtiquetas {
-  bottom: 20px;
-  width: 100vw;
-  padding: 0em 1em;
+  bottom: 10px;
+  left: 10px;
+  padding: 0.4em;
   position: fixed;
+  background-color: rgba(255, 255, 255, 0.2);
 
   #titulo {
     margin: 0 3em 0.5em 0;
@@ -225,8 +233,13 @@ function construirLineas() {
 #etiqProximidad {
   border-color: var(--colorProximidad);
 }
+
 #etiqCaminabilidad {
   border-color: var(--colorCaminabilidad);
+}
+
+#etiqViviendaEmpleo {
+  border-color: var(--colorViviendaEmpleo);
 }
 
 .grupoIndicadores {
@@ -270,6 +283,10 @@ function construirLineas() {
   &.caminabilidad {
     fill: var(--colorCaminabilidad);
   }
+
+  &.viviendaEmpleo {
+    fill: var(--colorViviendaEmpleo);
+  }
 }
 
 .zona {
@@ -310,7 +327,7 @@ function construirLineas() {
   min-width: fit-content;
   width: 160px;
   border: 2px black solid;
-  background-color: var(--piel);
+  background-color: var(--menta);
   padding: 0.5em 1em;
   font-size: 0.8em;
   z-index: 10;
@@ -338,11 +355,12 @@ function construirLineas() {
   }
 
   .circuloEtiqueta {
-    height: 6px;
-    width: 6px;
+    height: 9px;
+    width: 9px;
     margin-right: 0.5em;
     border-radius: 50%;
     background-color: black;
+    box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.3);
 
     &.ambiente {
       background-color: var(--colorAmbiente);
@@ -366,6 +384,10 @@ function construirLineas() {
 
     &.seguridad {
       background-color: var(--colorSeguridad);
+    }
+
+    &.viviendaEmpleo {
+      background-color: var(--colorViviendaEmpleo);
     }
   }
 }

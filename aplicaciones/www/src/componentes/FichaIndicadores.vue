@@ -37,6 +37,13 @@ function cerrar() {
       </p>
 
       <p class="infoIndicador">
+        <span id="etiqAccesibilidad" class="etiquetaDatos">Vivienda y empleo:</span> Un barrio habitable debería
+        facilitar el acceso a las oportunidades de vivienda y empleo, mientras mejora sus condiciones físicas. Esto
+        incluye minimizar las viviendas sin servicios públicos, tener en cuenta el valor del suelo, el nivel educativo
+        de la población y su densidad poblacional versus el acceso a empleo en la misma zona.
+      </p>
+
+      <p class="infoIndicador">
         <span id="etiqCaminabilidad" class="etiquetaDatos">Caminabilidad:</span> Se refiere a la capacidad que tienen
         las personas de moverse caminando por la infraestructura pública.
       </p>
