@@ -62,7 +62,7 @@ const podcasts: ElementoPaisaje[] = [
   </div>
 
   <div class="ficha fichaPodcast" v-if="cerebro.podcastVisible && podcastActual">
-    <span id="cerrar" @click="cerrar">X</span>
+    <span class="cerrar" @click="cerrar">X</span>
 
     <div class="tituloContenido">
       <img class="iconoPodcast" :src="`${base}/imagenes/icono_podcast.png`" />
@@ -84,28 +84,6 @@ const podcasts: ElementoPaisaje[] = [
 </template>
 
 <style lang="scss" scoped>
-#cerrar {
-  background-color: var(--menta);
-  border-radius: 50%;
-  cursor: pointer;
-  height: 1.5em;
-  width: 1.5em;
-  margin: 0;
-  line-height: 1.5em;
-  right: 1em;
-  top: 1em;
-  position: absolute;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-
-  opacity: 0.7;
-
-  &:hover {
-    opacity: 1;
-  }
-}
-
 .tituloBoton {
   background-color: var(--lila);
   padding: 0.5em 0.8em;
@@ -113,10 +91,6 @@ const podcasts: ElementoPaisaje[] = [
   font-size: 1.1em;
   font-weight: normal;
   cursor: pointer;
-}
-
-.fichaPodcast {
-  height: 86vh;
 }
 
 .tituloContenido {

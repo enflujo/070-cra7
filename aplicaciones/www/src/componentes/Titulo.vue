@@ -80,7 +80,7 @@ onUnmounted(() => {
   position: absolute;
   text-align: center;
   top: 0;
-  z-index: 9;
+  z-index: 99;
   width: 100vw;
   transition: all 0.5s;
   opacity: 0;

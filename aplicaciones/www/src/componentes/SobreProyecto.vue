@@ -9,7 +9,7 @@ const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
   <span ref="botonInformacion" id="botonInformacion" class="botonAbrir" @click="controlInfo">Sobre el proyecto</span>
 
   <div class="ficha infoProyecto" :class="{ visible: cerebro.infoVisible }">
-    <div id="cerrar" :onclick="controlInfo">X</div>
+    <div class="cerrar" :onclick="controlInfo">X</div>
     <h2>VEINTICUATRO / SIETE</h2>
     <p>
       Han pasado más de 25 años y Bogotá todavía no se pone de acuerdo en cómo transformar la carrera Séptima, la
@@ -70,31 +70,6 @@ const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
 </template>
 
 <style lang="scss" scoped>
-#cerrar {
-  background-color: var(--menta);
-  border-radius: 50%;
-  cursor: pointer;
-  height: 1.5em;
-  width: 1.5em;
-  margin: 0;
-  line-height: 1.5em;
-
-  right: 1em;
-  top: 1em;
-
-  position: absolute;
-
-  display: flex;
-  text-align: center;
-  justify-content: center;
-
-  opacity: 0.7;
-
-  &:hover {
-    opacity: 1;
-  }
-}
-
 #botonInformacion {
   display: block;
   padding: 0.8em;

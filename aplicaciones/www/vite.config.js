@@ -7,7 +7,7 @@ import vue from '@vitejs/plugin-vue';
 
 /** @type {import("vite").UserConfig} */
 export default defineConfig({
-  base: '/070-cra7/',
+  base: '/especiales/veinticuatro-siete/',
   plugins: [vue()],
   clearScreen: false,
   build: {

@@ -1,3 +1,5 @@
+import { Perfil } from '@/tipos';
+
 export type Medicion = number | null;
 
 export type Ruido = [
@@ -39,10 +41,13 @@ export interface Punto {
   txtPajaros?: string;
   ilustraciones?: string[];
   podcast?: string;
-  perfil?: string;
+  perfil?: Perfil;
   ubicacionX?: number;
   indices: { indicador: LlavesIndices; valor: number }[];
   habitabilidad: number;
+  vegetacion?: string[];
+  pajaros?: string[];
+  malAire?: string[];
 }
 
 export type LlavesIndices =

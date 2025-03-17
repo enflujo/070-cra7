@@ -58,7 +58,7 @@ body {
 // Estilo fichas
 .ficha {
   border: 1px solid black;
-  height: 75vh;
+  height: 86vh;
   overflow: auto;
   background-color: var(--lila);
   position: fixed;
@@ -71,6 +71,28 @@ body {
   h2 {
     font-size: 1.2em;
     letter-spacing: -0.02em;
+  }
+
+  .cerrar {
+    background-color: var(--menta);
+    border-radius: 50%;
+    cursor: pointer;
+    height: 1.5em;
+    width: 1.5em;
+    margin: 0;
+    line-height: 1.5em;
+    right: 1em;
+    top: 1em;
+    position: absolute;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 
@@ -94,14 +116,4 @@ body {
 }
 
 @media screen and (min-width: $minTablet) {
-  .ficha {
-    width: 35vw;
-    height: 65vh;
-    padding: 5em 6em;
-
-    h2 {
-      font-size: 1.8em;
-      letter-spacing: 0em;
-    }
-  }
 }

@@ -39,24 +39,11 @@ jobs:
           yarn install --immutable
           yarn build
 
-      - name: 🐉 Configurar Servidor
-        id: pages
-        uses: actions/configure-pages@v5
-
-      - name: 🦥 Subir archivos exportados
-        uses: actions/upload-pages-artifact@v3
+      - name: 🦅 Enviar por FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
-          path: ${{ env.RUTA }}/publico
-
-  deploy:
-    name: 🦅 Despliegue a servidores de Github
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 🕊️ Mandar archivos transpilados al servidor de Github Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          server: ${{ secrets.DOMINIO_070 }}
+          username: ${{ secrets.USUARIO_070 }}
+          server-dir: especiales/veinticuatro-siete/
+          local-dir: ./aplicaciones/www/publico/
+          password: ${{ secrets.CLAVE_070 }}

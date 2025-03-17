@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import type { Ref } from 'vue';
-import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos } from './utilidades/ayudas';
+import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos, numeroAleatorio } from './utilidades/ayudas';
 import slugificar from 'slug';
-import FichaLugar from './componentes/FichaLugar.vue';
+import FichaPerfil from './componentes/FichaPerfil.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
-import { usarCerebro } from './utilidades/cerebro';
+import { perfiles, usarCerebro } from './utilidades/cerebro';
 import Titulo from './componentes/Titulo.vue';
 import SobreProyecto from './componentes/SobreProyecto.vue';
 import Podcast from './componentes/Podcast.vue';
 import type { Punto } from '@/tipos/compartidos';
 import FichaIndicadores from './componentes/FichaIndicadores.vue';
 import Animacion from './componentes/Animacion.vue';
+import type { Perfil } from './tipos';
 
 const puntos: Ref<Punto[]> = ref([]);
 /** Lugares que tienen ilustración */
@@ -23,6 +24,39 @@ const anchoContenedor = ref(0);
 const pasoX = 1500;
 const alto = ref(0);
 const dims = computed(() => ({ fondo: alto.value * 0.5, calle: alto.value * 0.11, vis: alto.value * 0.368 }));
+const xMinCarros = computed(() =>
+  puntos.value.length ? ((puntos.value[2].ubicacionX || 0) / 100) * anchoContenedor.value : 0
+);
+const perfilElegido: Ref<Perfil | null> = ref(null);
+
+const arboles = [
+  'septimazo-arbol.webp',
+  'septimazo-arbol2.webp',
+  'septimazo-arbol3.webp',
+  'septimazo-borrachero.webp',
+  'septimazo-palmera.webp',
+  'septimazo-yarumoamarillo.webp',
+  'septimazo-yarumorosa.webp',
+  'septimazo-yarumoverde.webp',
+].map((ruta) => `${base}/imagenes/vegetacion/${ruta}`);
+
+const escalaLogaritmica = (valor: number, min: number, max: number, minEscala: number, maxEscala: number): number => {
+  const factor = (valor - min) / (max - min);
+  return Math.round(minEscala + (maxEscala - minEscala) * factor);
+};
+
+const cantidadArboles = (valor: number): string[] => {
+  const valorMin = 0.6;
+  if (valor <= valorMin) return [];
+  const cantidad = escalaLogaritmica(valor, 0.6, 1, 2, 30);
+  const arbolesElegidos: string[] = [];
+
+  for (let i = 0; i < cantidad; i++) {
+    arbolesElegidos.push(arboles[numeroAleatorio(arboles.length - 1)]);
+  }
+
+  return arbolesElegidos;
+};
 
 const cerebro = usarCerebro();
 
@@ -31,11 +65,8 @@ const escalar = () => {
   alto.value = window.innerHeight;
 };
 
-const abrirFicha = (id: string) => {
-  cerebro.lugarElegido = id;
-  idPodcast.value = id;
-  idLugar.value = id;
-  cerebro.fichaVisible = true;
+const abrirFichaPerfil = (perfil: Perfil) => {
+  perfilElegido.value = perfil;
 };
 
 const cerrarFicha = () => {
@@ -43,6 +74,7 @@ const cerrarFicha = () => {
   idLugar.value = null;
   cerebro.fichaVisible = false;
   cerebro.indicadoresVisible = false;
+  perfilElegido.value = null;
 };
 
 // Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
@@ -93,9 +125,10 @@ onMounted(async () => {
     let distanciaTotal = 0;
 
     datosPuntos.forEach((punto, i) => {
-      if (i === 0) {
-        punto.ubicacionX = 0;
-      } else {
+      punto.ubicacionX = 0;
+      punto.malAire = [];
+
+      if (i > 0) {
         const puntoAnterior = datosPuntos[i - 1];
         if (puntoAnterior.lat && puntoAnterior.lon && punto.lat && punto.lon) {
           const distanciaParcial = distanciaEntreCoordenadas(
@@ -114,24 +147,40 @@ onMounted(async () => {
           }
         }
       }
+
+      const indiceAmbiente = punto.indices.find((obj) => obj.indicador === 'ambiente');
+      punto.vegetacion = cantidadArboles(indiceAmbiente?.valor || 0);
+
+      if (indiceAmbiente && indiceAmbiente.valor > 0.75) {
+        punto.pajaros = [];
+        for (let i = 0; i < escalaLogaritmica(indiceAmbiente.valor, 0.75, 1, 1, 20); i++) {
+          punto.pajaros.push(`${base}/imagenes/vegetacion/pajaros.webp`);
+        }
+      }
+
+      const malAire = ['Calle 76', 'Calle 84', 'Calle 170', 'Calle 180', 'Calle 189'];
+      const imgsRuido = ['ruido-septimazo.webp', 'ruido2-septimazo.webp', 'ruido3-septimazo.webp'];
+
+      if (malAire.includes(punto.nombre)) {
+        for (let i = 0; i < 15; i++) {
+          punto.malAire.push(`${base}/imagenes/fondos/${imgsRuido[numeroAleatorio(imgsRuido.length - 1)]}`);
+        }
+      }
+
+      const perfil = perfiles.find((perfil) => perfil.slug === punto.slug);
+
+      if (perfil) {
+        punto.perfil = perfil;
+      } else {
+        punto.perfil = undefined;
+      }
     });
 
     puntos.value = datosPuntos;
     anchoContenedor.value = datosPuntos.length * pasoX;
-    // lugares.value = datosPuntos.filter((punto) => punto.ilustraciones && punto.ilustraciones.length);
-    // perfiles.value = datosPuntos.filter((punto) => !!punto.perfil);
   } catch (error) {
     console.error('Error descargando datos de los puntos', error);
   }
-
-  // Generar índices para árboles que van a pintarse y alturas para los pájaros
-  // puntosUbicados.value.forEach((punto) => {
-  //   if (!punto.ambiente) return;
-  //   let arbol = arboles[numeroAleatorio(arboles.length)];
-  //   let altura = 210 + numeroAleatorio(60);
-  //   arbolesElegidos.value.push(arbol);
-  //   alturaPajaros.value.push(altura);
-  // });
 
   escalar();
 
@@ -152,6 +201,7 @@ onUnmounted(() => {
     <div id="animacionesCalle" :style="{ top: `${dims.fondo}px` }">
       <Animacion
         ruta="septimazo-bici2.webp"
+        idAnim="bici1"
         :puntoA="0"
         :puntoB="anchoContenedor"
         :y="-20"
@@ -163,6 +213,7 @@ onUnmounted(() => {
 
       <Animacion
         ruta="septimazo-bici.webp"
+        idAnim="bici2"
         :puntoA="0"
         :puntoB="anchoContenedor"
         :y="dims.calle - 90"
@@ -170,6 +221,66 @@ onUnmounted(() => {
         sentido="derecha"
         :invertir="false"
         :velocidad="1000"
+      />
+
+      <Animacion
+        ruta="septimazo-ambulancia.webp"
+        idAnim="ambulancia"
+        :puntoA="anchoContenedor - 300"
+        :puntoB="xMinCarros"
+        :y="dims.calle - 100"
+        :alto="50"
+        sentido="izquierda"
+        :invertir="false"
+        :velocidad="300"
+      />
+
+      <Animacion
+        ruta="septimazo-basura.webp"
+        idAnim="basura"
+        :puntoA="anchoContenedor - 300"
+        :puntoB="xMinCarros"
+        :y="dims.calle - 150"
+        :alto="100"
+        sentido="izquierda"
+        :invertir="false"
+        :velocidad="500"
+      />
+
+      <Animacion
+        ruta="septimazo-bus1.webp"
+        idAnim="bus1"
+        :puntoA="anchoContenedor - 100"
+        :puntoB="xMinCarros"
+        :y="dims.calle - 180"
+        :alto="150"
+        sentido="izquierda"
+        :invertir="false"
+        :velocidad="400"
+      />
+
+      <Animacion
+        ruta="septimazo-bus2.webp"
+        idAnim="bus2"
+        :puntoA="xMinCarros"
+        :puntoB="anchoContenedor - 100"
+        :y="dims.calle - 150"
+        :alto="150"
+        sentido="izquierda"
+        :invertir="true"
+        :velocidad="400"
+      />
+
+      <Animacion
+        ruta="septimazo-bus3.webp"
+        idAnim="bus3"
+        :puntoA="xMinCarros * 2"
+        :puntoB="anchoContenedor - 100"
+        :y="dims.calle - 150"
+        :alto="150"
+        sentido="izquierda"
+        :invertir="true"
+        :velocidad="300"
       />
     </div>
 
@@ -181,7 +292,12 @@ onUnmounted(() => {
         backgroundSize: `${dims.fondo * 1.8}px`,
       }"
     >
-      <div class="elementosPunto" v-for="punto in puntos" :key="punto.slug" :style="{ left: `${punto.ubicacionX}%` }">
+      <div
+        class="elementosPunto"
+        v-for="punto in puntos"
+        :key="punto.slug"
+        :style="{ left: `${punto.ubicacionX}%`, width: `${punto.ancho}%` }"
+      >
         <img
           v-if="punto.ilustraciones && punto.ilustraciones.length"
           @mouseenter="mostrarEtiquetaLugar(punto.ilustraciones[0])"
@@ -193,37 +309,61 @@ onUnmounted(() => {
           :alt="`Ilustración de ${punto.ilustraciones}`"
         />
 
-        <img
+        <div class="perfil" v-if="punto.perfil" @click="abrirFichaPerfil(punto.perfil)">
+          <img class="iconoPerfil" :src="`${base}/imagenes/icono_perfil.png`" alt="ícono abrir perfil" />
+          <p>{{ punto.perfil.nombre }}</p>
+        </div>
+
+        <!-- <img
           v-if="punto.perfil"
-          @click="abrirFicha(punto.slug)"
+          @click="abrirFichaPerfil(punto.slug)"
           class="icono iconoPerfil botonAbrir"
           :src="`${base}/imagenes/icono_perfil.png`"
           alt="ícono abrir perfil"
-        />
+        /> -->
 
-        <!--árboles: pintar uno si el valor de ambiente del punto >= 0.7 y dos si es > 0.8 -->
-        <!-- <img
-            v-if="punto.ambiente ? punto.ambiente >= 0.7 : 0"
+        <div class="vegetacion">
+          <img
+            v-for="arbol in punto.vegetacion"
             class="arbol sinEventos"
-            :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
+            :src="arbol"
             alt="árbol"
-          /> -->
+            :style="{
+              left: `${numeroAleatorio(100)}%`,
+              bottom: `${Math.random() * 5}%`,
+              scale: `${0.3 + (1.5 - 0.3) * Math.random()}`,
+            }"
+          />
 
-        <!-- <img
-            v-if="punto.ambiente ? punto.ambiente > 0.8 : 0"
-            class="arbol sinEventos"
-            :src="`${base}/imagenes/vegetacion/${arbolesElegidos[i]}.png`"
-            alt="árbol"
-          /> -->
+          <img
+            v-if="punto.pajaros"
+            v-for="pajaro in punto.pajaros"
+            class="icono iconoPajaro"
+            :src="pajaro"
+            alt="pájaro"
+            :style="{
+              left: `${numeroAleatorio(100)}%`,
+              top: `${Math.random() * 20}%`,
+              scale: `${1 + (1.5 - 1) * Math.random()}`,
+              transform: `scale(${numeroAleatorio(2) === 1 ? -1 : 1}, 1)`,
+            }"
+          />
+        </div>
 
-        <!-- <img
-            v-if="punto.txtPajaros"
-            @click="punto.slug === 'calle-32' ? abrirFicha(punto.slug) : ''"
-            class="icono iconoPajaro sinEventos"
-            :src="`${base}/imagenes/icono_pajaro.png`"
-            alt="ícono abrir perfil"
-            :style="`bottom:${alturaPajaros[i]}px`"
-          /> -->
+        <div v-if="punto.malAire" class="malAire">
+          <img
+            v-for="humo in punto.malAire"
+            class="humo"
+            :src="humo"
+            alt="Humo que representa contaminación del aire"
+            :style="{
+              left: `${numeroAleatorio(100)}%`,
+              top: `${Math.random() * 10}%`,
+              scale: `${0.2 + (1 - 0.2) * Math.random()}`,
+              transform: `scale(${numeroAleatorio(2) === 1 ? -1 : 1}, 1)`,
+            }"
+          />
+        </div>
       </div>
 
       <div ref="etiquetaIlustracion" class="etiqueta etiquetaIlustracion sinEventos"></div>
@@ -232,9 +372,8 @@ onUnmounted(() => {
     <div id="fondoCalle" :style="{ width: `${anchoContenedor}px`, height: `${dims.calle}px` }"></div>
 
     <VisualizacionIndices :puntos="puntos" :ancho="anchoContenedor" :alto="dims.vis" :pasoX="pasoX" />
-
     <FichaIndicadores :cerrar="cerrarFicha" />
-    <FichaLugar v-if="cerebro.fichaVisible" :id="idLugar ? idLugar : ''" :cerrar="cerrarFicha" />
+    <FichaPerfil v-if="perfilElegido" :perfil="perfilElegido" :cerrar="cerrarFicha" />
   </main>
 </template>
 
@@ -242,6 +381,31 @@ onUnmounted(() => {
 @use 'scss/constantes' as *;
 @use 'scss/general' as *;
 
+.perfil {
+  background-color: rgba(255, 255, 255, 0.4);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  p {
+    font-size: 1.3em;
+    font-weight: bold;
+    background-color: var(--lila);
+  }
+
+  &::before {
+    content: '▶';
+    font-size: 4em;
+    flex-shrink: 0;
+    color: var(--morado);
+  }
+}
 #animacionesCalle {
   position: absolute;
   z-index: 9;
@@ -409,11 +573,60 @@ onUnmounted(() => {
     transform: translate(0, 1%) rotate(-1deg);
   }
 }
-.arbol {
+
+.vegetacion {
   position: absolute;
-  bottom: 0px;
-  height: 15vh;
-  z-index: 8;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+
+  .arbol {
+    position: absolute;
+    bottom: 0;
+    height: 150px;
+    z-index: 1;
+    pointer-events: none;
+    transform-origin: bottom center;
+  }
+}
+
+.malAire {
+  opacity: 0.6;
+  animation: vibrarOpacidad 1s infinite;
+
+  .humo {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    transform-origin: bottom center;
+    animation: moverHumo 3s infinite linear;
+  }
+}
+
+@keyframes vibrarOpacidad {
+  0% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes moverHumo {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
 }
 
 // Etiqueta del lugar ilustrado

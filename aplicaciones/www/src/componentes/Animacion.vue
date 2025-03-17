@@ -11,18 +11,16 @@ const props = defineProps<{
   sentido: 'derecha' | 'izquierda';
   invertir: boolean;
   velocidad: number;
+  idAnim: string;
 }>();
 
 const animacion = ref<HTMLImageElement | null>(null);
-
-// Función para generar nombres únicos de animación
-const nombreAnimacion = (ruta: string) => `animacion-${ruta.replace(/\W/g, '')}`;
 
 const aplicarAnimacion = () => {
   const estilos = document.createElement('style');
   document.head.appendChild(estilos);
 
-  const nombre = nombreAnimacion(props.ruta);
+  const nombre = props.idAnim;
 
   const secuencia = `
     @keyframes ${nombre} {
