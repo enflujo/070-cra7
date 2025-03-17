@@ -6,7 +6,7 @@ import slugificar from 'slug';
 import FichaPerfil from './componentes/FichaPerfil.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
-import { perfiles, usarCerebro } from './utilidades/cerebro';
+import { perfiles, textos, usarCerebro } from './utilidades/cerebro';
 import Titulo from './componentes/Titulo.vue';
 import SobreProyecto from './componentes/SobreProyecto.vue';
 import Podcast from './componentes/Podcast.vue';
@@ -173,6 +173,12 @@ onMounted(async () => {
         punto.perfil = perfil;
       } else {
         punto.perfil = undefined;
+      }
+
+      const textosPunto = textos[punto.slug];
+
+      if (textosPunto) {
+        punto.textos = textosPunto.textos;
       }
     });
 

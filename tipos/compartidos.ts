@@ -29,6 +29,11 @@ export interface DatosRuido {
   };
 }
 
+export interface Texto {
+  titulo: string;
+  texto: string;
+}
+
 export interface Punto {
   id: string;
   nombre: string;
@@ -48,6 +53,7 @@ export interface Punto {
   vegetacion?: string[];
   pajaros?: string[];
   malAire?: string[];
+  textos?: Texto[];
 }
 
 export type LlavesIndices =

@@ -127,11 +127,20 @@ function construirLineas() {
   </div>
 
   <div id="info" :class="{ visible: infoPunto }" :style="{ top: `${posInfo.y}px`, left: `${posInfo.x}px` }">
-    <h4>{{ infoPunto?.nombre }}</h4>
-    <p v-for="indice in infoPunto?.indices" :class="`indiceInfo ${indice.indicador}`">
-      <span :class="`circuloEtiqueta ${indice.indicador}`"></span>
-      {{ nombresIndices[indice.indicador] }}: {{ indice.valor }}
-    </p>
+    <div class="indicadores">
+      <h4>{{ infoPunto?.nombre }}</h4>
+      <p v-for="indice in infoPunto?.indices" :class="`indiceInfo ${indice.indicador}`">
+        <span :class="`circuloEtiqueta ${indice.indicador}`"></span>
+        {{ nombresIndices[indice.indicador] }}: {{ indice.valor }}
+      </p>
+    </div>
+
+    <div class="textos" v-if="infoPunto?.textos">
+      <div class="texto" v-for="texto in infoPunto.textos">
+        <h4>{{ texto.titulo }}</h4>
+        <p>{{ texto.texto }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -332,11 +341,18 @@ function construirLineas() {
   font-size: 0.8em;
   z-index: 10;
   display: none;
-  transform: translate(10px, -50%);
+  transform: translate(10px, -100%);
   pointer-events: none;
 
   &.visible {
-    display: block;
+    display: flex;
+  }
+
+  .texto {
+    width: 300px;
+    font-size: 1em;
+    border: 1px black dotted;
+    padding: 0.5em;
   }
 
   p,
