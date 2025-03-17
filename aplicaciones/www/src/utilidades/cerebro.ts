@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { Cerebro, ElementoPaisaje, Perfil } from '../tipos';
+import type { Cerebro, Perfil } from '../tipos';
 
 // Guargar qué lugar está elegido para que quede disponible para todos los componentes
 export const usarCerebro = defineStore('cerebro', {
