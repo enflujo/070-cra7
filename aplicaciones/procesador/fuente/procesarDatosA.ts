@@ -120,10 +120,6 @@ export default async (): Promise<Punto[]> => {
             procesarCeldaTipoA('seguridad', obj.raw);
             break;
 
-          case 'Caminabilidad':
-            procesarCeldaTipoA('caminabilidad', obj.raw);
-            break;
-
           default:
             break;
         }

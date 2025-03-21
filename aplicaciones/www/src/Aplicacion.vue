@@ -10,10 +10,9 @@ import { perfiles, textos, usarCerebro } from './utilidades/cerebro';
 import Titulo from './componentes/Titulo.vue';
 import SobreProyecto from './componentes/SobreProyecto.vue';
 import Podcast from './componentes/Podcast.vue';
-import type { Punto } from '@/tipos/compartidos';
+import type { Perfil, Punto } from '@/tipos/compartidos';
 import FichaIndicadores from './componentes/FichaIndicadores.vue';
 import Animacion from './componentes/Animacion.vue';
-import type { Perfil } from './tipos';
 
 const puntos: Ref<Punto[]> = ref([]);
 /** Lugares que tienen ilustración */
@@ -319,14 +318,6 @@ onUnmounted(() => {
           <img class="iconoPerfil" :src="`${base}/imagenes/icono_perfil.png`" alt="ícono abrir perfil" />
           <p>{{ punto.perfil.nombre }}</p>
         </div>
-
-        <!-- <img
-          v-if="punto.perfil"
-          @click="abrirFichaPerfil(punto.slug)"
-          class="icono iconoPerfil botonAbrir"
-          :src="`${base}/imagenes/icono_perfil.png`"
-          alt="ícono abrir perfil"
-        /> -->
 
         <div class="vegetacion">
           <img

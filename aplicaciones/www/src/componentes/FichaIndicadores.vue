@@ -71,17 +71,6 @@ function cerrar() {
         y plazoletas. También debería incentivar la caminata, el uso de la bicicleta y ser un barrio de proximidad: un
         barrio que tenga cerca las soluciones a las necesidades básicas de sus habitantes.
       </p>
-
-      <p class="infoIndicador">
-        <span id="etiqCaminabilidad" class="etiquetaDatos">Caminabilidad:</span> Se refiere a la capacidad que tienen
-        las personas de moverse caminando por la infraestructura pública.
-      </p>
-
-      <p class="infoIndicador">
-        <span id="etiqProximidad" class="etiquetaDatos">Proximidad:</span> Se refiere a la capacidad que tiene una
-        persona en un determinado lugar a acceder caminando a sus necesidades básicas y a trabajo, salud, educación y
-        parques, cerca a su vivienda y sin tener que moverse en carro o en moto.
-      </p>
     </div>
   </div>
 </template>

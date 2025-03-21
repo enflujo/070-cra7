@@ -1,5 +1,3 @@
-import { Perfil } from '@/tipos';
-
 export type Medicion = number | null;
 
 export type Ruido = [
@@ -56,16 +54,9 @@ export interface Punto {
   textos?: Texto[];
 }
 
-export type LlavesIndices =
-  | 'ambiente'
-  | 'infraestructura'
-  | 'movilidad'
-  | 'seguridad'
-  | 'proximidad'
-  | 'caminabilidad'
-  | 'viviendaEmpleo';
+export type LlavesIndices = 'ambiente' | 'infraestructura' | 'movilidad' | 'seguridad' | 'viviendaEmpleo';
 
-export type LlavesZats = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad' | 'proximidad';
+export type LlavesZats = 'habitabilidad' | 'ambiente' | 'infraestructura' | 'movilidad';
 
 export type LlavesAire = 'pm25' | 'ebc' | 'npNs';
 
@@ -78,4 +69,12 @@ export interface Aire {
     promedios: { [llave in LlavesAire]: number };
     mediciones: MedicionAire[];
   };
+}
+
+export interface Perfil {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  slug: string;
+  video: string;
 }

@@ -21,8 +21,7 @@ export default async (puntos: Punto[]): Promise<Punto[]> => {
     const datosZats: Zats = {};
 
     flujo.on('data', async (obj) => {
-      const [idZat, costado, sur, norte, movilidad, ambiente, infraestructura, habitabilidad, proximidad] =
-        obj.formatted.arr;
+      const [idZat, _costado, _sur, _norte, movilidad, ambiente, infraestructura, habitabilidad] = obj.formatted.arr;
 
       puntos.forEach((punto) => {
         const zatsEnPunto = zat.tramos[punto.nombre];
@@ -39,7 +38,6 @@ export default async (puntos: Punto[]): Promise<Punto[]> => {
               ambiente: [],
               infraestructura: [],
               habitabilidad: [],
-              proximidad: [],
             };
           }
 
@@ -66,12 +64,6 @@ export default async (puntos: Punto[]): Promise<Punto[]> => {
               datosZats[punto.nombre].movilidad.push(movilidad);
             } else {
               errata.push({ fila: numeroFila, error: `El zat ${idZat} no tiene valor para movilidad` });
-            }
-
-            if (proximidad) {
-              datosZats[punto.nombre].proximidad.push(proximidad);
-            } else {
-              errata.push({ fila: numeroFila, error: `El zat ${idZat} no tiene valor para proximidad` });
             }
           }
         }

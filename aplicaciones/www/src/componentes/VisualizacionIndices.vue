@@ -11,8 +11,6 @@ const nombresIndices = {
   infraestructura: 'Infraestructura',
   movilidad: 'Movilidad',
   seguridad: 'Seguridad',
-  proximidad: 'Proximidad',
-  caminabilidad: 'Caminabilidad',
   viviendaEmpleo: 'Vivienda y empleo',
 };
 const infoPunto: Ref<Punto | null> = ref(null);
@@ -23,8 +21,6 @@ const indices: Ref<{ indicador: LlavesIndices; linea: string }[]> = ref([
   { indicador: 'infraestructura', linea: '' },
   { indicador: 'movilidad', linea: '' },
   { indicador: 'seguridad', linea: '' },
-  { indicador: 'proximidad', linea: '' },
-  { indicador: 'caminabilidad', linea: '' },
   { indicador: 'viviendaEmpleo', linea: '' },
 ]);
 
@@ -120,8 +116,6 @@ function construirLineas() {
         <p class="etiquetaDatos" id="etiqViviendaEmpleo">Vivienda y Empleo</p>
         <p class="etiquetaDatos" id="etiqSeguridad">Seguridad</p>
         <p class="etiquetaDatos" id="etiqInfraestructura">Infraestructura</p>
-        <p class="etiquetaDatos" id="etiqCaminabilidad">Caminabilidad</p>
-        <p class="etiquetaDatos" id="etiqProximidad">Proximidad</p>
       </div>
     </div>
   </div>
@@ -180,14 +174,6 @@ function construirLineas() {
     stroke: var(--colorSeguridad);
   }
 
-  &.proximidad {
-    stroke: var(--colorProximidad);
-  }
-
-  &.caminabilidad {
-    stroke: var(--colorCaminabilidad);
-  }
-
   &.viviendaEmpleo {
     stroke: var(--colorViviendaEmpleo);
   }
@@ -239,14 +225,6 @@ function construirLineas() {
   border-color: var(--colorSeguridad);
 }
 
-#etiqProximidad {
-  border-color: var(--colorProximidad);
-}
-
-#etiqCaminabilidad {
-  border-color: var(--colorCaminabilidad);
-}
-
 #etiqViviendaEmpleo {
   border-color: var(--colorViviendaEmpleo);
 }
@@ -283,14 +261,6 @@ function construirLineas() {
 
   &.seguridad {
     fill: var(--colorSeguridad);
-  }
-
-  &.proximidad {
-    fill: var(--colorProximidad);
-  }
-
-  &.caminabilidad {
-    fill: var(--colorCaminabilidad);
   }
 
   &.viviendaEmpleo {
@@ -382,20 +352,12 @@ function construirLineas() {
       background-color: var(--colorAmbiente);
     }
 
-    &.caminabilidad {
-      background-color: var(--colorCaminabilidad);
-    }
-
     &.infraestructura {
       background-color: var(--colorInfraestructura);
     }
 
     &.movilidad {
       background-color: var(--colorMovilidad);
-    }
-
-    &.proximidad {
-      background-color: var(--colorProximidad);
     }
 
     &.seguridad {
