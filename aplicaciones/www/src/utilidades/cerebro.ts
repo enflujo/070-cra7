@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import type { Cerebro, Perfil } from '../tipos';
-import { Texto } from '@/tipos/compartidos';
+import type { Cerebro } from '../tipos';
+import type { Perfil, Texto } from '@/tipos/compartidos';
 
 // Guargar qué lugar está elegido para que quede disponible para todos los componentes
 export const usarCerebro = defineStore('cerebro', {
