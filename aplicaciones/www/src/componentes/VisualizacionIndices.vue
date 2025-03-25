@@ -14,6 +14,7 @@ const nombresIndices = {
   viviendaEmpleo: 'Vivienda y empleo',
 };
 const infoPunto: Ref<Punto | null> = ref(null);
+const infoLeyenda = ref(false);
 const posInfo = ref({ x: 0, y: 0 });
 
 const indices: Ref<{ indicador: LlavesIndices; linea: string }[]> = ref([
@@ -36,9 +37,9 @@ watch(() => props.puntos, construirLineas);
 watch(() => props.ancho, construirLineas);
 watch(() => props.alto, construirLineas);
 
-function mostrarInfoPunto(punto: Punto) {
-  infoPunto.value = punto;
-}
+const mostrarInfoPunto = (punto: Punto) => (infoPunto.value = punto);
+const mostrarInfoLeyenda = () => (infoLeyenda.value = true);
+const esconderInfoLeyenda = () => (infoLeyenda.value = false);
 
 function esconderInfoPunto() {
   infoPunto.value = null;
@@ -52,6 +53,7 @@ function construirLineas() {
   indices.value.forEach((indice) => {
     indice.linea = '';
   });
+
   // Construir líneas de los indicadores
   for (let i = 0; i < props.puntos.length; i++) {
     const punto = props.puntos[i];
@@ -120,6 +122,20 @@ function construirLineas() {
     </div>
   </div>
 
+  <div
+    id="leyendaIndices"
+    @mouseenter="mostrarInfoLeyenda"
+    @mouseleave="esconderInfoLeyenda"
+    @mousemove="actualizarPosicionInfoPunto"
+    :style="{ height: `${alto}px` }"
+  >
+    <span>1</span>
+    <span>0.75</span>
+    <span>0.50</span>
+    <span>0.25</span>
+    <span>0</span>
+  </div>
+
   <div id="info" :class="{ visible: infoPunto }" :style="{ top: `${posInfo.y}px`, left: `${posInfo.x}px` }">
     <div class="indicadores">
       <h4>{{ infoPunto?.nombre }}</h4>
@@ -136,6 +152,11 @@ function construirLineas() {
       </div>
     </div>
   </div>
+
+  <div id="infoLeyenda" :class="{ visible: infoLeyenda }" :style="{ top: `${posInfo.y}px`, left: `${posInfo.x}px` }">
+    <p>Los indicadores de habitabilidad son una forma de medir la calidad de vida en un barrio o ciudad.</p>
+    <p>Los valores van de 0 a 1, donde 1 es el mejor valor posible.</p>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -144,6 +165,47 @@ function construirLineas() {
 #contenedorVis {
   position: relative;
   z-index: 10;
+}
+
+#leyendaIndices {
+  position: fixed;
+  bottom: 5px;
+  left: 0;
+  z-index: 10;
+  background: rgb(0, 255, 0);
+  background: linear-gradient(180deg, rgba(0, 255, 0, 1) 0%, rgba(255, 0, 0, 1) 100%);
+  font-weight: bold;
+  height: 100%;
+  width: 25px;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  font-size: 0.7em;
+  cursor: help;
+
+  span {
+    background-color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+  }
+}
+
+#infoLeyenda {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background-color: var(--lila);
+  padding: 0.5em 1em;
+  font-size: 0.8em;
+  width: 200px;
+  display: none;
+  transform: translate(10px, -100%);
+
+  &.visible {
+    display: block;
+  }
 }
 
 #graficaIndices {
@@ -181,7 +243,7 @@ function construirLineas() {
 
 #contenedorEtiquetas {
   bottom: 10px;
-  left: 10px;
+  left: 30px;
   padding: 0.4em;
   position: fixed;
   background-color: rgba(255, 255, 255, 0.2);
