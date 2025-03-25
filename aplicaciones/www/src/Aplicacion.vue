@@ -2,7 +2,6 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos, numeroAleatorio } from './utilidades/ayudas';
-import slugificar from 'slug';
 import FichaPerfil from './componentes/FichaPerfil.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
@@ -12,21 +11,21 @@ import SobreProyecto from './componentes/SobreProyecto.vue';
 import Podcast from './componentes/Podcast.vue';
 import type { Perfil, Punto } from '@/tipos/compartidos';
 import FichaIndicadores from './componentes/FichaIndicadores.vue';
-import Animacion from './componentes/Animacion.vue';
+import AnimacionesCalle from './componentes/AnimacionesCalle.vue';
+import Paisaje from './componentes/Paisaje.vue';
 
 const puntos: Ref<Punto[]> = ref([]);
 /** Lugares que tienen ilustración */
 const idPodcast: Ref<string | null> = ref(null);
 const idLugar: Ref<string | null> = ref(null);
-const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
+
 const anchoContenedor = ref(0);
 const pasoX = 1500;
 const alto = ref(0);
 const dims = computed(() => ({ fondo: alto.value * 0.5, calle: alto.value * 0.11, vis: alto.value * 0.368 }));
-const xMinCarros = computed(() =>
-  puntos.value.length ? ((puntos.value[2].ubicacionX || 0) / 100) * anchoContenedor.value : 0
-);
+
 const perfilElegido: Ref<Perfil | null> = ref(null);
+const abrirFichaPerfil = (perfil: Perfil) => (perfilElegido.value = perfil);
 
 const arboles = [
   'septimazo-arbol.webp',
@@ -64,35 +63,12 @@ const escalar = () => {
   alto.value = window.innerHeight;
 };
 
-const abrirFichaPerfil = (perfil: Perfil) => {
-  perfilElegido.value = perfil;
-};
-
 const cerrarFicha = () => {
   idPodcast.value = null;
   idLugar.value = null;
   cerebro.fichaVisible = false;
   cerebro.indicadoresVisible = false;
   perfilElegido.value = null;
-};
-
-// Mostrar los nombres de los lugares ilustrados cuando el ratón está encima
-const mostrarEtiquetaLugar = (nombre: string) => {
-  if (!etiquetaIlustracion.value) return;
-  etiquetaIlustracion.value.innerText = nombre;
-  etiquetaIlustracion.value.classList.add('visible');
-};
-
-const ocultarEtiquetaLugar = () => {
-  if (!etiquetaIlustracion.value) return;
-  etiquetaIlustracion.value.innerText = '';
-  etiquetaIlustracion.value.classList.remove('visible');
-};
-
-const actualizarPosicionEtiqueta = (evento: MouseEvent) => {
-  if (!etiquetaIlustracion.value) return;
-  etiquetaIlustracion.value.style.left = `${evento.clientX + window.scrollX}px`;
-  etiquetaIlustracion.value.style.top = `${evento.clientY}px`;
 };
 
 // Cerrar ficha o info de proyecto al hacer clic afuera
@@ -202,169 +178,8 @@ onUnmounted(() => {
     <Titulo />
     <SobreProyecto />
     <Podcast :cerrar="cerrarFicha" />
-
-    <div id="animacionesCalle" :style="{ top: `${dims.fondo}px` }">
-      <Animacion
-        ruta="septimazo-bici2.webp"
-        idAnim="bici1"
-        :puntoA="0"
-        :puntoB="anchoContenedor"
-        :y="-20"
-        :alto="50"
-        sentido="izquierda"
-        :invertir="true"
-        :velocidad="1500"
-      />
-
-      <Animacion
-        ruta="septimazo-bici.webp"
-        idAnim="bici2"
-        :puntoA="0"
-        :puntoB="anchoContenedor"
-        :y="dims.calle - 90"
-        :alto="70"
-        sentido="derecha"
-        :invertir="false"
-        :velocidad="1000"
-      />
-
-      <Animacion
-        ruta="septimazo-ambulancia.webp"
-        idAnim="ambulancia"
-        :puntoA="anchoContenedor - 300"
-        :puntoB="xMinCarros"
-        :y="dims.calle - 100"
-        :alto="50"
-        sentido="izquierda"
-        :invertir="false"
-        :velocidad="300"
-      />
-
-      <Animacion
-        ruta="septimazo-basura.webp"
-        idAnim="basura"
-        :puntoA="anchoContenedor - 300"
-        :puntoB="xMinCarros"
-        :y="dims.calle - 150"
-        :alto="100"
-        sentido="izquierda"
-        :invertir="false"
-        :velocidad="500"
-      />
-
-      <Animacion
-        ruta="septimazo-bus1.webp"
-        idAnim="bus1"
-        :puntoA="anchoContenedor - 100"
-        :puntoB="xMinCarros"
-        :y="dims.calle - 180"
-        :alto="150"
-        sentido="izquierda"
-        :invertir="false"
-        :velocidad="400"
-      />
-
-      <Animacion
-        ruta="septimazo-bus2.webp"
-        idAnim="bus2"
-        :puntoA="xMinCarros"
-        :puntoB="anchoContenedor - 100"
-        :y="dims.calle - 150"
-        :alto="150"
-        sentido="izquierda"
-        :invertir="true"
-        :velocidad="400"
-      />
-
-      <Animacion
-        ruta="septimazo-bus3.webp"
-        idAnim="bus3"
-        :puntoA="xMinCarros * 2"
-        :puntoB="anchoContenedor - 100"
-        :y="dims.calle - 150"
-        :alto="150"
-        sentido="izquierda"
-        :invertir="true"
-        :velocidad="300"
-      />
-    </div>
-
-    <div
-      id="paisaje"
-      :style="{
-        width: `${anchoContenedor}px`,
-        height: `${dims.fondo}px`,
-        backgroundSize: `${dims.fondo * 1.8}px`,
-      }"
-    >
-      <div
-        class="elementosPunto"
-        v-for="punto in puntos"
-        :key="punto.slug"
-        :style="{ left: `${punto.ubicacionX}%`, width: `${punto.ancho}%` }"
-      >
-        <img
-          v-if="punto.ilustraciones && punto.ilustraciones.length"
-          @mouseenter="mostrarEtiquetaLugar(punto.ilustraciones[0])"
-          @mouseleave="ocultarEtiquetaLugar"
-          @mousemove="actualizarPosicionEtiqueta"
-          class="ilustracion"
-          :class="slugificar(punto.ilustraciones[0])"
-          :src="`${base}/imagenes/lugares/${punto.ilustraciones}.webp`"
-          :alt="`Ilustración de ${punto.ilustraciones}`"
-        />
-
-        <div class="perfil" v-if="punto.perfil" @click="abrirFichaPerfil(punto.perfil)">
-          <img class="iconoPerfil" :src="`${base}/imagenes/icono_perfil.png`" alt="ícono abrir perfil" />
-          <p>{{ punto.perfil.nombre }}</p>
-        </div>
-
-        <div class="vegetacion">
-          <img
-            v-for="arbol in punto.vegetacion"
-            class="arbol sinEventos"
-            :src="arbol"
-            alt="árbol"
-            :style="{
-              left: `${numeroAleatorio(100)}%`,
-              bottom: `${Math.random() * 5}%`,
-              scale: `${0.3 + (1.5 - 0.3) * Math.random()}`,
-            }"
-          />
-
-          <img
-            v-if="punto.pajaros"
-            v-for="pajaro in punto.pajaros"
-            class="icono iconoPajaro"
-            :src="pajaro"
-            alt="pájaro"
-            :style="{
-              left: `${numeroAleatorio(100)}%`,
-              top: `${Math.random() * 20}%`,
-              scale: `${1 + (1.5 - 1) * Math.random()}`,
-              transform: `scale(${numeroAleatorio(2) === 1 ? -1 : 1}, 1)`,
-            }"
-          />
-        </div>
-
-        <div v-if="punto.malAire" class="malAire">
-          <img
-            v-for="humo in punto.malAire"
-            class="humo"
-            :src="humo"
-            alt="Humo que representa contaminación del aire"
-            :style="{
-              left: `${numeroAleatorio(100)}%`,
-              top: `${Math.random() * 10}%`,
-              scale: `${0.2 + (1 - 0.2) * Math.random()}`,
-              transform: `scale(${numeroAleatorio(2) === 1 ? -1 : 1}, 1)`,
-            }"
-          />
-        </div>
-      </div>
-
-      <div ref="etiquetaIlustracion" class="etiqueta etiquetaIlustracion sinEventos"></div>
-    </div>
+    <AnimacionesCalle :puntos="puntos" :anchoContenedor="anchoContenedor" :dims="dims" />
+    <Paisaje :puntos="puntos" :anchoContenedor="anchoContenedor" :dims="dims" :abrirFichaPerfil="abrirFichaPerfil" />
 
     <div id="fondoCalle" :style="{ width: `${anchoContenedor}px`, height: `${dims.calle}px` }"></div>
 
