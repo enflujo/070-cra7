@@ -39,12 +39,12 @@ export const perfiles: Perfil[] = [
     slug: 'calle-53',
     nombre: 'Persona que tiene mascota',
     descripcion:
-      'Camilo Paez vive en el sector de Chapinero, cerca a la carrera Séptima y todos los días saca a pasear a su perro Rolo. Ambos tratan de evitar caminar por la Séptima, no solo por el ruido sino porque a Rolo le gusta la basura que allí abunda.',
+      'Camilo Páez vive en el sector de Chapinero, cerca de la carrera Séptima y todos los días saca a pasear a su perro Rolo. Ambos tratan de evitar caminar por la Séptima, no solo por el ruido sino porque a Rolo le gusta la basura que allí abunda.',
     video: 'ep2.mp4',
   },
   {
     id: 'pe3',
-    slug: 'calle-151',
+    slug: 'calle-70',
     nombre: 'Persona que trabaja en la séptima',
     descripcion:
       'Don Carlos Mariño se gana la vida conduciendo su taxi por las calles de Bogotá. Sólo toma la carrera Séptima cuando un pasajero se lo pide, de resto, hace lo imposible por no transitarla.',
@@ -60,15 +60,15 @@ export const perfiles: Perfil[] = [
   },
   {
     id: 'pe5',
-    slug: 'calle-175',
+    slug: 'calle-19',
     nombre: 'Persona con movilidad reducida ',
     descripcion:
-      'Alejandro Henao piensa que la Séptima peatonalizada, ubicada en el centro de la ciudad, es una de las zonas más accesibles de esta vía para las personas con movilidad reducida. Sin embargo señala que no es así para el resto de zonas de tránsito peatonal en esta carrera.',
+      'Alejandro Henao piensa que la Séptima peatonalizada, ubicada en el centro de la ciudad, es una de las zonas más accesibles de esta vía para las personas con movilidad reducida. Sin embargo, señala que no es así para el resto de zonas de tránsito peatonal en esta carrera.',
     video: 'ep5.mp4',
   },
   {
     id: 'pe6',
-    slug: 'calle-106',
+    slug: 'calle-100',
     nombre: 'Persona de la tercera edad',
     descripcion:
       'Myrian Gaona llegó a vivir cerca a la Séptima con 107 cuando la naturaleza aún la rodeaba. Aunque hoy celebra la modernización de la zona, siente que la vía hoy se piensa solo para que transiten personas jóvenes, y pone en riesgo el tránsito de personas mayores.  ',
