@@ -20,56 +20,50 @@ function cerrar() {
       <h3>Habitabilidad</h3>
 
       <p class="infoIndicador">
-        Un barrio o zona habitable debería ser seguro, sin contaminación, con un transporte sostenible y eficiente
-        cerca, donde se pueda caminar y andar en bicicleta sin peligros. Además debería estar cerca de servicios básicos
-        como salud, educación, cultura y recreación. o, sin contaminación, con un transporte sostenible y eficiente
-        cerca, donde se pueda caminar y andar en bicicleta sin peligros. Además debería estar cerca de servicios básicos
-        como salud, educación, cultura y recreación.
+        Un lugar habitable debería ser seguro, sin contaminación, con espacios públicos abiertos, transporte y vivienda
+        asequible, y donde se pueda caminar y andar en bicicleta agradablemente y sin peligro. Además, debería estar
+        cerca de servicios básicos como salud, educación, cultura, recreación y comercio.
       </p>
 
       <p>
-        Nuestro indicador de <span class="resaltar subrayar">habitabilidad</span> tiene valores entre 0 y 1. Está
-        compuesto por seis dominios, los cuales hacen que una ciudad sea
-        <span class="resaltar">chévere para vivir</span>. Estos van desde qué tan fácil es moverse, hasta la facilidad
-        de acceso a infraestructura o empleo. Cada dominio también tiene valores entre 0 y 1, y pueden ser estudiados de
-        forma independiente.
+        Nuestro indicador de <span class="resaltar subrayar">habitabilidad</span> se mide en una escala de
+        <span class="punto puntoNegativo">0</span> a <span class="punto puntoPositivo">1</span>, donde 1 representa la
+        mejor habitabilidad. Está compuesto por cinco dominios, desde qué tan sencillo es moverse, hasta la facilidad de
+        acceso a infraestructura o empleo. Cada dominio también se mide en una escala de 0 a 1.
+      </p>
+
+      <div id="escalaColores">
+        <span class="positivo">0</span><span>0.25</span><span>0.50</span><span>0.75</span>
+        <span class="positivo">1</span>
+      </div>
+
+      <p class="infoIndicador">
+        <span id="etiqAmbiente" class="etiquetaDatos">Ambiente:</span> Un lugar habitable debe tener poca o ninguna
+        contaminación del aire, con espacios de encuentro, zonas verdes, parques, y plazoletas con muchos árboles.
       </p>
 
       <p class="infoIndicador">
-        <span id="etiqAmbiente" class="etiquetaDatos">Ambiente:</span> Un barrio habitable debería tener poca o ninguna
-        contaminación del aire y zonas verdes con muchos árboles.
+        <span id="etiqMovilidad" class="etiquetaDatos">Movilidad:</span> Un lugar habitable debe permitir
+        desplazamientos seguros, asequibles y eficientes, reduciendo siniestros y congestión. Fortalecer el transporte
+        público mejora el acceso a oportunidades y servicios ofrecidos por la ciudad, promoviendo la equidad social.
       </p>
 
       <p class="infoIndicador">
-        <span id="etiqMovilidad" class="etiquetaDatos">Movilidad:</span> Un barrio habitable debería permitir e incluso
-        incentivar a que las personas se muevan en él de forma segura y eficiente. Si hay movilidad sostenible, y si se
-        invierte en ella, disminuyen los siniestros viales, la congestión, y los tiempos para movilizarse. También
-        debería aumentar la asequibilidad y la oferta de movilidad activa y transporte público. Esto mejora el acceso a
-        oportunidades y servicios básicos que ofrece la ciudad: empleo, educación, recreación, entre otras oportunidades
-        que promueven la equidad social.
+        <span id="etiqAccesibilidad" class="etiquetaDatos">Vivienda y empleo:</span> Un lugar habitable debe garantizar
+        el acceso a vivienda y empleo. Esto incluye reducir el déficit de servicios públicos y considerar el valor del
+        suelo, la educación de la población y la relación en la zona entre la densidad poblacional y la oferta laboral.
       </p>
 
       <p class="infoIndicador">
-        <span id="etiqAccesibilidad" class="etiquetaDatos">Vivienda y empleo:</span> Un barrio habitable debería
-        facilitar el acceso a las oportunidades de vivienda y empleo, mientras mejora sus condiciones físicas. Esto
-        incluye minimizar las viviendas sin servicios públicos, tener en cuenta el valor del suelo, el nivel educativo
-        de la población y su densidad poblacional versus el acceso a empleo en la misma zona.
+        <span id="etiqSeguridad" class="etiquetaDatos">Seguridad:</span>Un lugar habitable debe asegurar espacios
+        públicos seguros para todos, sin importar edad, género o condición social. Esto implica reducir el número de
+        delitos, y contar con CAIs, cámaras y buena iluminación.
       </p>
 
       <p class="infoIndicador">
-        <span id="etiqSeguridad" class="etiquetaDatos">Seguridad:</span>Un barrio habitable debería permitir que las
-        personas usen el espacio público con tranquilidad, sin miedo, a diferentes horas del día y sin importar su edad,
-        género, raza y condición social. Un barrio seguro, por ende habitable, debería minimizar el número de delitos,
-        tener CAIs, cámaras y una buena iluminación.
-      </p>
-
-      <p class="infoIndicador">
-        <span id="etiqInfraestructura" class="etiquetaDatos">Infraestructura pública y social:</span> Por último, un
-        barrio habitable debería tener infraestructura pública y social de calidad, que promueva el acceso a
-        oportunidades y servicios básicos, y que disponga de espacios de encuentro para la comunidad. Un barrio con este
-        tipo de infraestructura debería tener espacios públicos permanentes y de calidad, zonas verdes, parques, plazas
-        y plazoletas. También debería incentivar la caminata, el uso de la bicicleta y ser un barrio de proximidad: un
-        barrio que tenga cerca las soluciones a las necesidades básicas de sus habitantes.
+        <span id="etiqInfraestructura" class="etiquetaDatos">Infraestructura:</span> Un lugar habitable debe contar con
+        infraestructura de calidad que promueva el acceso cercano a oportunidades y servicios básicos. Además, debe
+        incentivar la caminata y el uso de la bicicleta.
       </p>
     </div>
   </div>
@@ -79,6 +73,7 @@ function cerrar() {
 .tituloContenido {
   display: inline-flex;
   align-items: center;
+
   .iconoFicha {
     margin-right: 1em;
     background: transparent;
@@ -93,5 +88,41 @@ function cerrar() {
 .etiquetaDatos {
   margin: 0;
   font-weight: bold;
+}
+
+.punto {
+  &::before {
+    content: ' ';
+    display: inline-block;
+    vertical-align: center;
+    width: 0.85em;
+    height: 0.85em;
+    margin-right: 2px;
+  }
+
+  &.puntoPositivo {
+    &::before {
+      background-color: var(--verde);
+    }
+  }
+  &.puntoNegativo {
+    &::before {
+      background-color: var(--rojo);
+    }
+  }
+}
+
+#escalaColores {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5em 0;
+  background: rgb(0, 255, 0);
+  background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%, rgba(0, 255, 0, 1) 100%);
+  font-size: 0.75em;
+
+  span {
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 2px;
+  }
 }
 </style>
