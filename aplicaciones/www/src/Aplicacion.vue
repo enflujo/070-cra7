@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos, numeroAleatorio } from './utilidades/ayudas';
 import FichaPerfil from './componentes/FichaPerfil.vue';
@@ -14,6 +14,7 @@ import FichaIndicadores from './componentes/FichaIndicadores.vue';
 import AnimacionesCalle from './componentes/AnimacionesCalle.vue';
 import Paisaje from './componentes/Paisaje.vue';
 
+const contenedorGeneral = ref<HTMLElement | null>(null);
 const puntos: Ref<Punto[]> = ref([]);
 /** Lugares que tienen ilustración */
 const idPodcast: Ref<string | null> = ref(null);
@@ -26,6 +27,7 @@ const dims = computed(() => ({ fondo: alto.value * 0.5, calle: alto.value * 0.11
 
 const perfilElegido: Ref<Perfil | null> = ref(null);
 const abrirFichaPerfil = (perfil: Perfil) => (perfilElegido.value = perfil);
+let posX = 0;
 
 const arboles = [
   'septimazo-arbol.webp',
@@ -69,6 +71,20 @@ const cerrarFicha = () => {
   cerebro.fichaVisible = false;
   cerebro.indicadoresVisible = false;
   perfilElegido.value = null;
+};
+
+const moverEjeXEnScrollY = (evento: WheelEvent) => {
+  if (!contenedorGeneral.value) return;
+
+  if (evento.deltaY !== 0) {
+    evento.preventDefault();
+    const diferencia = posX - (posX + evento.deltaY);
+    posX += evento.deltaY;
+    if (posX < 0) posX = 0;
+    if (posX > anchoContenedor.value) posX = anchoContenedor.value;
+
+    window.scrollBy({ left: -diferencia, behavior: 'instant' });
+  }
 };
 
 // Cerrar ficha o info de proyecto al hacer clic afuera
@@ -166,15 +182,26 @@ onMounted(async () => {
   escalar();
 
   window.addEventListener('resize', escalar);
+
+  if (contenedorGeneral.value) {
+    posX = window.scrollX;
+    window.addEventListener('wheel', moverEjeXEnScrollY, { passive: false });
+  }
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', escalar);
+  window.removeEventListener('wheel', moverEjeXEnScrollY);
 });
 </script>
 
 <template>
-  <main id="contenedorGeneral" @click="clicFuera($event)" :style="{ width: `${anchoContenedor + 300}px` }">
+  <main
+    id="contenedorGeneral"
+    ref="contenedorGeneral"
+    @click="clicFuera($event)"
+    :style="{ width: `${anchoContenedor + 300}px` }"
+  >
     <Titulo />
     <SobreProyecto />
     <Podcast :cerrar="cerrarFicha" />
