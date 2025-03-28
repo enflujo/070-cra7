@@ -55,6 +55,15 @@ body {
   margin: 0;
 }
 
+.resaltar {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.subrayar {
+  text-decoration: underline;
+}
+
 // Estilo fichas
 .ficha {
   border: 1px solid black;

@@ -11,45 +11,33 @@ const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
   <div class="ficha infoProyecto" :class="{ visible: cerebro.infoVisible }">
     <div class="cerrar" :onclick="controlInfo">X</div>
     <h2>VEINTICUATRO / SIETE</h2>
+
     <p>
-      Han pasado más de 25 años y Bogotá todavía no se pone de acuerdo en cómo transformar la carrera Séptima, la
-      avenida más representativa de la ciudad, que conecta el centro histórico con el norte y bordea los cerros
-      orientales y los barrios más pudientes de la capital de Colombia.
+      Han pasado más de 25 años y Bogotá todavía no se pone de acuerdo en cómo transformar la carrera Séptima, una de
+      las avenidas más emblemáticas de la ciudad. Este corredor, que conecta el centro histórico con el norte y bordea
+      los cerros orientales, sigue siendo el epicentro de debates.
     </p>
     <p>
-      Han pasado 25 años, cinco alcaldes, muchos proyectos de infraestructura y dinero para pagar estudios y renders que
-      justifican por qué no se debe hacer el plan del antecesor sino el del sucesor: que si Transmilenio pesado o
-      ligero, que si tranvía, que mejor metro, o que quizá lo que se debe hacer es un Corredor Verde. Hasta ahora, sin
-      embargo, todo se ha quedado en promesas.
+      Esta arteria vial, con más de 400 años de historia por donde han transitado pueblos indígenas, el tranvía, el
+      Bogotazo, la Ciclovía y el Septimazo, es hoy un reflejo de la salud urbana de Bogotá y sus habitantes.
     </p>
     <p>
-      Mientras tanto, la arteria vial más importante de Bogotá, por la que han transitado pueblos indígenas, el tranvía,
-      el Bogotazo, la Ciclovía y el Septimazo, y que tiene más de 400 años de historia, sigue ocupando los primeros
-      lugares de congestión en una de las ciudades con peor tráfico de América Latina.
+      CIVICA
+      <span class="resaltar"
+        >es un proyecto que estudió a fondo la habitabilidad de Bogotá y, en particular, de la carrera Séptima</span
+      >, analizando datos de varias fuentes y entrevistando a diferentes ciudadanos. Veinticuatro Siete, uno de los
+      resultados creado en colaboración con Cerosetenta, busca contar y visibilizar los hallazgos de la habitabilidad en
+      la carrera Séptima.
     </p>
     <p>
-      Además, sigue siendo un importante reflejo de cómo está la salud urbana de Bogotá y de sus habitantes: Personas
-      diversas, de todas las edades y estratos sociales, con necesidades específicas, que todos los días recorren la
-      Séptima en medio del tráfico, la inseguridad, una infraestructura pobre y la contaminación del aire y el ruido. Y
-      que, a pesar de todo, le tienen mucho cariño a esta avenida.
+      <span class="resaltar">Habitabilidad</span>. Es decir, qué tanto la gente que vive, trabaja y transita por esta
+      avenida tiene acceso a educación, transporte, salud, seguridad, empleo, recreación y cultura. O, dicho de forma
+      sencilla: ¿qué tan chévere es vivir en la carrera Séptima?
     </p>
     <p>
-      Veinticuatro Siete es un proyecto que estudió a fondo la carrera Séptima, entrevistó a sus habitantes, revisó cada
-      una de sus cuadras con inteligencia artificial, y analizó las cifras y datos de varias dimensiones y fuentes, para
-      comparar lo que a simple vista parece incomparable. Para crear mecanismos e indicadores que usen toda esa
-      información de la mejor manera para evaluar las transformaciones urbanas que pueden hacer que Bogotá sea una
-      ciudad más sostenible, accesible y habitable.
-    </p>
-    <p>
-      Habitable. Es decir, qué tanto la gente que vive y transita por esta avenida tiene acceso a educación, a servicios
-      de transporte, a servicios de salud, de seguridad, de empleo, a espacios para construir cohesión social y por lo
-      tanto, qué tantas posibilidades tienen de tener una mejor calidad de vida. En una palabra: qué tan chévere es
-      vivir en la carrera Séptima.
-    </p>
-    <p>
-      Este proyecto se enfoca en la carrera Séptima como caso de estudio, porque es una avenida donde se puede ver toda
-      la diversidad de quienes viven y se mueven en Bogotá. Sin embargo, la misma metodología se puede replicar para
-      evaluar la habitabilidad no sólo de otras avenidas claves de Bogotá, sino de otras ciudades del país.
+      Este proyecto se enfoca en la carrera Séptima como caso de estudio al ser una avenida donde se puede ver toda la
+      diversidad de quienes viven y se mueven en Bogotá. Sin embargo, la misma metodología se puede replicar para
+      evaluar la habitabilidad de otros puntos claves de Bogotá u otras ciudades del país.
     </p>
 
     <h2>Créditos</h2>
@@ -60,12 +48,10 @@ const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
     </p>
 
     <p>
-      Los contenidos fueron creados por <a href="https://cerosetenta.uniandes.edu.co/proyectos/">070 Proyectos</a> y la
-      página fue desarrollada por el <a href="">Laboratorio EnFlujo</a>, del
-      <a href="https://ceper.uniandes.edu.co/">Ceper</a>, de la Universidad de los Andes.
+      Los contenidos de Veinticuatro Siete fueron creados por
+      <a href="https://cerosetenta.uniandes.edu.co/proyectos/">070 Proyectos</a>. La página web fue desarrollada por el
+      <a href="https://enflujo.com">Laboratorio EnFlujo</a>, del Ceper, de la Universidad de los Andes.
     </p>
-
-    <div id="contenedorLogos"></div>
   </div>
 </template>
 

@@ -94,13 +94,4 @@ function cerrar() {
   margin: 0;
   font-weight: bold;
 }
-
-.resaltar {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-.subrayar {
-  text-decoration: underline;
-}
 </style>
