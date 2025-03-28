@@ -183,7 +183,13 @@ onUnmounted(() => {
 
     <div id="fondoCalle" :style="{ width: `${anchoContenedor}px`, height: `${dims.calle}px` }"></div>
 
-    <VisualizacionIndices :puntos="puntos" :ancho="anchoContenedor" :alto="dims.vis" :pasoX="pasoX" />
+    <VisualizacionIndices
+      :puntos="puntos"
+      :ancho="anchoContenedor"
+      :alto="dims.vis"
+      :pasoX="pasoX"
+      :y="dims.fondo + dims.calle"
+    />
     <FichaIndicadores :cerrar="cerrarFicha" />
     <FichaPerfil v-if="perfilElegido" :perfil="perfilElegido" :cerrar="cerrarFicha" />
   </main>

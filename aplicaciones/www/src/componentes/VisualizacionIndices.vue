@@ -4,7 +4,7 @@ import type { LlavesIndices, Punto } from '@/tipos/compartidos';
 import { escalaColores } from '@enflujo/alquimia';
 import { usarCerebro } from '@/utilidades/cerebro';
 
-const props = defineProps<{ puntos: Punto[]; ancho: number; alto: number; pasoX: number }>();
+const props = defineProps<{ puntos: Punto[]; ancho: number; alto: number; pasoX: number; y: number }>();
 const cerebro = usarCerebro();
 const nombresIndices = {
   ambiente: 'Ambiente',
@@ -127,7 +127,7 @@ function construirLineas() {
     @mouseenter="mostrarInfoLeyenda"
     @mouseleave="esconderInfoLeyenda"
     @mousemove="actualizarPosicionInfoPunto"
-    :style="{ height: `${alto}px` }"
+    :style="{ height: `${alto}px`, top: `${y}px` }"
   >
     <span>1</span>
     <span>0.75</span>
