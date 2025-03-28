@@ -76,358 +76,171 @@ export const perfiles: Perfil[] = [
   },
 ];
 
+const objHabitabilidadPositivo = {
+  titulo: 'Habitabilidad',
+  texto:
+    'Este punto es el más habitable de la Séptima (valores entre 0.67 y 0.70 en un índice entre 0 y 1). Es decir, hay buena oferta de transporte público y es fácil caminar o andar en bicicleta. Es relativamente seguro e iluminado de noche. La gente camina en la calle regularmente, el ambiente es poco contaminado y tiene cerca múltiples servicios esenciales.',
+};
+
+const objHabitabilidadNegativo = {
+  titulo: 'Habitabilidad',
+  texto:
+    'Este punto es el menos habitable de la Séptima (valores entre 0.42 a 0.55 en un índice entre 0 y 1). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro, hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
+};
+
+const objAireNegativo = {
+  titulo: 'Calidad del aire',
+  texto:
+    'Este punto tiene mala calidad del aire (valores promedio de entre 94 y 129 µg/m3 para peatones y ciclistas).  La concentración de material particulado PM2.5 supera el límite diario recomendado por la Organización Mundial de la Salud (15 µg/m3), lo que puede afectar la salud de las personas.',
+};
+
+const objCaminabilidadPositivo = {
+  titulo: 'Caminabilidad',
+  texto:
+    'Este punto tiene una buena caminabilidad (valores de entre 0.57 y 0.63 en un índice entre 0 y 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
+};
+
+const objCaminabilidadNegativo = {
+  titulo: 'Caminabilidad',
+  texto:
+    'Este punto tiene una baja caminabilidad (valores de entre 0.3 y 0.48 en un índice entre 0 y 1). Es decir, es difícil caminar porque los andenes son estrechos y están deteriorados, las losas están levantadas y hay huecos. Hay poca gente caminando y hay pocas actividades.',
+};
+
+const objPeatonesPositivo = {
+  titulo: 'Flujo de peatones',
+  texto:
+    'En este punto hay un alto número de peatones movilizándose por los andenes de la carrera Séptima (promedio en cada punto de entre 2.000 y 3.600 peatones en la hora pico).',
+};
+
+const objFlujoVehicularNegativo = {
+  titulo: 'Intersecciones con mayor flujo vehicular',
+  texto:
+    'En este punto hay un alto flujo vehicular (promedio en cada punto de aproximadamente 7.800 vehículos movilizándose en la hora pico). En estos puntos la congestión puede aumentar los tiempos de viaje en hasta 80%.',
+};
+
+const objDelitosNegativo = {
+  titulo: 'Delitos contra personas',
+  texto: 'En este punto hay un alto número de delitos contra personas (entre 1.490 y 1.690 delitos en el 2019).',
+};
+
 export const textos: { [slug: string]: { textos: Texto[] } } = {
   'calle-19': {
-    textos: [
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-      {
-        titulo: 'Flujo de peatones',
-        texto:
-          'En este punto hay un alto flujo de peatones que se mueve por los andenes de la carrera séptima con un promedio en cada punto de entre 2.000 y 3.600 peatones en la hora pico.',
-      },
-    ],
+    textos: [objCaminabilidadPositivo, objPeatonesPositivo],
   },
   'calle-26': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el más habitable de la Séptima (valores entre 0.67 y 0.70 en un índice de 0 a 1). Es decir, hay buena oferta de transporte público y es fácil caminar o andar en bici. Es relativamente seguro e iluminado de noche. La gente camina en la calle regularmente, el ambiente es poco contaminado y tiene cerca múltiples servicios esenciales.',
-      },
-    ],
+    textos: [objHabitabilidadPositivo],
   },
   'calle-32': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el más habitable de la Séptima (valores entre 0.67 y 0.70 en un índice de 0 a 1). Es decir, hay buena oferta de transporte público y es fácil caminar o andar en bici. Es relativamente seguro e iluminado de noche. La gente camina en la calle regularmente, el ambiente es poco contaminado y tiene cerca múltiples servicios esenciales.',
-      },
-      {
-        titulo: 'Intersecciones con mayor flujo vehicular y aumento en tiempos de viaje',
-        texto:
-          'Estas son las intersecciones con mayor flujo vehicular y congestión en la Carrera Séptima, con un promedio en cada punto de aproximadamente 7.800 vehículos movilizándose en la hora pico. En la calle 32 y en la calle 170 hay alta congestión, lo que aumenta los tiempos de viaje en más del 80%.',
-      },
-    ],
+    textos: [objHabitabilidadPositivo, objFlujoVehicularNegativo],
   },
   'calle-36': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el más habitable de la Séptima (valores entre 0.67 y 0.70 en un índice de 0 a 1). Es decir, hay buena oferta de transporte público y es fácil caminar o andar en bici. Es relativamente seguro e iluminado de noche. La gente camina en la calle regularmente, el ambiente es poco contaminado y tiene cerca múltiples servicios esenciales.',
-      },
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-    ],
+    textos: [objHabitabilidadPositivo, objCaminabilidadPositivo],
   },
   'diagonal-40a': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el más habitable de la Séptima (valores entre 0.67 y 0.70 en un índice de 0 a 1). Es decir, hay buena oferta de transporte público y es fácil caminar o andar en bici. Es relativamente seguro e iluminado de noche. La gente camina en la calle regularmente, el ambiente es poco contaminado y tiene cerca múltiples servicios esenciales.',
-      },
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-    ],
+    textos: [objHabitabilidadPositivo, objCaminabilidadPositivo],
   },
 
   'calle-53': {
-    textos: [
-      {
-        titulo: 'Delitos contra personas',
-        texto:
-          'Estos son los tramos en los que hay un mayor número de delitos a personas. En cada punto se registraron en el 2019 entre 1690 y 1490 delitos.',
-      },
-    ],
+    textos: [objDelitosNegativo],
   },
 
   'calle-56': {
-    textos: [
-      {
-        titulo: 'Delitos contra personas',
-        texto:
-          'Estos son los tramos en los que hay un mayor número de delitos a personas. En cada punto se registraron en el 2019 entre 1690 y 1490 delitos.',
-      },
-    ],
+    textos: [objDelitosNegativo],
   },
 
   'calle-60': {
-    textos: [
-      {
-        titulo: 'Delitos contra personas',
-        texto:
-          'Estos son los tramos en los que hay un mayor número de delitos a personas. En cada punto se registraron en el 2019 entre 1690 y 1490 delitos.',
-      },
-    ],
+    textos: [objDelitosNegativo],
+  },
+
+  'calle-67': {
+    textos: [objHabitabilidadPositivo],
   },
 
   'calle-70': {
-    textos: [
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-    ],
+    textos: [objCaminabilidadPositivo],
   },
+
   'calle-72': {
-    textos: [
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-      {
-        titulo: 'Flujo de peatones',
-        texto:
-          'En este punto hay un alto flujo de peatones que se mueve por los andenes de la carrera séptima con un promedio en cada punto de entre 2.000 y 3.600 peatones en la hora pico.',
-      },
-      {
-        titulo: 'Intersecciones con mayor flujo vehicular y aumento en tiempos de viaje',
-        texto:
-          'Estas son las intersecciones con mayor flujo vehicular y congestión en la Carrera Séptima, con un promedio en cada punto de aproximadamente 7.800 vehículos movilizándose en la hora pico. En la calle 32 y en la calle 170 hay alta congestión, lo que aumenta los tiempos de viaje en más del 80%.',
-      },
-    ],
+    textos: [objHabitabilidadPositivo, objCaminabilidadPositivo, objPeatonesPositivo, objFlujoVehicularNegativo],
   },
 
   'calle-74': {
-    textos: [
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-    ],
+    textos: [objHabitabilidadPositivo, objCaminabilidadPositivo],
   },
 
   'calle-76': {
-    textos: [
-      {
-        titulo: 'Calidad del aire',
-        texto:
-          'Este tramo tiene mala calidad del aire (valores medidos entre 94 y 129 µg/m3 para peatones y ciclistas ). En este punto la concentración de material particulado PM2.5 supera el límite diario recomendado por la Organización Mundial de la Salud (15 µg/m3),  lo que puede afectar la salud de las personas.',
-      },
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-    ],
+    textos: [objAireNegativo, objCaminabilidadPositivo],
   },
 
   'calle-84': {
-    textos: [
-      {
-        titulo: 'Calidad del aire',
-        texto:
-          'Este tramo tiene mala calidad del aire (valores medidos entre 94 y 129 µg/m3 para peatones y ciclistas ). En este punto la concentración de material particulado PM2.5 supera el límite diario recomendado por la Organización Mundial de la Salud (15 µg/m3),  lo que puede afectar la salud de las personas.',
-      },
-    ],
+    textos: [objAireNegativo],
   },
 
   'calle-100': {
-    textos: [
-      {
-        titulo: 'Intersecciones con mayor flujo vehicular y aumento en tiempos de viaje',
-        texto:
-          'Estas son las intersecciones con mayor flujo vehicular y congestión en la Carrera Séptima, con un promedio en cada punto de aproximadamente 7.800 vehículos movilizándose en la hora pico. En la calle 32 y en la calle 170 hay alta congestión, lo que aumenta los tiempos de viaje en más del 80%.',
-      },
-    ],
+    textos: [objFlujoVehicularNegativo],
   },
 
   'calle-116': {
-    textos: [
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-      {
-        titulo: 'Flujo de peatones',
-        texto:
-          'En este punto hay un alto flujo de peatones que se mueve por los andenes de la carrera séptima con un promedio en cada punto de entre 2.000 y 3.600 peatones en la hora pico.',
-      },
-    ],
+    textos: [objCaminabilidadPositivo, objPeatonesPositivo],
   },
 
   'calle-134': {
-    textos: [
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-    ],
+    textos: [objCaminabilidadPositivo],
   },
 
   'calle-140': {
-    textos: [
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-    ],
+    textos: [objCaminabilidadPositivo],
   },
 
   'calle-147': {
-    textos: [
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad alta (valores de entre 0.57 y  0.63 en un índice de 0 a 1). Es decir, es cómodo caminar por ahí: hay buena iluminación y los andenes están en condiciones aceptables.',
-      },
-    ],
+    textos: [objCaminabilidadPositivo],
+  },
+
+  'calle-151': {
+    textos: [],
+  },
+
+  'calle-153': {
+    textos: [objCaminabilidadPositivo],
   },
 
   'calle-160': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo, objCaminabilidadPositivo],
   },
+
   'calle-164': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo, objCaminabilidadPositivo],
   },
+
   'calle-165': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo],
   },
+
   'calle-170': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad baja (valores de entre 0.3 y 0.48). Es decir, es difícil caminar porque los andenes son estrechos y están deteriorados, las lozas están levantadas y hay huecos. Hay poca gente caminando y hay pocas actividades.',
-      },
-      {
-        titulo: 'Intersecciones con mayor flujo vehicular y aumento en tiempos de viaje',
-        texto:
-          'Estas son las intersecciones con mayor flujo vehicular y congestión en la Carrera Séptima, con un promedio en cada punto de aproximadamente 7.800 vehículos movilizándose en la hora pico. En la calle 32 y en la calle 170 hay alta congestión, lo que aumenta los tiempos de viaje en más del 80%.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo, objAireNegativo, objCaminabilidadNegativo, objFlujoVehicularNegativo],
   },
   'calle-175': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad baja (valores de entre 0.3 y 0.48). Es decir, es difícil caminar porque los andenes son estrechos y están deteriorados, las lozas están levantadas y hay huecos. Hay poca gente caminando y hay pocas actividades.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo, objCaminabilidadNegativo],
   },
   'calle-180': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo, objAireNegativo],
   },
   'calle-183': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo],
   },
   'calle-189': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo, objAireNegativo],
   },
   'calle-192': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad baja (valores de entre 0.3 y 0.48). Es decir, es difícil caminar porque los andenes son estrechos y están deteriorados, las lozas están levantadas y hay huecos. Hay poca gente caminando y hay pocas actividades.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo, objCaminabilidadNegativo],
   },
   'calle-193': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad baja (valores de entre 0.3 y 0.48). Es decir, es difícil caminar porque los andenes son estrechos y están deteriorados, las lozas están levantadas y hay huecos. Hay poca gente caminando y hay pocas actividades.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo, objCaminabilidadNegativo],
   },
   'calle-200': {
-    textos: [
-      {
-        titulo: 'Habitabilidad',
-        texto:
-          'Este tramo es el menos habitable de la Séptima (valores de 0.42 a 0.55). Es decir, hay poca oferta de transporte público, los andenes son estrechos y es difícil caminar. Es inseguro y hay mucha contaminación y no es fácil acceder a servicios como el trabajo o la educación superior.',
-      },
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad baja (valores de entre 0.3 y 0.48). Es decir, es difícil caminar porque los andenes son estrechos y están deteriorados, las lozas están levantadas y hay huecos. Hay poca gente caminando y hay pocas actividades.',
-      },
-    ],
+    textos: [objHabitabilidadNegativo, objCaminabilidadNegativo],
   },
   'calle-220': {
-    textos: [
-      {
-        titulo: 'Caminabilidad',
-        texto:
-          'Este tramo tiene una caminabilidad baja (valores de entre 0.3 y 0.48). Es decir, es difícil caminar porque los andenes son estrechos y están deteriorados, las lozas están levantadas y hay huecos. Hay poca gente caminando y hay pocas actividades.',
-      },
-    ],
+    textos: [objCaminabilidadNegativo],
   },
 };
