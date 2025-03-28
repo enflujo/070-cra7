@@ -19,11 +19,3 @@ export interface Cerebro {
   podcastVisible: boolean;
   indicadoresVisible: boolean;
 }
-
-export interface Perfil {
-  id: string;
-  nombre: string;
-  descripcion: string;
-  slug: string;
-  video: string;
-}

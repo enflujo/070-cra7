@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { base } from '@/utilidades/ayudas';
-import type { Perfil } from '@/tipos';
+import type { Perfil } from '@/tipos/compartidos';
 
 defineProps<{ perfil: Perfil; cerrar: () => void }>();
 </script>
