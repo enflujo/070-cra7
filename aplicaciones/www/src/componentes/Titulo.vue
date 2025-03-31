@@ -2,8 +2,9 @@
 import { onMounted, onUnmounted, type Ref, ref } from 'vue';
 
 const contenedorTitulo: Ref<HTMLDivElement | undefined> = ref();
+const tituloAnimado: Ref<HTMLDivElement | undefined> = ref();
 const tituloVisible = ref(true);
-const animaciones: any[] = []; // Blotter no tiene tipos.
+let animaciones: any[] = []; // Blotter no tiene tipos.
 let reproduciendo = true;
 
 const eventoPosicionX = () => {
@@ -18,25 +19,23 @@ const eventoPosicionX = () => {
   }
 };
 
-onMounted(async () => {
-  if (!contenedorTitulo.value) return;
+function crearTituloAnimado() {
+  if (!tituloAnimado.value) return;
 
-  await document.fonts.ready;
+  animaciones = []; // Reiniciar animaciones
+  tituloAnimado.value.innerHTML = ''; // Limpiar el contenedor
 
   const configuracion = {
     family: 'Rubik Bubbles',
-    size: screen.width * 0.1,
     fill: '#F3D78E',
+    size: screen.width > 767 ? screen.width * 0.12 : screen.width * 0.27,
   };
 
   const material = new Blotter.LiquidDistortMaterial();
   material.uniforms.uSpeed.value = 0.5;
   material.uniforms.uVolatility.value = 0.03;
 
-  const sieteTexto = new Blotter.Text('SIETE', {
-    ...configuracion,
-    size: screen.width > 767 ? screen.width * 0.12 : screen.width * 0.27,
-  });
+  const sieteTexto = new Blotter.Text('SIETE', configuracion);
   const siete = new Blotter(material, { texts: sieteTexto });
   const sieteObj = siete.forText(sieteTexto);
 
@@ -52,23 +51,34 @@ onMounted(async () => {
   puntoObj.domElement.className = 'enflujito';
   burbujaObj.domElement.className = 'enflujito';
 
-  sieteObj.appendTo(contenedorTitulo.value);
-  puntoObj.appendTo(contenedorTitulo.value);
-  burbujaObj.appendTo(contenedorTitulo.value);
+  sieteObj.appendTo(tituloAnimado.value);
+  puntoObj.appendTo(tituloAnimado.value);
+  burbujaObj.appendTo(tituloAnimado.value);
 
   animaciones.push(siete, punto, burbuja);
+}
+
+onMounted(async () => {
+  if (!contenedorTitulo.value || !tituloAnimado.value) return;
+
+  await document.fonts.ready;
+
+  crearTituloAnimado();
 
   window.addEventListener('scroll', eventoPosicionX);
+  window.addEventListener('resize', crearTituloAnimado);
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', eventoPosicionX);
+  window.removeEventListener('resize', crearTituloAnimado);
 });
 </script>
 
 <template>
   <div ref="contenedorTitulo" id="contenedorTitulo" :class="{ visible: tituloVisible, sinEvento: true }">
     <span class="texto">VEINTICUATRO</span>
+    <div id="tituloAnimado" ref="tituloAnimado"></div>
   </div>
 </template>
 
