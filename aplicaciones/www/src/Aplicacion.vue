@@ -13,6 +13,7 @@ import type { Perfil, Punto } from '@/tipos/compartidos';
 import FichaIndicadores from './componentes/FichaIndicadores.vue';
 import AnimacionesCalle from './componentes/AnimacionesCalle.vue';
 import Paisaje from './componentes/Paisaje.vue';
+import IndicadorGesto from './componentes/IndicadorGesto.vue';
 
 const contenedorGeneral = ref<HTMLElement | null>(null);
 const puntos: Ref<Punto[]> = ref([]);
@@ -219,6 +220,7 @@ onUnmounted(() => {
     />
     <FichaIndicadores :cerrar="cerrarFicha" />
     <FichaPerfil v-if="perfilElegido" :perfil="perfilElegido" :cerrar="cerrarFicha" />
+    <IndicadorGesto />
   </main>
 </template>
 
