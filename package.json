@@ -1,6 +1,6 @@
 {
   "name": "070-cra7",
-  "packageManager": "yarn@4.7.0",
+  "packageManager": "yarn@4.8.1",
   "private": true,
   "version": "0.0.1",
   "workspaces": [
