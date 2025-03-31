@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import type { Ref } from 'vue';
-import { distanciaEntreCoordenadas, base, convertirEscala, pedirDatos, numeroAleatorio } from './utilidades/ayudas';
+import {
+  distanciaEntreCoordenadas,
+  base,
+  convertirEscala,
+  pedirDatos,
+  numeroAleatorio,
+  escalaLogaritmica,
+} from './utilidades/ayudas';
 import FichaPerfil from './componentes/FichaPerfil.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
@@ -40,11 +47,6 @@ const arboles = [
   'septimazo-yarumorosa.webp',
   'septimazo-yarumoverde.webp',
 ].map((ruta) => `${base}/imagenes/vegetacion/${ruta}`);
-
-const escalaLogaritmica = (valor: number, min: number, max: number, minEscala: number, maxEscala: number): number => {
-  const factor = (valor - min) / (max - min);
-  return Math.round(minEscala + (maxEscala - minEscala) * factor);
-};
 
 const cantidadArboles = (valor: number): string[] => {
   const valorMin = 0.6;

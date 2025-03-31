@@ -52,3 +52,14 @@ export function convertirEscala(
 export function numeroAleatorio(maximo: number) {
   return Math.floor(Math.random() * maximo);
 }
+
+export const escalaLogaritmica = (
+  valor: number,
+  min: number,
+  max: number,
+  minEscala: number,
+  maxEscala: number
+): number => {
+  const factor = (valor - min) / (max - min);
+  return Math.round(minEscala + (maxEscala - minEscala) * factor);
+};
