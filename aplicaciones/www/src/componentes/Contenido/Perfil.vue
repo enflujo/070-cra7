@@ -11,8 +11,9 @@ const cerebro = usarCerebro();
       <h3>{{ cerebro.perfilActual.nombre }}</h3>
     </div>
 
-    <p>{{ cerebro.perfilActual.descripcion }}</p>
     <video class="video" :src="`${base}/videos/${cerebro.perfilActual.video}`" controls="true"></video>
+
+    <p>{{ cerebro.perfilActual.descripcion }}</p>
   </div>
 </template>
 
@@ -29,6 +30,9 @@ const cerebro = usarCerebro();
 }
 
 .contenedorPersonaje {
+  display: flex;
+  flex-direction: column;
+
   .iconoPerfil {
     bottom: 180px;
     border-radius: 50%;
@@ -42,6 +46,6 @@ const cerebro = usarCerebro();
 }
 
 .video {
-  height: 500px;
+  height: 60vh;
 }
 </style>

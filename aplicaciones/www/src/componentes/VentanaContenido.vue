@@ -36,7 +36,7 @@ function eventoDentro(evento: MouseEvent) {
   position: fixed;
   top: 5vh;
   left: 6vw;
-  padding: 3em 3em;
+  padding: 3em;
   width: 62vw;
   z-index: 99;
 
@@ -65,6 +65,15 @@ function eventoDentro(evento: MouseEvent) {
     &:hover {
       opacity: 1;
     }
+  }
+}
+
+@media (max-width: 800px) {
+  #ficha {
+    left: 2vw;
+    width: 96vw;
+    height: 90vh;
+    padding: 1em;
   }
 }
 </style>

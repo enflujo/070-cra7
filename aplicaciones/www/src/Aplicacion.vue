@@ -24,6 +24,7 @@ const puntos: Ref<Punto[]> = ref([]);
 const anchoContenedor = ref(0);
 const pasoX = 1500;
 const alto = ref(0);
+const listaPodcastsVisible = ref(false);
 const dims = computed(() => ({ fondo: alto.value * 0.5, calle: alto.value * 0.11, vis: alto.value * 0.368 }));
 let posX = 0;
 
@@ -174,17 +175,23 @@ onUnmounted(() => {
   window.removeEventListener('resize', escalar);
   contenedorGeneral.value?.removeEventListener('wheel', moverEjeXEnScrollY);
 });
+
+function mostrarListaPodcasts() {
+  listaPodcastsVisible.value = !listaPodcastsVisible.value;
+}
 </script>
 
 <template>
   <span ref="botonInformacion" id="botonInformacion" class="botonAbrir" @click="controlInfo">Sobre el proyecto</span>
 
   <div id="contenedorIconos">
-    <h2 class="tituloBoton">Podcasts</h2>
+    <h2 class="tituloBoton" @click="mostrarListaPodcasts">Podcasts</h2>
 
-    <div v-for="podcast in podcasts" @click="cerebro.elegirPodcast(podcast, $event)" class="enlacePodcast">
-      <img class="iconoPodcast botonAbrir" :src="`${base}/imagenes/icono_podcast.png`" alt="ícono abrir podcast" />
-      <span class="nombrePodcast">{{ podcast.nombre }}</span>
+    <div id="enlacesPodcasts" :class="listaPodcastsVisible ? 'visible' : ''">
+      <div v-for="podcast in podcasts" @click="cerebro.elegirPodcast(podcast, $event)" class="enlacePodcast">
+        <img class="iconoPodcast botonAbrir" :src="`${base}/imagenes/icono_podcast.png`" alt="ícono abrir podcast" />
+        <span class="nombrePodcast">{{ podcast.nombre }}</span>
+      </div>
     </div>
   </div>
 
@@ -262,6 +269,15 @@ onUnmounted(() => {
     font-family: var(--fuentePrincipal);
     background-color: #ffffffde;
     padding: 0.5em;
+  }
+
+  #enlacesPodcasts {
+    height: 0;
+    overflow: auto;
+
+    &.visible {
+      height: 100%;
+    }
   }
 
   .iconoPodcast {
