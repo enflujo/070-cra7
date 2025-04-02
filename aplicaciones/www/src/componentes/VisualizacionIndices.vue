@@ -255,9 +255,11 @@ function construirLineas() {
 
 #etiquetas {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   z-index: 2;
   position: relative;
+  font-size: 0.7em;
 }
 
 .etiquetaDatos {
@@ -434,7 +436,7 @@ function construirLineas() {
 
 @media screen and (min-width: $minTablet) {
   #etiquetas {
-    flex-direction: row;
+    font-size: 0.9em;
   }
 }
 </style>
