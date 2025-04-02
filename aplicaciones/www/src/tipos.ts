@@ -1,3 +1,5 @@
+import type { Perfil } from '@/tipos/compartidos';
+
 // Los elementos son: podcast, personaje y texto
 export interface ElementoPaisaje {
   id?: string;
@@ -11,11 +13,11 @@ export interface FichaIndicador {
   descripcion: string;
   unidadMedida: string;
 }
-
+export type TiposContenido = 'sobre' | 'perfil' | 'podcast' | 'indicadores';
 export interface Cerebro {
   lugarElegido: string | null;
   fichaVisible: boolean;
-  infoVisible: boolean;
-  podcastVisible: boolean;
-  indicadoresVisible: boolean;
+  tipoContenido: TiposContenido;
+  podcastActual: ElementoPaisaje | null;
+  perfilActual: Perfil | null;
 }

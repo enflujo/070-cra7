@@ -1,15 +1,5 @@
-<script setup lang="ts">
-import { usarCerebro } from '@/utilidades/cerebro';
-
-const cerebro = usarCerebro();
-const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
-</script>
-
 <template>
-  <span ref="botonInformacion" id="botonInformacion" class="botonAbrir" @click="controlInfo">Sobre el proyecto</span>
-
-  <div class="ficha infoProyecto" :class="{ visible: cerebro.infoVisible }">
-    <div class="cerrar" :onclick="controlInfo">X</div>
+  <div class="infoProyecto">
     <h2>VEINTICUATRO / SIETE</h2>
 
     <p>
@@ -54,32 +44,3 @@ const controlInfo = () => (cerebro.infoVisible = !cerebro.infoVisible);
     </p>
   </div>
 </template>
-
-<style lang="scss" scoped>
-#botonInformacion {
-  display: block;
-  padding: 0.8em;
-  background-color: var(--lila);
-  position: fixed;
-  text-align: center;
-  right: 0px;
-  top: 0px;
-  opacity: 0.7;
-  cursor: pointer;
-  z-index: 10;
-  font-family: var(--fuentePrincipal);
-
-  &:hover {
-    opacity: 1;
-  }
-}
-
-.infoProyecto {
-  display: none;
-
-  &.visible {
-    display: block;
-    height: 86vh;
-  }
-}
-</style>

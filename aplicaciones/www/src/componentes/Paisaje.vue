@@ -2,14 +2,16 @@
 import { base, numeroAleatorio } from '@/utilidades/ayudas';
 import { type Ref, ref } from 'vue';
 import slugificar from 'slug';
-import type { Perfil, Punto } from '@/tipos/compartidos';
+import type { Punto } from '@/tipos/compartidos';
+import { usarCerebro } from '@/utilidades/cerebro';
 
 defineProps<{
   puntos: Punto[];
   anchoContenedor: number;
   dims: { calle: number; fondo: number };
-  abrirFichaPerfil: (perfil: Perfil) => void;
 }>();
+
+const cerebro = usarCerebro();
 
 const etiquetaIlustracion: Ref<HTMLElement | null> = ref(null);
 
@@ -59,7 +61,7 @@ const actualizarPosicionEtiqueta = (evento: MouseEvent) => {
         :alt="`Ilustración de ${punto.ilustraciones}`"
       />
 
-      <div class="perfil" v-if="punto.perfil" @click="abrirFichaPerfil(punto.perfil)">
+      <div class="perfil" v-if="punto.perfil" @click="cerebro.elegirPerfil(punto.perfil, $event)">
         <img class="iconoPerfil" :src="`${base}/imagenes/icono_perfil.png`" alt="ícono abrir perfil" />
         <p>{{ punto.perfil.nombre }}</p>
       </div>

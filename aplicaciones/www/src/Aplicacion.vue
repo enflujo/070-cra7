@@ -9,32 +9,22 @@ import {
   numeroAleatorio,
   escalaLogaritmica,
 } from './utilidades/ayudas';
-import FichaPerfil from './componentes/FichaPerfil.vue';
 import VisualizacionIndices from './componentes/VisualizacionIndices.vue';
 
-import { perfiles, textos, usarCerebro } from './utilidades/cerebro';
+import { perfiles, podcasts, textos, usarCerebro } from './utilidades/cerebro';
 import Titulo from './componentes/Titulo.vue';
-import SobreProyecto from './componentes/SobreProyecto.vue';
-import Podcast from './componentes/Podcast.vue';
-import type { Perfil, Punto } from '@/tipos/compartidos';
-import FichaIndicadores from './componentes/FichaIndicadores.vue';
+import type { Punto } from '@/tipos/compartidos';
 import AnimacionesCalle from './componentes/AnimacionesCalle.vue';
 import Paisaje from './componentes/Paisaje.vue';
 import IndicadorGesto from './componentes/IndicadorGesto.vue';
+import VentanaContenido from './componentes/VentanaContenido.vue';
 
 const contenedorGeneral = ref<HTMLElement | null>(null);
 const puntos: Ref<Punto[]> = ref([]);
-/** Lugares que tienen ilustración */
-const idPodcast: Ref<string | null> = ref(null);
-const idLugar: Ref<string | null> = ref(null);
-
 const anchoContenedor = ref(0);
 const pasoX = 1500;
 const alto = ref(0);
 const dims = computed(() => ({ fondo: alto.value * 0.5, calle: alto.value * 0.11, vis: alto.value * 0.368 }));
-
-const perfilElegido: Ref<Perfil | null> = ref(null);
-const abrirFichaPerfil = (perfil: Perfil) => (perfilElegido.value = perfil);
 let posX = 0;
 
 const arboles = [
@@ -62,18 +52,13 @@ const cantidadArboles = (valor: number): string[] => {
 };
 
 const cerebro = usarCerebro();
+const controlInfo = () => {
+  cerebro.mostrarFicha('sobre');
+};
 
 /** Eventos de la página general */
 const escalar = () => {
   alto.value = window.innerHeight;
-};
-
-const cerrarFicha = () => {
-  idPodcast.value = null;
-  idLugar.value = null;
-  cerebro.fichaVisible = false;
-  cerebro.indicadoresVisible = false;
-  perfilElegido.value = null;
 };
 
 const moverEjeXEnScrollY = (evento: WheelEvent) => {
@@ -95,18 +80,11 @@ const clicFuera = (evento: MouseEvent) => {
   evento.stopPropagation();
 
   const elemento = evento.target as HTMLElement;
-  const botonAbrir = elemento.classList.contains('botonAbrir');
-  const botonIndicador = elemento.classList.contains('etiquetaDatos');
-  const fichaLugar = elemento.classList.contains('fichaLugar');
-  const fichaPodcast = elemento.classList.contains('fichaPodcast');
-  const infoProyecto = elemento.classList.contains('infoProyecto');
-  const infoIndicadores = elemento.classList.contains('infoProyecto');
+  const ficha = document.getElementById('ficha');
 
-  if (botonAbrir || fichaLugar || infoProyecto || fichaPodcast || infoIndicadores || botonIndicador) return;
-  cerebro.infoVisible = false;
-  cerebro.fichaVisible = false;
-  cerebro.podcastVisible = false;
-  cerebro.indicadoresVisible = false;
+  if (!ficha || !(ficha === elemento || ficha.contains(elemento))) {
+    cerebro.fichaVisible = false;
+  }
 };
 
 onMounted(async () => {
@@ -188,17 +166,28 @@ onMounted(async () => {
 
   if (contenedorGeneral.value) {
     posX = window.scrollX;
-    window.addEventListener('wheel', moverEjeXEnScrollY, { passive: false });
+    contenedorGeneral.value.addEventListener('wheel', moverEjeXEnScrollY, { passive: false });
   }
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', escalar);
-  window.removeEventListener('wheel', moverEjeXEnScrollY);
+  contenedorGeneral.value?.removeEventListener('wheel', moverEjeXEnScrollY);
 });
 </script>
 
 <template>
+  <span ref="botonInformacion" id="botonInformacion" class="botonAbrir" @click="controlInfo">Sobre el proyecto</span>
+
+  <div id="contenedorIconos">
+    <h2 class="tituloBoton">Podcasts</h2>
+
+    <div v-for="podcast in podcasts" @click="cerebro.elegirPodcast(podcast, $event)" class="enlacePodcast">
+      <img class="iconoPodcast botonAbrir" :src="`${base}/imagenes/icono_podcast.png`" alt="ícono abrir podcast" />
+      <span class="nombrePodcast">{{ podcast.nombre }}</span>
+    </div>
+  </div>
+
   <main
     id="contenedorGeneral"
     ref="contenedorGeneral"
@@ -206,10 +195,9 @@ onUnmounted(() => {
     :style="{ width: `${anchoContenedor + 300}px` }"
   >
     <Titulo />
-    <SobreProyecto />
-    <Podcast :cerrar="cerrarFicha" />
+    <VentanaContenido v-if="cerebro.fichaVisible" />
     <AnimacionesCalle :puntos="puntos" :anchoContenedor="anchoContenedor" :dims="dims" />
-    <Paisaje :puntos="puntos" :anchoContenedor="anchoContenedor" :dims="dims" :abrirFichaPerfil="abrirFichaPerfil" />
+    <Paisaje :puntos="puntos" :anchoContenedor="anchoContenedor" :dims="dims" />
 
     <div id="fondoCalle" :style="{ width: `${anchoContenedor}px`, height: `${dims.calle}px` }"></div>
 
@@ -220,8 +208,6 @@ onUnmounted(() => {
       :pasoX="pasoX"
       :y="dims.fondo + dims.calle"
     />
-    <FichaIndicadores :cerrar="cerrarFicha" />
-    <FichaPerfil v-if="perfilElegido" :perfil="perfilElegido" :cerrar="cerrarFicha" />
     <IndicadorGesto />
   </main>
 </template>
@@ -229,6 +215,80 @@ onUnmounted(() => {
 <style lang="scss">
 @use 'scss/constantes' as *;
 @use 'scss/general' as *;
+
+#botonInformacion {
+  display: block;
+  padding: 0.8em;
+  background-color: var(--lila);
+  position: fixed;
+  text-align: center;
+  right: 0px;
+  top: 0px;
+  opacity: 0.7;
+  cursor: pointer;
+  z-index: 10;
+  font-family: var(--fuentePrincipal);
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+#contenedorIconos {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 0;
+  top: 3em;
+  z-index: 11;
+  border-radius: 15px;
+
+  .tituloBoton {
+    background-color: var(--lila);
+    padding: 0.5em 0.8em;
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  .enlacePodcast {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    max-width: 173px;
+    margin-bottom: 0.2em;
+    font-size: 0.85em;
+    font-family: var(--fuentePrincipal);
+    background-color: #ffffffde;
+    padding: 0.5em;
+  }
+
+  .iconoPodcast {
+    width: 50px;
+  }
+
+  .iconoPodcast {
+    width: 35px;
+    border-radius: 50%;
+    padding: 0.3em;
+  }
+
+  .tituloPodcast {
+    position: absolute;
+    display: none;
+    background-color: #ffffffde;
+    right: 20px;
+    padding: 0.7em;
+    text-align: right;
+    font-size: 0.9em;
+    border-radius: 5px;
+
+    .visible {
+      display: block;
+    }
+  }
+}
 
 .perfil {
   background-color: rgba(255, 255, 255, 0.4);

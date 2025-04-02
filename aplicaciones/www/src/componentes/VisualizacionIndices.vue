@@ -112,7 +112,7 @@ function construirLineas() {
     </svg>
 
     <div id="contenedorEtiquetas">
-      <div id="etiquetas" @click="cerebro.indicadoresVisible = true">
+      <div id="etiquetas" @click="cerebro.mostrarIndicadores">
         <p class="etiquetaDatos" id="etiqAmbiente">Ambiente</p>
         <p class="etiquetaDatos" id="etiqMovilidad">Movilidad</p>
         <p class="etiquetaDatos" id="etiqViviendaEmpleo">Vivienda y Empleo</p>

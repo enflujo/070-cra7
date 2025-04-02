@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { Cerebro, ElementoPaisaje } from '../tipos';
+import type { Cerebro, ElementoPaisaje, TiposContenido } from '../tipos';
 import type { Perfil, Texto } from '@/tipos/compartidos';
 
 // Guargar qué lugar está elegido para que quede disponible para todos los componentes
@@ -7,10 +7,10 @@ export const usarCerebro = defineStore('cerebro', {
   state: (): Cerebro => {
     return {
       lugarElegido: '',
-      fichaVisible: false,
-      infoVisible: true,
-      podcastVisible: false,
-      indicadoresVisible: false,
+      fichaVisible: true,
+      tipoContenido: 'sobre',
+      podcastActual: null,
+      perfilActual: null,
     };
   },
 
@@ -21,6 +21,31 @@ export const usarCerebro = defineStore('cerebro', {
 
     deseleccionarPunto() {
       this.lugarElegido = null;
+    },
+
+    mostrarFicha(contenido: TiposContenido) {
+      this.fichaVisible = true;
+      this.tipoContenido = contenido;
+    },
+
+    elegirPodcast(podcast: ElementoPaisaje, evento: MouseEvent) {
+      evento.stopPropagation();
+      this.fichaVisible = true;
+      this.podcastActual = podcast;
+      this.tipoContenido = 'podcast';
+    },
+
+    elegirPerfil(perfil: Perfil, evento: MouseEvent) {
+      evento.stopPropagation();
+      this.fichaVisible = true;
+      this.perfilActual = perfil;
+      this.tipoContenido = 'perfil';
+    },
+
+    mostrarIndicadores(evento: MouseEvent) {
+      evento.stopPropagation();
+      this.fichaVisible = true;
+      this.tipoContenido = 'indicadores';
     },
   },
 });
