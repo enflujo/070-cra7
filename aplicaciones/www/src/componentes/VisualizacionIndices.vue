@@ -47,7 +47,6 @@ function esconderInfoPunto() {
 }
 
 function actualizarPosicionInfoPunto(evento: MouseEvent) {
-  // posInfo.value = { x: evento.clientX, y: evento.clientY };
   const anchoPantalla = window.innerWidth;
   const anchoInfo = info.value?.clientWidth || 0;
   const altoInfo = info.value?.clientHeight || 0;
@@ -101,6 +100,7 @@ function construirLineas() {
       }"
       @mouseenter="mostrarInfoPunto(punto)"
       @mousemove="actualizarPosicionInfoPunto"
+      @mouseleave="esconderInfoPunto"
     >
       <span class="nombreCalle">
         {{ punto.nombre }}
@@ -391,7 +391,7 @@ function construirLineas() {
   padding: 5px;
   font-size: 0.75em;
   z-index: 10;
-  // display: none;
+  display: none;
   transform: translate(10px, -100%);
   pointer-events: none;
 
