@@ -100,7 +100,6 @@ function construirLineas() {
         backgroundColor: colorHabitabilidad(punto.habitabilidad),
       }"
       @mouseenter="mostrarInfoPunto(punto)"
-      @mouseleave="esconderInfoPunto"
       @mousemove="actualizarPosicionInfoPunto"
     >
       <span class="nombreCalle">
@@ -165,11 +164,9 @@ function construirLineas() {
       </p>
     </div>
 
-    <div class="textos" v-if="infoPunto?.textos">
-      <div class="texto" v-for="texto in infoPunto.textos">
-        <h4>{{ texto.titulo }}</h4>
-        <p>{{ texto.texto }}</p>
-      </div>
+    <div class="texto" v-if="infoPunto?.textos" v-for="texto in infoPunto.textos">
+      <h4>{{ texto.titulo }}</h4>
+      <p>{{ texto.texto }}</p>
     </div>
   </div>
 
@@ -387,23 +384,28 @@ function construirLineas() {
 
 #info {
   position: fixed;
-  min-width: fit-content;
-  width: 150px;
+  min-width: 380px;
+  max-width: 80vw;
   border: 2px black solid;
   background-color: var(--menta);
-  padding: 0.5em 1em;
+  padding: 5px;
   font-size: 0.75em;
   z-index: 10;
-  display: none;
+  // display: none;
   transform: translate(10px, -100%);
   pointer-events: none;
 
+  .indicadores {
+    width: 150px;
+  }
+
   &.visible {
     display: flex;
+    flex-wrap: wrap;
   }
 
   .texto {
-    width: 300px;
+    width: 180px;
     font-size: 0.8em;
     border: 1px black dotted;
     padding: 0.5em;
