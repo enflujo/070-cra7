@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, Ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import type { LlavesIndices, Punto } from '@/tipos/compartidos';
 import { escalaColores } from '@enflujo/alquimia';
 import { usarCerebro } from '@/utilidades/cerebro';
@@ -13,11 +13,12 @@ const nombresIndices = {
   seguridad: 'Seguridad',
   viviendaEmpleo: 'Vivienda y empleo',
 };
-const infoPunto: Ref<Punto | null> = ref(null);
+const info = ref<HTMLElement | null>(null);
+const infoPunto = ref<Punto | null>(null);
 const infoLeyenda = ref(false);
 const posInfo = ref({ x: 0, y: 0 });
 
-const indices: Ref<{ indicador: LlavesIndices; linea: string }[]> = ref([
+const indices = ref<{ indicador: LlavesIndices; linea: string }[]>([
   { indicador: 'ambiente', linea: '' },
   { indicador: 'infraestructura', linea: '' },
   { indicador: 'movilidad', linea: '' },
@@ -46,7 +47,26 @@ function esconderInfoPunto() {
 }
 
 function actualizarPosicionInfoPunto(evento: MouseEvent) {
-  posInfo.value = { x: evento.clientX, y: evento.clientY };
+  // posInfo.value = { x: evento.clientX, y: evento.clientY };
+  const anchoPantalla = window.innerWidth;
+  const anchoInfo = info.value?.clientWidth || 0;
+  const altoInfo = info.value?.clientHeight || 0;
+  const ratonX = evento.clientX;
+  const ratonY = evento.clientY;
+  let _x = ratonX;
+  let _y = ratonY;
+
+  if (ratonX + anchoInfo > anchoPantalla) {
+    const diferencia = anchoPantalla - (ratonX + anchoInfo);
+    _x = ratonX + diferencia;
+  }
+
+  if (ratonY < altoInfo) {
+    const diferencia = altoInfo - ratonY;
+    _y = ratonY + diferencia;
+  }
+
+  posInfo.value = { x: _x, y: _y };
 }
 
 function construirLineas() {
@@ -136,7 +156,7 @@ function construirLineas() {
     <span>0</span>
   </div>
 
-  <div id="info" :class="{ visible: infoPunto }" :style="{ top: `${posInfo.y}px`, left: `${posInfo.x}px` }">
+  <div id="info" ref="info" :class="{ visible: infoPunto }" :style="{ top: `${posInfo.y}px`, left: `${posInfo.x}px` }">
     <div class="indicadores">
       <h4>{{ infoPunto?.nombre }}</h4>
       <p v-for="indice in infoPunto?.indices" :class="`indiceInfo ${indice.indicador}`">
@@ -368,11 +388,11 @@ function construirLineas() {
 #info {
   position: fixed;
   min-width: fit-content;
-  width: 160px;
+  width: 150px;
   border: 2px black solid;
   background-color: var(--menta);
   padding: 0.5em 1em;
-  font-size: 0.8em;
+  font-size: 0.75em;
   z-index: 10;
   display: none;
   transform: translate(10px, -100%);
@@ -384,7 +404,7 @@ function construirLineas() {
 
   .texto {
     width: 300px;
-    font-size: 1em;
+    font-size: 0.8em;
     border: 1px black dotted;
     padding: 0.5em;
   }
